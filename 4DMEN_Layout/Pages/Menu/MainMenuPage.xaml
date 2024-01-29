@@ -1,0 +1,92 @@
+﻿<UserControl x:Class="_4DMEN_Layout.Pages.MainMenuPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:_4DMEN_Layout.Pages"
+              xmlns:materialDesign ="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="1080" d:DesignWidth="100">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="900"/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+        <StackPanel Background="#FF1A237E" Grid.Column="0" Grid.Row="0">
+            <Image Width="100" Height="80" Source="/Pages/Menu/LOGO2_white.png" />
+        </StackPanel>
+        <!--<materialDesign:Card Grid.Row="1" Grid.Column="0">
+            <TabControl x:Name="MenuTab"
+                materialDesign:NavigationRailAssist.ShowSelectionBackground="True"
+                         SnapsToDevicePixels="True"
+                         Style="{StaticResource MaterialDesignNavigationRailTabControl}"
+                        TabStripPlacement="Left" Width="100"
+                         SelectionChanged="TabControl_SelectionChanged">
+                <TabItem Width="100" Height="100" IsSelected="True" Tag="Main Page">
+                    <TabItem.Header>
+                        <StackPanel Width="auto" Height="auto">
+                            <materialDesign:PackIcon Width="48" Height="48" HorizontalAlignment="Center" Kind="Factory" />
+                            <TextBlock HorizontalAlignment="Center" Text="Main Page" FontSize="18" />
+                        </StackPanel>
+                    </TabItem.Header>
+                </TabItem>
+                <TabItem Width="100" Height="100" Tag="System Setting">
+                    <TabItem.Header>
+                        <StackPanel Width="auto" Height="auto">
+                            <materialDesign:PackIcon Width="48" Height="48" HorizontalAlignment="Center" Kind="CogOutline" />
+                            <TextBlock HorizontalAlignment="Center" FontSize="18" >
+                                System <LineBreak/>
+                                Setting
+                            </TextBlock>
+                        </StackPanel>
+                    </TabItem.Header>
+                </TabItem>
+                <TabItem Width="100" Height="100" Tag="System Info.">
+                    <TabItem.Header>
+                        <StackPanel Width="auto" Height="auto">
+                            <materialDesign:PackIcon Width="48" Height="48" HorizontalAlignment="Center" Kind="ClipboardListOutline" />
+                            <TextBlock HorizontalAlignment="Center" FontSize="18" TextAlignment="Center">
+                                System <LineBreak/>
+                                Information
+                            </TextBlock>
+                        </StackPanel>
+                    </TabItem.Header>
+                </TabItem>
+
+            </TabControl>
+        </materialDesign:Card>-->
+        <StackPanel Grid.Row="1" Grid.Column="0">
+            <RadioButton x:Name="MainPageRB" GroupName="MenuGroup" Margin="0" IsChecked="True" Width="100" Height="100" Tag="Main Page" Style="{StaticResource MaterialDesignCalendarMeridiemRadioButtonDefault}" Click="ChangeMenu_Click">
+                <StackPanel Width="auto" Height="auto">
+                    <materialDesign:PackIcon Width="48" Height="48" HorizontalAlignment="Center" Kind="Factory" />
+                    <TextBlock HorizontalAlignment="Center" Text="Main Page" FontSize="16" />
+                </StackPanel>
+            </RadioButton>
+            <RadioButton GroupName="MenuGroup" Margin="0" Width="100" Height="100" Tag="System Setting" Style="{StaticResource MaterialDesignCalendarMeridiemRadioButtonDefault}" Click="ChangeMenu_Click">
+                <StackPanel Width="auto" Height="auto">
+                    <materialDesign:PackIcon Width="48" Height="48" HorizontalAlignment="Center" Kind="CogOutline" />
+                    <TextBlock HorizontalAlignment="Center" FontSize="18" >
+                                System <LineBreak/>
+                                Setting
+                    </TextBlock>
+                </StackPanel>
+            </RadioButton>
+            <RadioButton GroupName="MenuGroup" Margin="0" Width="100" Height="100" Tag="System Info." Style="{StaticResource MaterialDesignCalendarMeridiemRadioButtonDefault}" Click="ChangeMenu_Click">
+                <StackPanel Width="auto" Height="auto">
+                    <materialDesign:PackIcon Width="48" Height="48" HorizontalAlignment="Center" Kind="ClipboardListOutline" />
+                    <TextBlock HorizontalAlignment="Center" FontSize="18" TextAlignment="Center">
+                                System <LineBreak/>
+                                Information
+                    </TextBlock>
+                </StackPanel>
+            </RadioButton>
+        </StackPanel>
+        <Button Style="{StaticResource MaterialDesignFlatDarkBgButton}" Grid.Row="3" Padding="0" Grid.Column="0" Margin="3" Width="92" Height="92" Click="AppCloseBtn_Click">
+            <StackPanel>
+                <materialDesign:PackIcon Width="48" Height="48" HorizontalAlignment="Center" Kind="LocationExit" />
+                <TextBlock HorizontalAlignment="Center" Text="系統關閉" FontSize="16" />
+            </StackPanel>
+        </Button>
+    </Grid>
+</UserControl>
