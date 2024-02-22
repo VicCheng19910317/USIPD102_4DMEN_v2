@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>_4DMEN_Library</RootNamespace>
     <AssemblyName>4DMEN_Library</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -49,7 +51,11 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="Model\BaseThread.cs" />
+    <Compile Include="Model\CalcFunc.cs" />
     <Compile Include="Model\ClientTCP.cs" />
+    <Compile Include="Model\Display\DisplayArmsAction.cs" />
+    <Compile Include="Model\Display\DisplayPLCAction.cs" />
+    <Compile Include="Model\Display\DisplayReaderAction.cs" />
     <Compile Include="Model\Enum\EnumData.cs" />
     <Compile Include="Model\EventArgs.cs" />
     <Compile Include="Model\IniFile.cs" />
@@ -63,10 +69,17 @@
     <Compile Include="Model\Param\LogData.cs" />
     <Compile Include="Model\Param\SystemParam.cs" />
     <Compile Include="Model\PLCNet.cs" />
+    <Compile Include="Model\Processor\Customized\EsponArmsProcessor_In.cs" />
+    <Compile Include="Model\Processor\Customized\KeyencePLCProcessor_Height.cs" />
+    <Compile Include="Model\Processor\Customized\LFJProcessor.cs" />
+    <Compile Include="Model\Processor\Customized\KeyenceLoadPLCProcessor.cs" />
     <Compile Include="Model\Processor\EsponArmsProcessor.cs" />
     <Compile Include="Model\Processor\KeyencePLCProcessor.cs" />
     <Compile Include="Model\Processor\KeyenceReaderProcessor.cs" />
+    <Compile Include="Model\LKIF2.cs" />
+    <Compile Include="Model\Processor\LKIFProcessor.cs" />
     <Compile Include="Model\Processor\RS232Processor.cs" />
+    <Compile Include="Model\Processor\SfisProcessor.cs" />
     <Compile Include="Model\RecordData.cs" />
     <Compile Include="Model\Request\SocketRequest.cs" />
     <Compile Include="Model\Response\ResponseBase.cs" />

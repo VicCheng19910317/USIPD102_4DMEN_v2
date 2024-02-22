@@ -270,19 +270,45 @@ namespace _4DMEN_Library.Model
         /// </summary>
         public int Index { get; set; }
         /// <summary>
-        /// 膠前重
+        /// 手動設定NG站別
         /// </summary>
-        public double BeforeWeight { get => _beforeWeight; set => _beforeWeight = Math.Round(value, 4); }
+        public int ManualNGPosition { get; set; } = 0;
         /// <summary>
-        /// 膠後重
+        /// 手動設定NG
         /// </summary>
-        public double AfterWeight { get => _afterWeight; set => _afterWeight = Math.Round(value, 4); }
+        public bool ManualNG { get; set; } = false;
         /// <summary>
-        /// 膠淨重
+        /// 量測結果
         /// </summary>
-        public double GlueWeight { get => _glueWeight; set => _glueWeight = Math.Round(value, 4); }
-        
-        public bool InspResult { get; set; } = true;
+        public List<float> EstResult { get; set; } = new List<float>();
+        /// <summary>
+        /// 基準面位置
+        /// </summary>
+        public string BasePost { get; set; } = "";
+        /// <summary>
+        /// 平面參數
+        /// </summary>
+        public List<float> BaseParam { get; set; } = new List<float>();
+        /// <summary>
+        /// 平面距離
+        /// </summary>
+        public List<float> PlaneDist { get; set; } = new List<float>();
+        /// <summary>
+        /// 平整度
+        /// </summary>
+        public List<float> Flatness { get; set; } = new List<float>();
+        /// <summary>
+        /// 量測NG
+        /// </summary>
+        public bool MeasureNG { get; set; } = false;
+        /// <summary>
+        /// 掃碼結果1NG
+        /// </summary>
+        public bool Reader1NG { get; set; } = false;
+        /// <summary>
+        /// 掃碼結果2NG
+        /// </summary>
+        public bool Reader2NG { get; set; } = false;
         /// <summary>
         /// 掃碼結果1
         /// </summary>
@@ -296,25 +322,37 @@ namespace _4DMEN_Library.Model
         /// </summary>
         public Stopwatch CaseInTime { get; set; } = new Stopwatch();
         /// <summary>
+        /// 組裝上蓋時間
+        /// </summary>
+        public Stopwatch CaseAssembleTime { get; set; } = new Stopwatch();
+        /// <summary>
+        /// 掃碼時間
+        /// </summary>
+        public Stopwatch CaseReaderTime { get; set; } = new Stopwatch();
+        /// <summary>
+        /// 折彎時間
+        /// </summary>
+        public Stopwatch CaseBendTime { get; set; } = new Stopwatch();
+        /// <summary>
         /// 下壓時間
         /// </summary>
         public Stopwatch CasePlateTime { get; set; } = new Stopwatch();
         /// <summary>
-        /// 塗膠時間
+        /// 測高時間
         /// </summary>
-        public Stopwatch CaseGlueTime { get; set; } = new Stopwatch();
+        public Stopwatch CaseEstHeiTime { get; set; } = new Stopwatch();
         /// <summary>
-        /// 秤重時間
+        /// NG初料時間
         /// </summary>
-        public Stopwatch CaseWeightTime { get; set; } = new Stopwatch();
+        public Stopwatch CaseNgTime { get; set; } = new Stopwatch();
+        /// <summary>
+        /// 雷雕時間
+        /// </summary>
+        public Stopwatch CaseMarkingTime { get; set; } = new Stopwatch();
         /// <summary>
         /// 出料時間
         /// </summary>
         public Stopwatch CaseOutTime { get; set; } = new Stopwatch();
-        /// <summary>
-        /// 檢測時間
-        /// </summary>
-        public Stopwatch CaseInspTime { get; set; } = new Stopwatch();
         /// <summary>
         /// 單顆總耗時
         /// </summary>

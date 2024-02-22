@@ -158,7 +158,7 @@ namespace _4DMEN_Library.Model
                     IsDoorStatus = true;
                     var is_open = false;
                     var by_pass = 1;
-                    string send_get_status = $"RDS R1307 9";
+                    string send_get_status = $"RDS R2300 11";
                     is_open = plcNet.ReadData(send_get_status).Replace("E", "").Replace("\r\n", "").Replace(" ", "").Contains("0");
                     string send_get_by_pass = $"RDS MR2009 1";
                     by_pass = int.Parse(plcNet.ReadData(send_get_by_pass).Replace("E", "").Replace("\r\n", "").Replace(" ", ""));
@@ -210,7 +210,26 @@ namespace _4DMEN_Library.Model
         /// <returns>成功/失敗</returns>
         public bool ResetPLCErrorList(int value)
         {
-            string send_data = $"WRS MR400 1 {value}";
+            string send_data = $"WRS MR203 1 {value}";
+            string status = plcNet.WriteData(send_data).Replace("E", "").Replace("\r\n", "");
+            var logger = MainPresenter.LogDatas();
+            if (!status.Contains("OK"))
+            {
+                Message = $"發送回傳訊號比對錯誤，發送訊號:{send_data}，比對訊號:OK";
+
+                logger = LoggerData.Error(new Exception("錯誤"), $"發送回傳訊號比對錯誤，發送訊號:{send_data}，比對訊號:OK");
+                return false;
+            }
+            return true;
+        }
+        /// <summary>
+        /// 設定自動模式
+        /// </summary>
+        /// <param name="value">1:開啟/0:關閉</param>
+        /// <returns>成功/失敗</returns>
+        public bool SwitchAutoMode(int value)
+        {
+            string send_data = $"WRS MR204 1 {value}";
             string status = plcNet.WriteData(send_data).Replace("E", "").Replace("\r\n", "");
             var logger = MainPresenter.LogDatas();
             if (!status.Contains("OK"))
@@ -392,7 +411,7 @@ namespace _4DMEN_Library.Model
             var initialize_finish = false;
             while ((DateTime.Now - tick).TotalSeconds < 300)
             {
-                string send_data = $"RDS MR315 1";
+                string send_data = $"RDS MR202 1";
                 string status = plcNet.WriteData(send_data).Replace("E", "").Replace("\r\n", "");
                 if (status == "1")
                 {
@@ -418,6 +437,42 @@ namespace _4DMEN_Library.Model
             var result = RunOneStepFlow(91, true);
             Timeout = _timeout;
             logger = LoggerData.Info("PLC執行單站初始化完成");
+            return result;
+        }
+        /// <summary>
+        /// 放置螺帽
+        /// </summary>
+        /// <returns>成功/失敗</returns>
+        internal virtual bool RunPutNut()
+        {
+            var logger = MainPresenter.LogDatas();
+            logger = LoggerData.Info("PLC放置螺帽");
+            var result = RunOneStepFlow();
+            logger = LoggerData.Info("PLC放置螺帽完成");
+            return result;
+        }
+        /// <summary>
+        /// 執行折彎
+        /// </summary>
+        /// <returns>成功/失敗</returns>
+        internal virtual bool RunBending()
+        {
+            var logger = MainPresenter.LogDatas();
+            logger = LoggerData.Info("PLC執行折彎");
+            var result = RunOneStepFlow();
+            logger = LoggerData.Info("PLC執行折彎完成");
+            return result;
+        }
+        /// <summary>
+        /// 執行壓平
+        /// </summary>
+        /// <returns>成功/失敗</returns>
+        internal virtual bool RunPlate()
+        {
+            var logger = MainPresenter.LogDatas();
+            logger = LoggerData.Info("PLC執行壓平");
+            var result = RunOneStepFlow();
+            logger = LoggerData.Info("PLC執行壓平完成");
             return result;
         }
         /// <summary>

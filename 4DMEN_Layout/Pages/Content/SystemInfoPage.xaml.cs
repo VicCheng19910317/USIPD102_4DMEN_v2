@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace _4DMEN_Layout.Pages
+namespace USIPD102_4DMEN.Pages
 {
     /// <summary>
     /// SystemInfoPage.xaml 的互動邏輯

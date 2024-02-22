@@ -6,9 +6,9 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{AF0A3D23-E618-4DD7-9141-145666FCB733}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>_4DMEN_Layout</RootNamespace>
-    <AssemblyName>4DMEN_Layout</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <RootNamespace>USIPD102_4DMEN</RootNamespace>
+    <AssemblyName>USIPD102_4DMEN</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -16,9 +16,10 @@
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -100,6 +101,34 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\Content\Inner\ArmsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Content\Inner\FlowDataInfoPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Content\Inner\MainFlowPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Content\Inner\MarkingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Content\Inner\PLCPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Content\Inner\ReaderPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\Content\Inner\SystemParamSettingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\Content\MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -124,6 +153,27 @@
   <ItemGroup>
     <Compile Include="Pages\Content\BottomPage.xaml.cs">
       <DependentUpon>BottomPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Content\Inner\ArmsPage.xaml.cs">
+      <DependentUpon>ArmsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Content\Inner\FlowDataInfoPage.xaml.cs">
+      <DependentUpon>FlowDataInfoPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Content\Inner\MainFlowPage.xaml.cs">
+      <DependentUpon>MainFlowPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Content\Inner\MarkingPage.xaml.cs">
+      <DependentUpon>MarkingPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Content\Inner\PLCPage.xaml.cs">
+      <DependentUpon>PLCPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Content\Inner\ReaderPage.xaml.cs">
+      <DependentUpon>ReaderPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Content\Inner\SystemParamSettingPage.xaml.cs">
+      <DependentUpon>SystemParamSettingPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Content\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -153,6 +203,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Pages\Content\Inner\Bending-230213.jpg" />
+    <Resource Include="Pages\Content\Inner\Green_Button.png" />
+    <Resource Include="Pages\Content\Inner\White_Button.png" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

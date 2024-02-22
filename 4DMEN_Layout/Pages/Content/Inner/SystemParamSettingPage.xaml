@@ -1,0 +1,512 @@
+﻿<UserControl x:Class="USIPD102_4DMEN.Pages.SystemParamSettingPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:USIPD102_4DMEN.Pages"
+             xmlns:materialDesign ="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="915" d:DesignWidth="1815">
+    <UserControl.Resources>
+        <Style x:Key="CCDGrid" TargetType="{x:Type Grid}">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Margin" Value="3" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" BlurRadius="5" Opacity="0.5" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="DisplayLabel" TargetType="TextBlock">
+            <Setter Property="Margin" Value="2" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Right"/>
+
+        </Style>
+        <Style x:Key="DisplayTxt" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Margin" Value="10,0,0,0"/>
+            <Setter Property="Width" Value="Auto" />
+            <Setter Property="Foreground" Value="#1A237E" />
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="White" Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="19*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid.Effect>
+            <DropShadowEffect Color="Black" Direction="315" ShadowDepth="2" Opacity="1"/>
+        </Grid.Effect>
+        <TabControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                    materialDesign:ColorZoneAssist.Mode="SecondaryMid"
+                    Style="{StaticResource MaterialDesignTabControl}"
+                TabStripPlacement="Right">
+            <TabItem Height="80" Width="20">
+                <TabItem.Header>
+                    <TextBlock FontSize="24">
+                            基本 <LineBreak/>
+                            設定
+                    </TextBlock>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="5*" />
+                        </Grid.RowDefinitions>
+                        <GroupBox Margin="5" Grid.Row="0" Grid.Column="0"  Header="基礎設置" Style="{StaticResource MaterialDesignCardGroupBox}">
+                            <GroupBox.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock  Margin="8,0,0,0" VerticalAlignment="Center" FontSize="24" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="{Binding}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GroupBox.HeaderTemplate>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="1*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="0.5*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="報廢數量上限：" Style="{StaticResource DisplayLabel}" />
+                                <ComboBox Grid.Row="0" Grid.Column="1" x:Name="NgOutCountCB" Style="{StaticResource MaterialDesignComboBox}" HorizontalContentAlignment="Center" VerticalAlignment="Center" Margin="15,0,15,0" Padding="0" FontSize="24"  TextBlock.TextAlignment="Center" >
+                                    <ComboBoxItem>1</ComboBoxItem>
+                                    <ComboBoxItem>2</ComboBoxItem>
+                                    <ComboBoxItem>3</ComboBoxItem>
+                                </ComboBox>
+                                <TextBlock Grid.Row="0" Grid.Column="2" Text="片" Style="{StaticResource DisplayLabel}" HorizontalAlignment="Left" />
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="記錄保存天數：" Style="{StaticResource DisplayLabel}" />
+                                <TextBox x:Name="RecordKeepDayTxt" Grid.Row="1" Grid.Column="1" Style="{StaticResource MaterialDesignTextBox}" FontSize="20" TextAlignment="Center" VerticalAlignment="Center" Margin="15,0,15,0" />
+                                <TextBlock Grid.Row="1" Grid.Column="2" Text="天" Style="{StaticResource DisplayLabel}" HorizontalAlignment="Left" />
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Margin="5" Grid.Row="1" Grid.Column="0"  Header="SFIS設置" Style="{StaticResource MaterialDesignCardGroupBox}">
+                            <GroupBox.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock  Margin="8,0,0,0" VerticalAlignment="Center" FontSize="24" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="{Binding}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GroupBox.HeaderTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="6*" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="站別名稱：" Style="{StaticResource DisplayLabel}" />
+                                <TextBox x:Name="SfisStationNameTxt" Grid.Row="0" Grid.Column="1" Style="{StaticResource MaterialDesignTextBox}" FontSize="20" TextAlignment="Center" VerticalAlignment="Center" Margin="15,0,15,0" />
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="線別名稱：" Style="{StaticResource DisplayLabel}" />
+                                <TextBox x:Name="SfisLineNameTxt" Grid.Row="1" Grid.Column="1" Style="{StaticResource MaterialDesignTextBox}" FontSize="20" TextAlignment="Center" VerticalAlignment="Center" Margin="15,0,15,0" />
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Barcode A：" Style="{StaticResource DisplayLabel}" />
+                                <TextBox x:Name="SfisBarcodeATxt" Grid.Row="2" Grid.Column="1" Style="{StaticResource MaterialDesignTextBox}" FontSize="20" TextAlignment="Center" VerticalAlignment="Center" Margin="15,0,15,0" />
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Barcode B：" Style="{StaticResource DisplayLabel}" />
+                                <TextBox x:Name="SfisBarcodeBTxt" Grid.Row="3" Grid.Column="1" Style="{StaticResource MaterialDesignTextBox}" FontSize="20" TextAlignment="Center" VerticalAlignment="Center" Margin="15,0,15,0" />
+                                <TextBlock Grid.Row="4" Grid.Column="0" Text="雷雕等級：" Style="{StaticResource DisplayLabel}" />
+                                <TextBox x:Name="MarkingLevelTxt" Grid.Row="4" Grid.Column="1" Style="{StaticResource MaterialDesignTextBox}" FontSize="20" TextAlignment="Center" VerticalAlignment="Center" Margin="15,0,15,0" />
+                                <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Width="auto" Height="auto" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="SFISChange_Click" >
+                                        <Image x:Name="DisplaySfisSignalImg" Grid.Row="0" Grid.Column="0" Source="White_Button.png" Margin="10,0,0,0"  />
+                                    </Button>
+                                    <TextBlock x:Name="DisplaySfisSignalTxt"  Grid.Row="0" Grid.Column="1"  Text="OFF" Style="{StaticResource DisplayTxt}" Width="Auto" FontSize="32" HorizontalAlignment="Left"/>
+                                    <Button x:Name="StepOneBtn" Tag ="1" Content="發送Step 1" Grid.Row="0" Grid.Column="2" Style="{StaticResource MaterialDesignOutlinedButton}" VerticalAlignment="Center" FontSize="24" Height="40" Click="StepBtn_Click" />
+                                    <Button x:Name="StepTwoBtn" Tag="2" Content="發送Step 2" Grid.Row="0" Grid.Column="3" Style="{StaticResource MaterialDesignOutlinedButton}" VerticalAlignment="Center" FontSize="24" Height="40" Click="StepBtn_Click" Margin="5,0,0,0" />
+                                    <Button x:Name="StepThreeBtn" Tag="3" Content="發送Step 3" Grid.Row="0" Grid.Column="4" Style="{StaticResource MaterialDesignOutlinedButton}" VerticalAlignment="Center" FontSize="24" Height="40" Margin="5,0,0,0" Click="StepBtn_Click"/>
+                                </Grid>
+                            </Grid>
+
+                        </GroupBox>
+                    </Grid>
+                    <GroupBox Margin="5" Grid.Row="0" Grid.Column="1"  Header="測高設定" Style="{StaticResource MaterialDesignCardGroupBox}">
+                        <GroupBox.HeaderTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock  Margin="8,0,0,0" VerticalAlignment="Center" FontSize="24" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="{Binding}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </GroupBox.HeaderTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*" />
+                                <RowDefinition Height="2*" />
+                                <RowDefinition Height="3*" />
+                            </Grid.RowDefinitions>
+                            <GroupBox Margin="5" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"  Header="位置設定" Style="{StaticResource MaterialDesignCardGroupBox}">
+                                <GroupBox.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock  Margin="8,0,0,0" VerticalAlignment="Center" FontSize="24" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="{Binding}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GroupBox.HeaderTemplate>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*" />
+                                        <RowDefinition Height="6*" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width=".5*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width=".5*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="1.2*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="X：" Style="{StaticResource DisplayLabel}" />
+                                    <TextBox x:Name="LocationXTxt" Grid.Row="0" Grid.Column="1" Style="{StaticResource MaterialDesignTextBox}" FontSize="20" TextAlignment="Center" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Y：" Style="{StaticResource DisplayLabel}" />
+                                    <TextBox x:Name="LocationYTxt" Grid.Row="0" Grid.Column="3" Style="{StaticResource MaterialDesignTextBox}" FontSize="20" TextAlignment="Center" VerticalAlignment="Center" />
+                                    <Button x:Name="LocationAddBtn" Content="新增" Grid.Row="0" Grid.Column="4" Style="{StaticResource MaterialDesignOutlinedButton}" VerticalAlignment="Center" FontSize="20" Height="40" Click="LocationAddBtn_Click" Margin="3,0,0,0" />
+                                    <ListView x:Name="LocationLV" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" >
+                                        <ListView.ItemContainerStyle>
+                                            <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                                <Setter Property="FontSize" Value="24" />
+                                            </Style>
+                                        </ListView.ItemContainerStyle>
+                                        <ListViewItem Content="Hello" />
+                                        <ListViewItem Content="World" />
+                                        <ListViewItem Content=":)" />
+                                        <ListViewItem Content="Hello" />
+                                        <ListViewItem Content="World" />
+                                        <ListViewItem Content=":)" />
+                                        <ListViewItem Content="Hello" />
+                                        <ListViewItem Content="World" />
+                                        <ListViewItem Content=":)" />
+                                    </ListView>
+                                    <Button x:Name="LocationDelBtn" Content="移除" Grid.Row="1" Grid.Column="4" Style="{StaticResource MaterialDesignOutlinedButton}" FontSize="20" Height="40" VerticalAlignment="Top" Click="LocationDelBtn_Click" Margin="3,5,0,0" />
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Margin="5" Grid.Row="0" Grid.Column="1"  Header="平整度異常設定" Style="{StaticResource MaterialDesignCardGroupBox}">
+                                <GroupBox.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock  Margin="8,0,0,0" VerticalAlignment="Center" FontSize="24" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="{Binding}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GroupBox.HeaderTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="1*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="上限設定：" Style="{StaticResource DisplayLabel}" />
+                                    <TextBox x:Name="FlatnessMaxTxt" Grid.Row="0" Grid.Column="1" Style="{StaticResource MaterialDesignTextBox}" FontSize="20" TextAlignment="Center" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="mm" Style="{StaticResource DisplayLabel}" TextAlignment="Left" />
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Margin="5" Grid.Row="1" Grid.Column="1"  Header="高度異常設定" Style="{StaticResource MaterialDesignCardGroupBox}">
+                                <GroupBox.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock  Margin="8,0,0,0" VerticalAlignment="Center" FontSize="24" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="{Binding}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GroupBox.HeaderTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1.5*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="1*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*" />
+                                        <RowDefinition Height="1*" />
+                                        <RowDefinition Height="1*" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="位置1：" Style="{StaticResource DisplayLabel}" />
+                                    <TextBox x:Name="HeightMin1Txt" Grid.Row="0" Grid.Column="1" Style="{StaticResource MaterialDesignTextBox}" FontSize="20" TextAlignment="Center" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="~" Style="{StaticResource DisplayLabel}" TextAlignment="Center" />
+                                    <TextBox x:Name="HeightMax1Txt" Grid.Row="0" Grid.Column="3" Style="{StaticResource MaterialDesignTextBox}" FontSize="20" TextAlignment="Center" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Row="0" Grid.Column="4" Text="mm" Style="{StaticResource DisplayLabel}" TextAlignment="Left" />
+                                    
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="位置2：" Style="{StaticResource DisplayLabel}" />
+                                    <TextBox x:Name="HeightMin2Txt" Grid.Row="1" Grid.Column="1" Style="{StaticResource MaterialDesignTextBox}" FontSize="20" TextAlignment="Center" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Row="1" Grid.Column="2" Text="~" Style="{StaticResource DisplayLabel}" TextAlignment="Center" />
+                                    <TextBox x:Name="HeightMax2Txt" Grid.Row="1" Grid.Column="3" Style="{StaticResource MaterialDesignTextBox}" FontSize="20" TextAlignment="Center" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Row="1" Grid.Column="4" Text="mm" Style="{StaticResource DisplayLabel}" TextAlignment="Left" />
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="位置3：" Style="{StaticResource DisplayLabel}" />
+                                    <TextBox x:Name="HeightMin3Txt" Grid.Row="2" Grid.Column="1" Style="{StaticResource MaterialDesignTextBox}" FontSize="20" TextAlignment="Center" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Row="2" Grid.Column="2" Text="~" Style="{StaticResource DisplayLabel}" TextAlignment="Center" />
+                                    <TextBox x:Name="HeightMax3Txt" Grid.Row="2" Grid.Column="3" Style="{StaticResource MaterialDesignTextBox}" FontSize="20" TextAlignment="Center" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Row="2" Grid.Column="4" Text="mm" Style="{StaticResource DisplayLabel}" TextAlignment="Left" />
+                                </Grid>
+                            </GroupBox>
+                            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="1*" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="量測結果：" Style="{StaticResource DisplayLabel}" TextAlignment="Left" />
+                                <TextBox x:Name="EstResultTxt" Grid.Row="1" Grid.Column="0" IsReadOnly="True" Style="{StaticResource MaterialDesignOutlinedTextBox}" FontSize="20" TextAlignment="Center" VerticalAlignment="Center" Padding="0,7,0,0" Height="40" />
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="基準面位置(Base)：" Style="{StaticResource DisplayLabel}" TextAlignment="Left" />
+                                <TextBox x:Name="BasePlaneTxt" Grid.Row="3" Grid.Column="0" IsReadOnly="True" Style="{StaticResource MaterialDesignOutlinedTextBox}" FontSize="20" TextAlignment="Center" VerticalAlignment="Center"  Padding="0,7,0,0" Height="40" />
+                                <TextBlock Grid.Row="4" Grid.Column="0" Text="平面距離(Dist)：" Style="{StaticResource DisplayLabel}" TextAlignment="Left" />
+                                <TextBox x:Name="PlaneDistTxt" Grid.Row="5" Grid.Column="0" IsReadOnly="True" Style="{StaticResource MaterialDesignOutlinedTextBox}" FontSize="20" TextAlignment="Center" VerticalAlignment="Center"  Padding="0,7,0,0" Height="40" />
+                                <TextBlock Grid.Row="6" Grid.Column="0" Text="平整度(Flatness)：" Style="{StaticResource DisplayLabel}" TextAlignment="Left" />
+                                <TextBox x:Name="FlatnessTxt" Grid.Row="7" Grid.Column="0" IsReadOnly="True" Style="{StaticResource MaterialDesignOutlinedTextBox}" FontSize="20" TextAlignment="Center" VerticalAlignment="Center"  Padding="0,7,0,0" Height="40" />
+                                <Button x:Name="HeightEstBtn" Content="測試量測" Grid.Row="8" Grid.Column="0" Style="{StaticResource MaterialDesignOutlinedButton}" FontSize="20" Height="40" Width="240" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,5,0,0"  Click="HeightEstBtn_Click" />
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+                    
+
+                </Grid>
+
+            </TabItem>
+            <TabItem Height="80" Width="20">
+                <TabItem.Header>
+                    <TextBlock FontSize="24">
+                            偏移 <LineBreak/>
+                            設定
+                    </TextBlock>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="3*" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <GroupBox Margin="5" Grid.Column="0" Grid.Row="0"  Header="偏移資料設置" Style="{StaticResource MaterialDesignCardGroupBox}">
+                        <GroupBox.HeaderTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock  Margin="8,0,0,0" VerticalAlignment="Center" FontSize="30" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="{Binding}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </GroupBox.HeaderTemplate>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="2*" />
+                                <RowDefinition Height="1*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <GroupBox Margin="5" Grid.Column="0" Grid.Row="0"  Header="入料手臂" Style="{StaticResource MaterialDesignCardGroupBox}">
+                                <GroupBox.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock  Margin="8,0,0,0" VerticalAlignment="Center" FontSize="24" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="{Binding}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GroupBox.HeaderTemplate>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*" />
+                                        <RowDefinition Height="1*" />
+                                        <RowDefinition Height="1*" />
+                                        <RowDefinition Height="1*" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                    </Grid.ColumnDefinitions>
+                                    <!-- 標題-->
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="X" Style="{StaticResource DisplayLabel}" FontSize="24" TextAlignment="Center" />
+                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Y" Style="{StaticResource DisplayLabel}" FontSize="24" TextAlignment="Center"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="3" Text="Z" Style="{StaticResource DisplayLabel}" FontSize="24" TextAlignment="Center"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="4" Text="U" Style="{StaticResource DisplayLabel}" FontSize="24" TextAlignment="Center"/>
+                                    <!--region 取料-->
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="取料" Style="{StaticResource DisplayLabel}" FontSize="24" />
+                                    <TextBox x:Name="InPickShiftXTxt" Grid.Row="1" Grid.Column="1" Style="{StaticResource MaterialDesignTextBox}"  FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0" TextChanged="ShiftArmsTxt_TextChanged"/>
+                                    <TextBox x:Name="InPickShiftYTxt" Grid.Row="1" Grid.Column="2" Style="{StaticResource MaterialDesignTextBox}"  FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0" TextChanged="ShiftArmsTxt_TextChanged"/>
+                                    <TextBox x:Name="InPickShiftZTxt" Grid.Row="1" Grid.Column="3" Style="{StaticResource MaterialDesignTextBox}"  FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0" TextChanged="ShiftArmsTxt_TextChanged"/>
+                                    <TextBox x:Name="InPickShiftUTxt" Grid.Row="1" Grid.Column="4" Style="{StaticResource MaterialDesignTextBox}"  FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0" TextChanged="ShiftArmsTxt_TextChanged"/>
+                                    <!--endregion 取料-->
+                                    <!--region 放料-->
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="放料" Style="{StaticResource DisplayLabel}" FontSize="24" />
+                                    <TextBox x:Name="InPutShiftXTxt" Grid.Row="2" Grid.Column="1" Style="{StaticResource MaterialDesignTextBox}"  FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0" TextChanged="ShiftArmsTxt_TextChanged"/>
+                                    <TextBox x:Name="InPutShiftYTxt" Grid.Row="2" Grid.Column="2" Style="{StaticResource MaterialDesignTextBox}"  FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0" TextChanged="ShiftArmsTxt_TextChanged"/>
+                                    <TextBox x:Name="InPutShiftZTxt" Grid.Row="2" Grid.Column="3" Style="{StaticResource MaterialDesignTextBox}"  FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0" TextChanged="ShiftArmsTxt_TextChanged"/>
+                                    <TextBox x:Name="InPutShiftUTxt" Grid.Row="2" Grid.Column="4" Style="{StaticResource MaterialDesignTextBox}"  FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0" TextChanged="ShiftArmsTxt_TextChanged"/>
+                                    <!--endregion 放料-->
+                                    <!--#region -->
+                                    <Button x:Name="GetInArmShiftBtn" Grid.Row="3" Grid.Column="3" Content="取得偏移" FontSize="24" Style="{StaticResource MaterialDesignOutlinedLightButton}" Height="60" Margin="5,0,5,0" Click="GetArmsShift_Click"/>
+                                    <Button x:Name="SetInArmsShiftBtn" Grid.Row="3" Grid.Column="4" Content="設定偏移" FontSize="24" Style="{StaticResource MaterialDesignOutlinedLightButton}" Height="60" Margin="5,0,5,0" Click="SetArmsShift_Click" />
+                                    <!--#endregion-->
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Margin="5" Grid.Column="1" Grid.Row="0"  Header="出料手臂" Style="{StaticResource MaterialDesignCardGroupBox}">
+                                <GroupBox.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock  Margin="8,0,0,0" VerticalAlignment="Center" FontSize="24" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="{Binding}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GroupBox.HeaderTemplate>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*" />
+                                        <RowDefinition Height="1*" />
+                                        <RowDefinition Height="1*" />
+                                        <RowDefinition Height="1*" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                    </Grid.ColumnDefinitions>
+                                    <!-- 標題-->
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="X" Style="{StaticResource DisplayLabel}" FontSize="24" TextAlignment="Center" />
+                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Y" Style="{StaticResource DisplayLabel}" FontSize="24" TextAlignment="Center"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="3" Text="Z" Style="{StaticResource DisplayLabel}" FontSize="24" TextAlignment="Center"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="4" Text="U" Style="{StaticResource DisplayLabel}" FontSize="24" TextAlignment="Center"/>
+                                    <!--region 取料-->
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="取料" Style="{StaticResource DisplayLabel}" FontSize="24" />
+                                    <TextBox x:Name="OutPickShiftXTxt" Grid.Row="1" Grid.Column="1" Style="{StaticResource MaterialDesignTextBox}" FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0"  TextChanged="ShiftArmsTxt_TextChanged"/>
+                                    <TextBox x:Name="OutPickShiftYTxt" Grid.Row="1" Grid.Column="2" Style="{StaticResource MaterialDesignTextBox}" FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0" TextChanged="ShiftArmsTxt_TextChanged"/>
+                                    <TextBox x:Name="OutPickShiftZTxt" Grid.Row="1" Grid.Column="3" Style="{StaticResource MaterialDesignTextBox}" FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0" TextChanged="ShiftArmsTxt_TextChanged"/>
+                                    <TextBox x:Name="OutPickShiftUTxt" Grid.Row="1" Grid.Column="4" Style="{StaticResource MaterialDesignTextBox}"  FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0" TextChanged="ShiftArmsTxt_TextChanged"/>
+                                    <!--endregion 取料-->
+                                    <!--region 放料-->
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="放料" Style="{StaticResource DisplayLabel}" FontSize="24" />
+                                    <TextBox x:Name="OutPutShiftXTxt" Grid.Row="2" Grid.Column="1" Style="{StaticResource MaterialDesignTextBox}"  FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0" TextChanged="ShiftArmsTxt_TextChanged"/>
+                                    <TextBox x:Name="OutPutShiftYTxt" Grid.Row="2" Grid.Column="2" Style="{StaticResource MaterialDesignTextBox}"  FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0" TextChanged="ShiftArmsTxt_TextChanged"/>
+                                    <TextBox x:Name="OutPutShiftZTxt" Grid.Row="2" Grid.Column="3" Style="{StaticResource MaterialDesignTextBox}" FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0" TextChanged="ShiftArmsTxt_TextChanged"/>
+                                    <TextBox x:Name="OutPutShiftUTxt" Grid.Row="2" Grid.Column="4" Style="{StaticResource MaterialDesignTextBox}" FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,0" TextChanged="ShiftArmsTxt_TextChanged"/>
+                                    <!--endregion 放料-->
+                                    <!--#region -->
+                                    <Button x:Name="GetOutArmShiftBtn" Grid.Row="3" Grid.Column="3" Content="取得偏移" FontSize="24" Height="60" Style="{StaticResource MaterialDesignOutlinedLightButton}" Margin="5,0,5,0" Click="GetArmsShift_Click"/>
+                                    <Button x:Name="SetOutArmsShiftBtn" Grid.Row="3" Grid.Column="4" Content="設定偏移" FontSize="24" Height="60" Style="{StaticResource MaterialDesignOutlinedLightButton}" Margin="5,0,5,0" Click="SetArmsShift_Click"/>
+                                    <!--#endregion-->
+                                </Grid>
+                            </GroupBox>
+
+                            <GroupBox Margin="5" Grid.Column="0" Grid.Row="1"  Header="卡控設定" Style="{StaticResource MaterialDesignCardGroupBox}">
+                                <GroupBox.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock  Margin="8,0,0,0" VerticalAlignment="Center" FontSize="24" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="{Binding}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+
+                                </GroupBox.HeaderTemplate>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*" />
+                                        <RowDefinition Height="1*" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="上限：" Style="{StaticResource DisplayLabel}" FontSize="24" />
+                                    <TextBox x:Name="ShiftUpperTxt" Grid.Row="0" Grid.Column="1" Style="{StaticResource MaterialDesignTextBox}" FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,5"  TextChanged="ShiftArmsLimitTxt_TextChanged"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="公厘(mm)" Style="{StaticResource DisplayLabel}" FontSize="24" TextAlignment="Left"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="下限：" Style="{StaticResource DisplayLabel}" FontSize="24" />
+                                    <TextBox x:Name="ShiftLowerTxt" Grid.Row="1" Grid.Column="1" Style="{StaticResource MaterialDesignTextBox}" FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,0,5,5" TextChanged="ShiftArmsLimitTxt_TextChanged"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="2" Text="公厘(mm)" Style="{StaticResource DisplayLabel}" FontSize="24" TextAlignment="Left"/>
+                                </Grid>
+                            </GroupBox>
+                        </Grid>
+
+                    </GroupBox>
+                    <GroupBox Margin="5" Grid.Column="0" Grid.Row="1"  Header="組裝精度卡控" Style="{StaticResource MaterialDesignCardGroupBox}">
+                        <GroupBox.HeaderTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock  Margin="8,0,0,0" VerticalAlignment="Center" FontSize="24" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="{Binding}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </GroupBox.HeaderTemplate>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*" />
+                                <RowDefinition Height="1*" />
+                                <RowDefinition Height="1*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="338*" />
+                                <ColumnDefinition Width="338*" />
+                                <ColumnDefinition Width="55*" />
+                                <ColumnDefinition Width="282*"/>
+                                <ColumnDefinition Width="337*" />
+                                <ColumnDefinition Width="337*" />
+                            </Grid.ColumnDefinitions>
+                            <!-- 標題-->
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="X" Style="{StaticResource DisplayLabel}" FontSize="24" TextAlignment="Center" Margin="2,7,2,6" />
+                            <TextBlock Grid.Row="0" Grid.Column="2" Text="Y" Style="{StaticResource DisplayLabel}" FontSize="24" TextAlignment="Center" Grid.ColumnSpan="2" Margin="2,7,2,6"/>
+                            <TextBlock Grid.Row="0" Grid.Column="4" Text="U" Style="{StaticResource DisplayLabel}" FontSize="24" TextAlignment="Center" Margin="2,7,2,6"/>
+                            <!--region 上限-->
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="上限" Style="{StaticResource DisplayLabel}" FontSize="24" Margin="2,6" />
+                            <TextBox x:Name="PlateUpperXTxt" Grid.Row="1" Grid.Column="1" Style="{StaticResource MaterialDesignTextBox}" FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,2,5,1" TextChanged="PlateUpper_TextChanged"/>
+                            <TextBox x:Name="PlateUpperYTxt" Grid.Row="1" Grid.Column="2" Style="{StaticResource MaterialDesignTextBox}" FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,2,5,1" TextChanged="PlateUpper_TextChanged" Grid.ColumnSpan="2"/>
+                            <TextBox x:Name="PlateUpperUTxt" Grid.Row="1" Grid.Column="4" Style="{StaticResource MaterialDesignTextBox}" FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,2,5,1" TextChanged="PlateUpper_TextChanged"/>
+                            <!--endregion 上限-->
+                            <!--region 下限-->
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="下限" Style="{StaticResource DisplayLabel}" FontSize="24" Margin="2,6" />
+                            <TextBox x:Name="PlateLowerXTxt" Grid.Row="2" Grid.Column="1" Style="{StaticResource MaterialDesignTextBox}"  FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,2,5,1" TextChanged="PlateLower_TextChanged"/>
+                            <TextBox x:Name="PlateLowerYTxt" Grid.Row="2" Grid.Column="2" Style="{StaticResource MaterialDesignTextBox}"  FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,2,5,1" TextChanged="PlateLower_TextChanged" Grid.ColumnSpan="2"/>
+                            <TextBox x:Name="PlateLowerUTxt" Grid.Row="2" Grid.Column="4" Style="{StaticResource MaterialDesignTextBox}" FontSize="24" TextAlignment="Center" VerticalAlignment="Center" Margin="5,2,5,1" TextChanged="PlateLower_TextChanged"/>
+                            <!--endregion 放料-->
+                            <!--#region -->
+                            <Button x:Name="SetPlateBtn" Grid.Row="1" Grid.RowSpan="2" Grid.Column="5" Content="設定" FontSize="28" Style="{StaticResource MaterialDesignOutlinedLightButton}" Height="40" Margin="20" Click="SetPlateBtn_Click"/>
+                            <!--#endregion-->
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+
+            </TabItem>
+        </TabControl>
+
+        <Button x:Name="SaveParamBtn" Grid.Column="0" Grid.Row="2" Content="儲存" Style="{StaticResource MaterialDesignFlatDarkBgButton}" FontSize="32" Height="Auto" Margin="10" Width="200" HorizontalAlignment="Right" Click="SaveParamBtn_Click"/>
+    </Grid>
+</UserControl>

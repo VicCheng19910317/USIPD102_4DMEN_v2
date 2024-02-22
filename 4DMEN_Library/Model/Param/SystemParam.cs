@@ -11,35 +11,19 @@ namespace _4DMEN_Library.Model
         /// <summary>
         /// 執行數量
         /// </summary>
-        public int CastCount { get; set; } = 12;
+        public int CaseCount { get; set; } = 12;
         /// <summary>
-        /// 膠材壽命檢測
+        /// 產品編號
         /// </summary>
-        public bool GlueLifeStart { get; set; } = false;
+        public int Recipe { get; set; } = 0;
         /// <summary>
-        /// 膠材壽命更新時間
+        /// 出入料Tray上限數
         /// </summary>
-        public DateTime GlueLifeTime { get; set; } = DateTime.Now;
+        public int TrayCount { get; set; } = 12;
         /// <summary>
-        /// 膠材壽命逾期時間(小時)
+        /// 組裝Tray上限數
         /// </summary>
-        public double GlueLifeAlarm { get; set; } = 3;
-        /// <summary>
-        /// 膠材壽命檢測區間(分鐘)
-        /// </summary>
-        public double GlueLifeInterval { get; set; } = 2;
-        /// <summary>
-        /// 組裝逾期時間(秒)
-        /// </summary>
-        public double PlateInterval { get; set; } = 180;
-        /// <summary>
-        /// 吐膠時間(秒)
-        /// </summary>
-        public double GluePurgeTime { get; set; } = 2;
-        /// <summary>
-        /// 膠重上下限
-        /// </summary>
-        public Range GlueWeight { get; set; } = new Range { Lower = 0.2, Upper = 0.9 };
+        public int LidTrayCount { get; set; } = 35;
         /// <summary>
         /// NG數量上限
         /// </summary>
@@ -57,21 +41,17 @@ namespace _4DMEN_Library.Model
         /// </summary>
         public SfisParam Sfis { get; set; } = new SfisParam();
         /// <summary>
-        /// 校針上下限數值設定
+        /// 測高位置
         /// </summary>
-        public NeedleAlignLimit NeedleAlignLimit { get; set; } = new NeedleAlignLimit();
+        public List<EstimatePosition> MeasurePosition { get; set; } = new List<EstimatePosition>();
         /// <summary>
-        /// 校針間隔差異數值設定
+        /// 平整度上限
         /// </summary>
-        public NeedleAlignAxis NeedleAlignInterval { get; set; } = new NeedleAlignAxis();
+        public float FlatnessUpperLimit { get; set; } = 1;
         /// <summary>
-        /// 是否完成校針
+        /// 高度上下限範圍
         /// </summary>
-        public bool NeedleTeachFinish { get; set; } = false;
-        /// <summary>
-        /// 校針數值結果
-        /// </summary>
-        public NeedleAlignAxis NeedleTeachValue { get; set; } = new NeedleAlignAxis();
+        public List<Range> HeightLimit { get; set; } = new List<Range>();
         /// <summary>
         /// 入料手臂偏移參數
         /// </summary>
@@ -97,13 +77,21 @@ namespace _4DMEN_Library.Model
         /// </summary>
         public string SystemStatus => "Idle";//CaseAllTask.GetEntity().Status == EnumData.TaskStatus.Idle ? "Idle" : CaseAllTask.GetEntity().Status == EnumData.TaskStatus.Pause ? "Pause" : "Runing";
         /// <summary>
-        /// 手動塗膠Recipe
+        /// 入料手臂高度檢測
         /// </summary>
-        public int ManualGlueRecipe { get; set; } = 0;
+        public Range EstHeighIn { get; set; } = new Range { Lower = -100, Upper = 100 };
         /// <summary>
-        /// 手動塗膠Recipe列表
+        /// 雷射設定參數
         /// </summary>
-        public List<string> RecipeList { get; set; } = new List<string> { "XM3", "Infineon1B" };
+        public MarkingParam MarkParam { get; set; } = new MarkingParam();
+        /// <summary>
+        /// 雷雕IP
+        /// </summary>
+        public string MarkingIP { get; set; } = "127.0.0.1";
+        /// <summary>
+        /// 雷雕Port
+        /// </summary>
+        public int MarkingPort { get; set; } = 4000;
 
     }
     public class Range
@@ -115,6 +103,11 @@ namespace _4DMEN_Library.Model
     {
         public ShiftArmsAxis Pick { get; set; } = new ShiftArmsAxis();
         public ShiftArmsAxis Put { get; set; } = new ShiftArmsAxis();
+    }
+    public class EstimatePosition
+    {
+        public int X { get; set; } = 0;
+        public int Y { get; set; } = 0;
     }
     public class ShiftArmsAxis
     {
@@ -129,6 +122,7 @@ namespace _4DMEN_Library.Model
         public double Y { get; set; } = double.NaN;
         public double Z { get; set; } = double.NaN;
     }
+   
     public class NeedleAlignLimit
     {
         public Range X { get; set; } = new Range();
@@ -164,9 +158,13 @@ namespace _4DMEN_Library.Model
         /// </summary>
         public string WorkerID { get; set; } = "M026125";
         /// <summary>
-        /// 膠材Lot
+        /// 組裝上蓋編號
         /// </summary>
-        public string GlueLotID { get; set; } = "1234";
+        public string LidLotID { get; set; } = "1234";
+        /// <summary>
+        /// 螺帽編號
+        /// </summary>
+        public string NutNo { get; set; } = "2345";
         /// <summary>
         /// 秤重站條碼
         /// </summary>
@@ -176,39 +174,57 @@ namespace _4DMEN_Library.Model
         /// </summary>
         public string BarcodeB { get; set; } = "";
         /// <summary>
-        /// 膠重
+        /// 條碼檢測等級
         /// </summary>
-        public string GlueWeight { get; set; }
+        public string InspLevel { get; set; }
     }
     public class SystemFlow
     {
         /// <summary>
-        /// 入料換盤
+        /// 上蓋組裝
         /// </summary>
-        public bool CastIn { get; set; } = true;
-        /// <summary>
-        /// 下壓壓平
-        /// </summary>
-        public bool CasePlate { get; set; } = true;
-        /// <summary>
-        /// 塗膠製作
-        /// </summary>
-        public bool CastGlue { get; set; } = true;
+        public bool CaseAssemble { get; set; } = true;
         /// <summary>
         /// 條碼掃描
         /// </summary>
-        public bool CastScan { get; set; } = true;
+        public bool CaseScan { get; set; } = true;
         /// <summary>
-        /// 塗膠檢測
+        /// 底板折彎
         /// </summary>
-        public bool CastInsp { get; set; } = true;
+        public bool CaseBending { get; set; } = true;
+        /// <summary>
+        /// 底板壓平
+        /// </summary>
+        public bool CasePlate { get; set; } = true;
+        /// <summary>
+        /// 高度測試
+        /// </summary>
+        public bool CaseEstHeight { get; set; } = true;
         /// <summary>
         /// NG排料
         /// </summary>
-        public bool CastNgOut { get; set; } = true;
+        public bool CaseNgOut { get; set; } = true;
         /// <summary>
-        /// 出料換盤
+        /// 雷射雕刻
         /// </summary>
-        public bool CastOut { get; set; }
+        public bool CaseMarking { get; set; } = true;
+    }
+    public class MarkingParam
+    {
+        public string marking_fst_code { get; set; } = "CM_TextObj T1";
+        public string marking_fst_txt { get; set; } = "EAB450M12XM35";
+        public string marking_snd_code { get; set; } = "CM_TextObj T2";
+        public string marking_snd_txt { get; set; } = "HX2220-A1";
+        public int marking_snd_index { get; set; } = 0;
+        public string marking_snd_index_txt { get => marking_snd_index.ToString().PadLeft(3,'0'); }
+        public string marking_2d_code { get; set; } = "CM_2DObj Var2D";
+        public string marking_2d_txt { get; set; } = "0000000001";
+        public string marking_2d_result { get => $"{marking_fst_txt}-{marking_snd_txt}{marking_snd_index_txt}-{marking_2d_txt}"; }
+        public string start_marking_code { get; set; } = "CM_StartMarking";
+        public string shift_code { get; set; } = "CM_OffsetExt";
+        public int shift_x { get; set; } = 0;
+        public int shift_y { get; set; } = 0;
+        public int shift_a { get; set; } = 0;
+        public List<string> pass_level { get; set; } = new List<string>();
     }
 }

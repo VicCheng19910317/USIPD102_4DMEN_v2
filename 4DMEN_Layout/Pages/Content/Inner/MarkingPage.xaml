@@ -1,0 +1,218 @@
+﻿<UserControl x:Class="USIPD102_4DMEN.Pages.MarkingPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:local="clr-namespace:USIPD102_4DMEN.Pages"
+            xmlns:materialDesign ="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="915" d:DesignWidth="1815">
+    <UserControl.Resources>
+        <Style x:Key="CCDGrid" TargetType="{x:Type Grid}">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Margin" Value="3" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" BlurRadius="5" Opacity="0.5" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="DisplayLabel" TargetType="TextBlock">
+            <Setter Property="Margin" Value="3" />
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Right"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="White" Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="7*" />
+            <RowDefinition Height=".5*" />
+            <RowDefinition Height="2.5*" />
+        </Grid.RowDefinitions>
+        <GroupBox Margin="5" Grid.Column="0" Grid.Row="0" Header="雷射內容設定" Style="{StaticResource MaterialDesignCardGroupBox}">
+            <GroupBox.HeaderTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock  Margin="8,0,0,0" VerticalAlignment="Center" FontSize="30" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="{Binding}" />
+                    </StackPanel>
+                </DataTemplate>
+            </GroupBox.HeaderTemplate>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource DisplayLabel}" Text="IP："/>
+                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="Marking_IP" IsEnabled="False" Style="{StaticResource MaterialDesignTextBox}" VerticalAlignment="Center" TextAlignment="Center" FontSize="24"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource DisplayLabel}" Text="Port："/>
+                    <TextBox Grid.Row="0" Grid.Column="3" x:Name="Marking_Port" IsEnabled="False" Style="{StaticResource MaterialDesignTextBox}" VerticalAlignment="Center" TextAlignment="Center" FontSize="24"/>
+                </Grid>
+                <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource DisplayLabel}" Text="打標文字-第一行(代碼)："/>
+                <TextBox Grid.Row="1" Grid.Column="1" x:Name="TextObjectFstLine" Grid.ColumnSpan="2"  IsEnabled="False" Style="{StaticResource MaterialDesignTextBox}" VerticalAlignment="Center" FontSize="24" Text="CM_TextObj T1" TextAlignment="Center"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource DisplayLabel}" Text="打標文字-第一行："/>
+                <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" x:Name="TextObjectFstInpTxt" Style="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" VerticalAlignment="Center" FontSize="24" TextAlignment="Center" Margin="5,0,0,0" TextChanged="TextObjectTxt_TextChanged"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource DisplayLabel}" Text="打標文字-第二行(代碼)："/>
+                <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" x:Name="TextObjectSndLine" IsEnabled="False" Style="{StaticResource MaterialDesignTextBox}" VerticalAlignment="Center" FontSize="24" Text="CM_TextObj T2" TextAlignment="Center"/>
+                <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1.5*" />
+                        <ColumnDefinition Width=".4*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource DisplayLabel}" Text="打標文字-第二行："/>
+                    <TextBox Grid.Row="4" Grid.Column="1" x:Name="TextObjectSndInpTxt" Style="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" VerticalAlignment="Center" FontSize="24" TextAlignment="Center" Margin="5,0,5,0" TextChanged="TextObjectTxt_TextChanged"/>
+                    <TextBlock Grid.Row="4" Grid.Column="2" Style="{StaticResource DisplayLabel}" Text="編號："/>
+                    <TextBox Grid.Row="4" Grid.Column="3" x:Name="TextObjectSndInpCountTxt" Style="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" VerticalAlignment="Center" FontSize="24" TextAlignment="Center" Margin="5,0,0,0" TextChanged="TextObjectTxt_TextChanged"/>
+
+                </Grid>
+
+                <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource DisplayLabel}" Text="打標條碼(代碼)："/>
+                <TextBox Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" x:Name="TextCodeLine" Text="CM_2DObj Var2D" IsEnabled="False" Style="{StaticResource MaterialDesignTextBox}" VerticalAlignment="Center" FontSize="24" TextAlignment="Center" />
+                <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource DisplayLabel}" Text="打標條碼："/>
+                <TextBox Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="3" x:Name="TextCodeInpTxt" Style="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" VerticalAlignment="Center" FontSize="24" TextAlignment="Center" Margin="5,0,0,0" TextChanged="TextObjectTxt_TextChanged"/>
+                <TextBlock Grid.Row="7" Grid.Column="0" Style="{StaticResource DisplayLabel}" Text="條碼結果："/>
+                <TextBox Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="3" x:Name="TextCodeResultLine" IsEnabled="False" Style="{StaticResource MaterialDesignTextBox}" VerticalAlignment="Center" FontSize="24" TextAlignment="Center" />
+                <Button Grid.Row="8" Grid.Column="2" x:Name="MarkingBtn" Content="執行雕刻" Style="{StaticResource MaterialDesignOutlinedButton}" VerticalAlignment="Center" FontSize="24" Height="40" Click="MarkingBtn_Click" Margin="0,0,5,0" />
+                <Button Grid.Row="8" Grid.Column="3" x:Name="MarkingSettingBtn" Content="設定資料" Style="{StaticResource MaterialDesignOutlinedButton}" VerticalAlignment="Center" FontSize="24" Height="40" Click="MarkingSettingBtn_Click" />
+            </Grid>
+
+        </GroupBox>
+        <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="4*"/>
+                <RowDefinition Height="5*"/>
+            </Grid.RowDefinitions>
+            <GroupBox Margin="5" Grid.Column="0" Grid.Row="0" Header="雷射狀態" Style="{StaticResource MaterialDesignCardGroupBox}">
+                <GroupBox.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock  Margin="8,0,0,0" VerticalAlignment="Center" FontSize="24" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </GroupBox.HeaderTemplate>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource DisplayLabel}" Text="狀態："/>
+                    <TextBlock Grid.Row="0" Grid.Column="1" x:Name="LaserStatusTxt" IsEnabled="False" VerticalAlignment="Center" Foreground="Red" FontSize="24" Text="未連線" FontWeight="Bold" TextAlignment="Center"/>
+                    <Button  Grid.Row="0" Grid.Column="2" x:Name="ConnectBtn" Style="{StaticResource MaterialDesignOutlinedButton}" Content="連線" FontSize="24" Height="40" Margin="5,0,5,0" Click="ConnectBtn_Click"  />
+                    <Button  Grid.Row="0" Grid.Column="3" x:Name="DisconnectBtn" Style="{StaticResource MaterialDesignOutlinedButton}" Content="中斷連線" FontSize="24" Height="40" Margin="5,0,5,0" Click="DisconnectBtn_Click" />
+                </Grid>
+                
+            </GroupBox>
+            <GroupBox Margin="5" Grid.Column="0" Grid.Row="1" Header="雷射偏移參數設定" Style="{StaticResource MaterialDesignCardGroupBox}">
+                <GroupBox.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock  Margin="8,0,0,0" VerticalAlignment="Center" FontSize="30" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </GroupBox.HeaderTemplate>
+                <Grid Grid.Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource DisplayLabel}" Text="偏移參數(代碼)："/>
+                    <TextBox Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="4" x:Name="ShiftCodeTxt" Text="CM_OffsetExt" IsEnabled="False" Style="{StaticResource MaterialDesignTextBox}" VerticalAlignment="Center" FontSize="24" TextAlignment="Center" />
+                    <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource DisplayLabel}" Text="X："/>
+                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="ShiftCodeXTxt" Style="{StaticResource MaterialDesignTextBox}" VerticalAlignment="Center" FontSize="24" TextAlignment="Center" />
+                    <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource DisplayLabel}" Text="Y："/>
+                    <TextBox Grid.Row="1" Grid.Column="3" x:Name="ShiftCodeYTxt" Style="{StaticResource MaterialDesignTextBox}" VerticalAlignment="Center" FontSize="24" TextAlignment="Center" />
+                    <TextBlock Grid.Row="1" Grid.Column="4" Style="{StaticResource DisplayLabel}" Text="A："/>
+                    <TextBox Grid.Row="1" Grid.Column="5" x:Name="ShiftCodeATxt" Style="{StaticResource MaterialDesignTextBox}" VerticalAlignment="Center" FontSize="24" TextAlignment="Center" />
+                    <Button Grid.Row="2" Grid.Column="5" x:Name="SettingShiftBtn" Content="設定偏移" Style="{StaticResource MaterialDesignOutlinedButton}" VerticalAlignment="Center" FontSize="24" Height="40" Click="SettingShiftBtn_Click" />
+                </Grid>
+
+            </GroupBox>
+            <GroupBox Margin="5" Grid.Column="0" Grid.Row="2" Header="雷射等級設定" Style="{StaticResource MaterialDesignCardGroupBox}">
+                <GroupBox.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock  Margin="8,0,0,0" VerticalAlignment="Center" FontSize="30" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </GroupBox.HeaderTemplate>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="2*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource DisplayLabel}" Text="Pass等級："/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" x:Name="PassLevelTxt" Style="{StaticResource MaterialDesignTextBox}" VerticalAlignment="Center" FontSize="24" TextAlignment="Center" />
+                    <Button Grid.Row="0" Grid.Column="3" x:Name="PassLevelBtn" Content="設定" Style="{StaticResource MaterialDesignOutlinedButton}" VerticalAlignment="Bottom" FontSize="24" Height="40" Click="PassLevelBtn_Click" Margin="5,0,5,5" />
+                    <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource DisplayLabel}" Text="Pass等級列表："/>
+                    <ListView x:Name="PassLevelLV" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2" >
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="FontSize" Value="24" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListViewItem Content="Hello" />
+                        <ListViewItem Content="World" />
+                        <ListViewItem Content=":)" />
+                        <ListViewItem Content="Hello" />
+                        <ListViewItem Content="World" />
+                        <ListViewItem Content=":)" />
+                        <ListViewItem Content="Hello" />
+                        <ListViewItem Content="World" />
+                        <ListViewItem Content=":)" />
+                    </ListView>
+                    <Button Grid.Row="1" Grid.Column="3" x:Name="PassLevelRemoveBtn" Content="移除" Style="{StaticResource MaterialDesignOutlinedButton}" VerticalAlignment="Top" FontSize="24" Height="40" Click="PassLevelRemoveBtn_Click"  Margin="5,0,5,0" />
+                    <Button Grid.Row="2" Grid.Column="3" x:Name="PassLevelSaveBtn" Content="儲存參數" Style="{StaticResource MaterialDesignOutlinedButton}" VerticalAlignment="Top" FontSize="24" Height="40" Click="PassLevelSaveBtn_Click"  Margin="5,5,5,0" />
+                </Grid>
+            </GroupBox>
+        </Grid>
+        <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource DisplayLabel}" HorizontalAlignment="Left" Text="Message:"/>
+        <TextBox x:Name="MessageTB" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource MaterialDesignOutlinedTextBox}" IsReadOnly="True"  VerticalScrollBarVisibility="Auto" Margin="5"/>
+    </Grid>
+</UserControl>

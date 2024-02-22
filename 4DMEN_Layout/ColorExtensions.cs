@@ -5,7 +5,7 @@ using MaterialDesignThemes.Wpf;
 using System;
 using System.Windows.Media;
 
-namespace _4DMEN_Layout
+namespace USIPD102_4DMEN
 {
     public static class ColorAssist
     {

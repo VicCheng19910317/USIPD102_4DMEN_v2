@@ -1,0 +1,134 @@
+﻿<UserControl x:Class="USIPD102_4DMEN.Pages.PLCPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:USIPD102_4DMEN.Pages"
+              xmlns:materialDesign ="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="915" d:DesignWidth="1815">
+    <UserControl.Resources>
+        <Style x:Key="CCDGrid" TargetType="{x:Type Grid}">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Margin" Value="3" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" BlurRadius="5" Opacity="0.5" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="DisplayLabel" TargetType="TextBlock">
+            <Setter Property="Margin" Value="3" />
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Right"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="White" Margin="5">
+        <Grid.Effect>
+            <DropShadowEffect Color="Black" Direction="315" ShadowDepth="2" Opacity="1"/>
+        </Grid.Effect>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="4.5*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource DisplayLabel}" Text="IP："/>
+        <TextBox Grid.Row="0" Grid.Column="1" x:Name="PLCIPTxt" IsEnabled="False" Style="{StaticResource MaterialDesignTextBox}" VerticalAlignment="Center" FontSize="24" TextAlignment="Center"/>
+        <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource DisplayLabel}" Text="Port："/>
+        <TextBox Grid.Row="0" Grid.Column="3" x:Name="PLCPortTxt" IsEnabled="False" Style="{StaticResource MaterialDesignTextBox}" VerticalAlignment="Center" FontSize="24" TextAlignment="Center"/>
+        <TextBlock Grid.Row="0" Grid.Column="4" Style="{StaticResource DisplayLabel}" Text="Timeout："/>
+        <TextBox Grid.Row="0" Grid.Column="5" x:Name="PLCTimeoutTxt" IsEnabled="False" Style="{StaticResource MaterialDesignTextBox}" VerticalAlignment="Center" FontSize="24" TextAlignment="Center"/>
+        <GroupBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" Margin="5" Header="測高位置設定" Style="{StaticResource MaterialDesignCardGroupBox}">
+            <GroupBox.HeaderTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock  Margin="8,0,0,0" VerticalAlignment="Center" FontSize="20" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="{Binding}" />
+                    </StackPanel>
+                </DataTemplate>
+            </GroupBox.HeaderTemplate>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource DisplayLabel}" Text="X："/>
+                <TextBox Grid.Row="0" Grid.Column="1" x:Name="HeightXTxt" Style="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" VerticalAlignment="Center" TextAlignment="Center" FontSize="24"/>
+                <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource DisplayLabel}" Text="Y："/>
+                <TextBox Grid.Row="0" Grid.Column="3" x:Name="HeightYTxt" Style="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" VerticalAlignment="Center" TextAlignment="Center" FontSize="24"/>
+            </Grid>
+        </GroupBox>
+        <DataGrid x:Name="AddressPLCDG" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="6" CanUserAddRows="False" AutoGenerateColumns="False" Margin="20,0,20,0" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Station}" FontSize="20" Width="300" >
+                    <DataGridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="站別" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding ReadAddress}" FontSize="20" Width="300" >
+                    <DataGridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="讀取點位" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding WriteAddress}" FontSize="20" Width="300" >
+                    <DataGridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="寫入點位" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding ActionDetail}" FontSize="20" Width="600" >
+                    <DataGridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20" Text="動作描述" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <!-- New function -->
+
+                <DataGridTemplateColumn Width="200" >
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="0,0,0,0" VerticalAlignment="Center"  TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="單動執行" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Run" Click="RunSettingBtn_Click" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="6" Style="{StaticResource DisplayLabel}" HorizontalAlignment="Left" Margin="10,0,0,0" Text="Message："/>
+        <TextBox x:Name="MessageTB" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="6" Margin="10" Style="{StaticResource MaterialDesignOutlinedTextBox}" IsReadOnly="True"  VerticalScrollBarVisibility="Auto"/>
+    </Grid>
+</UserControl>

@@ -57,6 +57,17 @@ namespace _4DMEN_Library.Model
             timeout = Timeout;
             return success;
         }
+        internal virtual bool SetRecipe(int recipe)
+        {
+            var logger = MainPresenter.LogDatas();
+            logger = LoggerData.Info($"手臂 {Name} 設定產品編號{recipe}");
+            var _timeout = Timeout;
+            timeout = 20000;
+            var success = SendAction($"PROD;{recipe}");
+            logger = LoggerData.Info($"手臂 {Name} 設定產品編號{recipe}完成");
+            timeout = Timeout;
+            return success;
+        }
         /// <summary>
         /// 手臂取料置掃碼
         /// </summary>
@@ -255,6 +266,30 @@ namespace _4DMEN_Library.Model
             return result;
         }
         /// <summary>
+        /// 出料手臂移動到第一個掃描位置
+        /// </summary>
+        /// <returns>成功/失敗</returns>
+        internal virtual bool SetCOne()
+        {
+            var logger = MainPresenter.LogDatas();
+            logger = LoggerData.Info($"手臂 {Name} 移動到第一個掃描位置");
+            var result = SendAction($"CONE");
+            logger = LoggerData.Info($"手臂 {Name} 移動到第一個掃描位置完成");
+            return result;
+        }
+        /// <summary>
+        /// 出料手臂移動到第二個掃描位置
+        /// </summary>
+        /// <returns>成功/失敗</returns>
+        internal virtual bool SetCTwo()
+        {
+            var logger = MainPresenter.LogDatas();
+            logger = LoggerData.Info($"手臂 {Name} 移動到第二個掃描位置");
+            var result = SendAction($"CTWO");
+            logger = LoggerData.Info($"手臂 {Name} 移動到第二個掃描位置完成");
+            return result;
+        }
+        /// <summary>
         /// 自定義手臂動作
         /// </summary>
         /// <param name="action">輸入動作</param>
@@ -407,6 +442,9 @@ namespace _4DMEN_Library.Model
                 case "pick":
                     success = Pick();
                     break;
+                case "prod":
+                    success = SetRecipe(int.Parse(action.Split(';')[1]));
+                    break;
                 case "put":
                 case "putp":
                     success = Put();
@@ -459,6 +497,12 @@ namespace _4DMEN_Library.Model
                     break;
                 case "reset":
                     success = SystemLoginParamCheck("$Reset", "#Reset,0");
+                    break;
+                case "cone":
+                    success = SetCOne();
+                    break;
+                case "ctwo":
+                    success = SetCTwo();
                     break;
                 default:
                     success = SendAction(action);
@@ -642,6 +686,8 @@ namespace _4DMEN_Library.Model
                         System.Threading.Thread.Sleep(500);
                         success = StartConnected();
                         message = (success) ? message : $"登入控制錯誤，錯誤內容:{message}";
+                        // 設定產品編號
+                        success = SetRecipe(MainPresenter.SystemParam().Recipe);
                     }
                     else
                     {

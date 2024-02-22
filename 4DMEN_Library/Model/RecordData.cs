@@ -38,7 +38,7 @@ namespace _4DMEN_Library.Model
                     var txt = "";
                     txt += $"站別：{param.Sfis.StationID}\n";
                     txt += $"線別：{param.Sfis.LineID}\n";
-                    txt += $"膠材：{param.Sfis.GlueLotID}\n";
+                    //txt += $"膠材：{param.Sfis.GlueLotID}\n";
                     txt += $"工單：{param.Sfis.TicketID}\n";
                     txt += $"操作員：{param.Sfis.WorkerID}\n";
                     txt += $"=============================\n";
@@ -67,7 +67,7 @@ namespace _4DMEN_Library.Model
                 var txt = "";
                 txt += $"站別：{param.Sfis.StationID}\n";
                 txt += $"線別：{param.Sfis.LineID}\n";
-                txt += $"膠材：{param.Sfis.GlueLotID}\n";
+                //txt += $"膠材：{param.Sfis.GlueLotID}\n";
                 txt += $"工單：{param.Sfis.TicketID}\n";
                 txt += $"操作員：{param.Sfis.WorkerID}\n";
                 txt += $"==============================================\n";
@@ -78,7 +78,7 @@ namespace _4DMEN_Library.Model
             {
                 datas.ForEach(x =>
                 {
-                    sw.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.ffff")},{x.Index},{x.BeforeWeight},{x.AfterWeight},{x.GlueWeight},{x.ReaderResult1},{x.ReaderResult2},{x.CaseInTime.Elapsed.TotalSeconds},{x.CasePlateTime.Elapsed.TotalSeconds},{x.CaseGlueTime.Elapsed.TotalSeconds},{x.CaseWeightTime.Elapsed.TotalSeconds},{x.CaseInspTime.Elapsed.TotalSeconds},{x.CaseOutTime.Elapsed.TotalSeconds},{x.CTTime},{x.CaseTotalTime.Elapsed.TotalSeconds}");
+                    //sw.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.ffff")},{x.Index},{x.BeforeWeight},{x.AfterWeight},{x.GlueWeight},{x.ReaderResult1},{x.ReaderResult2},{x.CaseInTime.Elapsed.TotalSeconds},{x.CasePlateTime.Elapsed.TotalSeconds},{x.CaseGlueTime.Elapsed.TotalSeconds},{x.CaseWeightTime.Elapsed.TotalSeconds},{x.CaseInspTime.Elapsed.TotalSeconds},{x.CaseOutTime.Elapsed.TotalSeconds},{x.CTTime},{x.CaseTotalTime.Elapsed.TotalSeconds}");
                 });
             }
 
