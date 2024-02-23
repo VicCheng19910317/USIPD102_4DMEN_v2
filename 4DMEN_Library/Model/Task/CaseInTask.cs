@@ -119,8 +119,9 @@ namespace _4DMEN_Library.Model
                     RecordData.RecordProcessData(MainPresenter.SystemParam(), $"入料流程完成");
                     case_data.Step = Step = 0;
                     case_data?.CaseInTime.Stop();
-                    if((case_data.Index + 1) == MainPresenter.SystemParam().CaseCount)
+                    if((case_data.Index + 1) == MainPresenter.SystemParam().CaseCount || MainPresenter.GetRunSingleFlow())
                     {
+                        MainPresenter.SetRunSingleFlow(false);
                         MainPresenter.SetRunFlow(false);
                         Status = EnumData.TaskStatus.Done;
                     }

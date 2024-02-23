@@ -124,6 +124,7 @@ namespace _4DMEN_Library.Model
                     RecordData.RecordProcessData(MainPresenter.SystemParam(), $"雷雕站完成");
                     case_data.Step = Step = 0;
                     case_data?.CasePlateTime.Stop();
+                    MainPresenter.SetRunSingleFlow(false);
                     MainPresenter.SetRunFlow(false);
                     Status = EnumData.TaskStatus.Done;
                     break;

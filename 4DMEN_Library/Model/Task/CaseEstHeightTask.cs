@@ -84,6 +84,7 @@ namespace _4DMEN_Library.Model
                     RecordData.RecordProcessData(MainPresenter.SystemParam(), $"測高站完成");
                     case_data.Step = Step = 0;
                     case_data?.CaseEstHeiTime.Stop();
+                    MainPresenter.SetRunSingleFlow(false);
                     MainPresenter.SetRunFlow(false);
                     Status = EnumData.TaskStatus.Done;
                     break;

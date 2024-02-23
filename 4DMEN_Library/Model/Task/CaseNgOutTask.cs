@@ -111,6 +111,7 @@ namespace _4DMEN_Library.Model
                     break;
                 case 4: //完成流程
                     case_data.Step = Step = 0;
+                    MainPresenter.SetRunSingleFlow(false);
                     MainPresenter.SetRunFlow(false);
                     Status = EnumData.TaskStatus.Done;
                     RecordData.RecordProcessData(MainPresenter.SystemParam(), $"NG出料流程完成");

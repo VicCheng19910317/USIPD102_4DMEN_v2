@@ -29,7 +29,7 @@ namespace USIPD102_4DMEN
     {
         #region 屬性參數
         private readonly PaletteHelper _paletteHelper = new PaletteHelper();
-        private readonly string version = "2.27.1.20240223";
+        private readonly string version = "2.31.1.20240223";
         private static Logger logger = LogManager.GetCurrentClassLogger();
         #endregion 屬性參數
         #region 靜態動作
@@ -81,6 +81,10 @@ namespace USIPD102_4DMEN
                     RunMainFlowResponse((RunMainFlowArgs)e);
                 else if (response_name == "update_all_loop_data")
                     UpdateAllLoopData((UpdateCaseDatasArgs)e);
+                else if (response_name == "send_single_station_response")
+                    SingleStationRunResponse((SendSingleStationFlowArgs)e);
+                else if (response_name == "send_flow_error")
+                    SendFlowErrorResponse((SendMessageBoxArgs)e);
             }
             catch (Exception ex)
             {
@@ -247,6 +251,42 @@ namespace USIPD102_4DMEN
             catch (Exception ex)
             {
                 logger.Error(ex, "更新總執行流程錯誤。");
+            }
+
+        }
+        public void SingleStationRunResponse(SendSingleStationFlowArgs e)
+        {
+            try
+            {
+                StationFlowPage.UpdateCaseData(e.CaseDatas);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "更新單站流程資料錯誤。");
+            }
+
+        }
+        public void SendFlowErrorResponse(SendMessageBoxArgs e)
+        {
+            try
+            {
+                FlowDataInfoPage.InsertMessage(e.Message);
+                BottomPage.ChangeSystemStatus("Pause");
+                if (e.Button == MessageBoxButton.OKCancel)
+                {
+                    if (MessageBox.Show(e.Message, "流程錯誤", e.Button, e.Image) == MessageBoxResult.OK)
+                    {
+                        OnPresenterSendEvent("send_flow_error", new SendMessageBoxArgs { Name = e.Name });
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(e.Message, "流程錯誤", e.Button, e.Image);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "總流程資料回傳更新錯誤。");
             }
 
         }

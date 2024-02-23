@@ -102,6 +102,7 @@ namespace _4DMEN_Library.Model
                     }
                     RecordData.RecordProcessData(MainPresenter.SystemParam(), $"出料站流程完成");
                     Step = 0;
+                    MainPresenter.SetRunSingleFlow(false);
                     MainPresenter.SetRunFlow(false);
                     Status = EnumData.TaskStatus.Done;
                     break;

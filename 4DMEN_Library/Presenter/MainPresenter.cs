@@ -22,9 +22,13 @@ namespace _4DMEN_Library
         /// </summary>
         protected bool manual_pause = false;
         /// <summary>
-        /// 單動流程
+        /// 單動步驟
         /// </summary>
         protected bool run_single_step = false;
+        /// <summary>
+        /// 單動流程
+        /// </summary>
+        protected bool run_single_flow = false;
         /// <summary>
         /// 執行流程
         /// </summary>
@@ -172,7 +176,10 @@ namespace _4DMEN_Library
                 ResetPCErrorAction();
             else if (actions == "set_flow")
                 SetSystemFlowAction((SetSystemFlowArgs)e);
-            
+            else if (actions == "send_single_station_flow")
+                SendSingleStationFlow((SendSingleStationFlowArgs)e);
+            else if (actions == "send_single_station_control_flow")
+                SendSingleStationControlFlow((SendSingleStationFlowArgs)e);
         }
         private void MainPresenter_UpdateCaseDataEvent(object sender, List<CaseData> caseDatas)
         {
@@ -893,6 +900,7 @@ namespace _4DMEN_Library
         #region 靜態動作
         internal static Action<bool> SetRunFlow;
         internal static Action<bool> SetRunSingleStep;
+        internal static Action<bool> SetRunSingleFlow;
         #endregion 靜態動作
         #region 靜態功能
         internal static Func<List<LogData>> LogDatas;
@@ -901,6 +909,7 @@ namespace _4DMEN_Library
         internal static Func<bool> GetInitRun;
         internal static Func<bool> GetManualPause;
         internal static Func<bool> GetRunSingleStep;
+        internal static Func<bool> GetRunSingleFlow;
         internal static Func<EsponArmsProcessor_In> CaseInArms;
         internal static Func<EsponArmsProcessor> CaseLidArms;
         internal static Func<EsponArmsProcessor> CaseOutArms;
@@ -918,6 +927,7 @@ namespace _4DMEN_Library
         internal static Func<LKIFProcessor> LKProcessor;
         internal static Func<LFJProcessor> LFJProcessor;
         internal static Func<SfisProcessor> SFIS;
+
         #endregion 靜態功能
         public MainPresenter(MainView _view)
         {
@@ -928,6 +938,7 @@ namespace _4DMEN_Library
                 #region 靜態動作
                 SetRunFlow = value => run_flow = value;
                 SetRunSingleStep = data => run_single_step = data;
+                SetRunSingleFlow = data => run_single_flow = data;
                 #endregion 靜態動作
 
                 #region 靜態功能
@@ -936,6 +947,7 @@ namespace _4DMEN_Library
                 GetInitRun = () => init_run;
                 GetManualPause = () => manual_pause;
                 GetRunSingleStep = () => run_single_step;
+                GetRunSingleFlow = () => run_single_flow;
                 CaseInArms = () => in_arms;
                 CaseLidArms = () => lid_arms;
                 CaseOutArms = () => out_arms;
@@ -1693,6 +1705,134 @@ namespace _4DMEN_Library
                 logger = LoggerData.Error(ex, $"儲存系統流程參數錯誤。");
             }
         }
-       
+        private void SendSingleStationFlow(SendSingleStationFlowArgs e)
+        {
+            try
+            {
+                if (run_single_flow)
+                    OnPresentResponseEvent("send_flow_error", new SendMessageBoxArgs { Message = "流程執行中，請等待流程結束後，再行後續動作。" });
+                else
+                {
+                    run_single_flow = run_flow = true;
+                    if (e.Station == "In")
+                    {
+                        CaseInTask.GetEntity().case_data = e.CaseDatas[0]; CaseInTask.GetEntity().StartTask();
+                    }
+                    else if (e.Station == "Lid")
+                    {
+                        CaseLidTask.GetEntity().case_data = e.CaseDatas[0]; CaseLidTask.GetEntity().StartTask();
+                    }
+                    else if (e.Station == "Scan")
+                    {
+                        CaseScanCodeTask.GetEntity().case_data = e.CaseDatas[0]; CaseScanCodeTask.GetEntity().StartTask();
+                    }
+                    else if (e.Station == "PutNut")
+                    {
+                        CasePutNutTask.GetEntity().case_data = e.CaseDatas[0]; CasePutNutTask.GetEntity().StartTask();
+                    }
+                    else if (e.Station == "Bend")
+                    {
+                        CaseBendTask.GetEntity().case_data = e.CaseDatas[0]; CaseBendTask.GetEntity().StartTask();
+                    }
+                    else if (e.Station == "Plate")
+                    {
+                        CasePlateTask.GetEntity().case_data = e.CaseDatas[0]; CasePlateTask.GetEntity().StartTask();
+                    }
+                    else if (e.Station == "EstHeight")
+                    {
+                        CasePlateTask.GetEntity().case_data = e.CaseDatas[0]; CaseEstHeightTask.GetEntity().StartTask();
+                    }
+                    else if (e.Station == "NgOut")
+                    {
+                        CaseNgOutTask.GetEntity().case_data = e.CaseDatas[0]; CaseNgOutTask.GetEntity().StartTask();
+                    }
+                    else if (e.Station == "Marking")
+                    {
+                        CaseMarkingTask.GetEntity().case_data = e.CaseDatas[0]; CaseMarkingTask.GetEntity().StartTask();
+                    }
+                    else if (e.Station == "Out")
+                    {
+                        CaseOutTask.GetEntity().case_data = e.CaseDatas[0]; CaseOutTask.GetEntity().StartTask();
+                    }
+                    else if (e.Station == "InStation")
+                    {
+                        CaseInStationTask.GetEntity().StartTask();
+                    }
+                    else if (e.Station == "LidStation")
+                    {
+                        CaseLidStationTask.GetEntity().StartTask();
+                    }
+                    else if (e.Station == "OutStation")
+                    {
+                        CaseOutStationTask.GetEntity().StartTask();
+                    }
+                    else if (e.Station == "NextStep")
+                    {
+                        main_plc.RunToNextStep();
+                        run_flow = false;
+                    }
+                    Task.Run(() =>
+                    {
+                        while (run_single_flow)
+                        {
+                            Thread.Sleep(200);
+                            OnPresentResponseEvent("send_single_station_response", new SendSingleStationFlowArgs { Station = e.Station, CaseDatas = e.CaseDatas });
+                        };
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, $"執行單動流程失敗。");
+            }
+        }
+        private void SendSingleStationControlFlow(SendSingleStationFlowArgs e)
+        {
+            try
+            {
+                BaseTask flow_task = null;
+                if (CaseInTask.GetEntity().ThreadState == System.Threading.ThreadState.Running || CaseInTask.GetEntity().ThreadState == System.Threading.ThreadState.Suspended)
+                    flow_task = CaseInTask.GetEntity();
+                else if (CaseLidTask.GetEntity().ThreadState == System.Threading.ThreadState.Running || CaseLidTask.GetEntity().ThreadState == System.Threading.ThreadState.Suspended)
+                    flow_task = CaseLidTask.GetEntity();
+                else if (CasePutNutTask.GetEntity().ThreadState == System.Threading.ThreadState.Running || CasePutNutTask.GetEntity().ThreadState == System.Threading.ThreadState.Suspended)
+                    flow_task = CasePutNutTask.GetEntity();
+                else if (CaseBendTask.GetEntity().ThreadState == System.Threading.ThreadState.Running || CaseBendTask.GetEntity().ThreadState == System.Threading.ThreadState.Suspended)
+                    flow_task = CaseBendTask.GetEntity();
+                else if (CasePlateTask.GetEntity().ThreadState == System.Threading.ThreadState.Running || CasePlateTask.GetEntity().ThreadState == System.Threading.ThreadState.Suspended)
+                    flow_task = CasePlateTask.GetEntity();
+                else if (CaseEstHeightTask.GetEntity().ThreadState == System.Threading.ThreadState.Running || CaseEstHeightTask.GetEntity().ThreadState == System.Threading.ThreadState.Suspended)
+                    flow_task = CaseEstHeightTask.GetEntity();
+                else if (CaseNgOutTask.GetEntity().ThreadState == System.Threading.ThreadState.Running || CaseNgOutTask.GetEntity().ThreadState == System.Threading.ThreadState.Suspended)
+                    flow_task = CaseNgOutTask.GetEntity();
+                else if (CaseMarkingTask.GetEntity().ThreadState == System.Threading.ThreadState.Running || CaseMarkingTask.GetEntity().ThreadState == System.Threading.ThreadState.Suspended)
+                    flow_task = CaseMarkingTask.GetEntity();
+                else if (CaseOutTask.GetEntity().ThreadState == System.Threading.ThreadState.Running || CaseOutTask.GetEntity().ThreadState == System.Threading.ThreadState.Suspended)
+                    flow_task = CaseOutTask.GetEntity();
+                else if (CaseInStationTask.GetEntity().ThreadState == System.Threading.ThreadState.Running || CaseInStationTask.GetEntity().ThreadState == System.Threading.ThreadState.Suspended)
+                    flow_task = CaseInStationTask.GetEntity();
+                else if (CaseLidStationTask.GetEntity().ThreadState == System.Threading.ThreadState.Running || CaseLidStationTask.GetEntity().ThreadState == System.Threading.ThreadState.Suspended)
+                    flow_task = CaseLidStationTask.GetEntity();
+                else if (CaseOutStationTask.GetEntity().ThreadState == System.Threading.ThreadState.Running || CaseOutStationTask.GetEntity().ThreadState == System.Threading.ThreadState.Suspended)
+                    flow_task = CaseOutStationTask.GetEntity();
+                if (flow_task == null)
+                    return;
+                if (e.Station == "Pause")
+                    flow_task.PauseTaskWithoutWait();
+                else if (e.Station == "Resume")
+                    flow_task.ResumeTask();
+                else if (e.Station == "Stop")
+                {
+                    run_single_flow = run_flow = false;
+                    flow_task.SetStep(0);
+                    flow_task.StopTask();
+                }
+                OnPresentResponseEvent("send_flow_error", new SendMessageBoxArgs { Message = $"執行 {e.Station} 動作完成。", Image = System.Windows.MessageBoxImage.Information });
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, $"執行單動控制流程錯誤，動作{e.Station}。");
+            }
+        }
     }
 }

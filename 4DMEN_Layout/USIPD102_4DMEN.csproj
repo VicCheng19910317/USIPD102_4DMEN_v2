@@ -125,6 +125,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Pages\Content\Inner\StationFlowPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\Content\Inner\SystemParamSettingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -171,6 +175,9 @@
     </Compile>
     <Compile Include="Pages\Content\Inner\ReaderPage.xaml.cs">
       <DependentUpon>ReaderPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Content\Inner\StationFlowPage.xaml.cs">
+      <DependentUpon>StationFlowPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Content\Inner\SystemParamSettingPage.xaml.cs">
       <DependentUpon>SystemParamSettingPage.xaml</DependentUpon>

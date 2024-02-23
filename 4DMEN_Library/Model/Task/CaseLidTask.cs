@@ -143,8 +143,9 @@ namespace _4DMEN_Library.Model
                     if (!case_data.IsRun || !MainPresenter.SystemParam().Flow.CaseAssemble)
                         Step = 4;
                     case_data?.CaseAssembleTime.Stop();
-                    if ((case_data.Index + 1) == MainPresenter.SystemParam().CaseCount)
+                    if ((case_data.Index + 1) == MainPresenter.SystemParam().CaseCount || MainPresenter.GetRunSingleFlow())
                     {
+                        MainPresenter.SetRunSingleFlow(false);
                         MainPresenter.SetRunFlow(false);
                         Status = EnumData.TaskStatus.Done;
                     }

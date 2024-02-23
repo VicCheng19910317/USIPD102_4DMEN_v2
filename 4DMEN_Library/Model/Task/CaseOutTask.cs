@@ -185,6 +185,7 @@ namespace _4DMEN_Library.Model
                     case_data.Step = Step = 0;
                     case_data?.CaseOutTime.Stop();
                     case_data?.CaseTotalTime.Stop();
+                    MainPresenter.SetRunSingleFlow(false);
                     MainPresenter.SetRunFlow(false);
                     case_data.IsRun = false;
                     RecordData.RecordProcessData(MainPresenter.SystemParam(), $"出料流程完成");

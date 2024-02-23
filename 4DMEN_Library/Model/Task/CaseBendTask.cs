@@ -77,6 +77,7 @@ namespace _4DMEN_Library.Model
                     case_data.Step = Step = 0;
                     case_data?.CaseBendTime.Stop();
                     IsStartBend = false;
+                    MainPresenter.SetRunSingleFlow(false);
                     MainPresenter.SetRunFlow(false);
                     Status = EnumData.TaskStatus.Done;
                     break;
