@@ -106,12 +106,12 @@ namespace _4DMEN_Library.Model
 
         #endregion
         #region 虛擬方法
-        public void RunNextStep()
+        public virtual void RunNextStep()
         {
             Step = NextStep;
             ResumeTask();
         }
-        internal void SetStep(int _step)
+        internal virtual void SetStep(int _step)
         {
             Step = _step;
         }
@@ -150,6 +150,17 @@ namespace _4DMEN_Library.Model
             }
             return success;
         }
+        protected virtual bool DoArmsActionErrorWithoutWait(Func<bool> _Func, EsponArmsProcessor processor, string Message = "", System.Windows.MessageBoxButton _btn = System.Windows.MessageBoxButton.OK)
+        {
+            var success = _Func();
+            if (!success)
+            {
+                PauseTaskWithoutWait();
+                button = _btn;
+                ErrorMessage = Message.Length > 0 ? $"{Message}\n錯誤訊息:{processor.Message}" : processor.Message;
+            }
+            return success;
+        }
         protected virtual bool DoInspAction(Func<bool> _Func, KeyenceInspectorParam processor, System.Windows.MessageBoxButton _btn = System.Windows.MessageBoxButton.OK)
         {
             var success = _Func();
@@ -165,7 +176,7 @@ namespace _4DMEN_Library.Model
         {
             read_data = "";
             var success = _Func();
-            success = !(processor.ReadResult.Contains("超時") || processor.ReadResult.Contains("錯誤"));
+            success = !(processor.ReadResult.Contains("超時") || processor.ReadResult.Contains("錯誤") || processor.ReadResult.ToLower().Contains("error"));
             if (!success && pause_flow)
             {
                 PauseTask();

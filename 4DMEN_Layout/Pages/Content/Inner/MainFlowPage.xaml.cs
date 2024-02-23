@@ -92,6 +92,7 @@ namespace USIPD102_4DMEN.Pages
                 {
                     CaseAssembleCB.IsChecked = data.CaseAssemble;
                     CaseScanCB.IsChecked = data.CaseScan;
+                    CasePutNutCB.IsChecked = data.CasePutNut;
                     CaseBendingCB.IsChecked = data.CaseBending;
                     CasePlateCB.IsChecked = data.CasePlate;
                     CaseEstHeightCB.IsChecked = data.CaseEstHeight;
@@ -254,6 +255,18 @@ namespace USIPD102_4DMEN.Pages
                 logger.Error(ex, "重置NG計數失敗。");
             }
         }
+        private void OutNgCountResetBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (MessageBox.Show("Reset Out NG Count?", "Flow Info.", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    MainWindow.SendPresenterData("reset_out_ng_count_action", null);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "重置出料NG計數失敗。");
+            }
+        }
 
         private void PCErrorResetBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -276,6 +289,7 @@ namespace USIPD102_4DMEN.Pages
                 {
                     CaseAssemble = CaseAssembleCB.IsChecked.Value,
                     CaseScan = CaseScanCB.IsChecked.Value,
+                    CasePutNut = CasePutNutCB.IsChecked.Value,
                     CaseBending = CaseBendingCB.IsChecked.Value,
                     CasePlate = CasePlateCB.IsChecked.Value,
                     CaseEstHeight = CaseEstHeightCB.IsChecked.Value,
@@ -290,5 +304,7 @@ namespace USIPD102_4DMEN.Pages
                 logger.Error(ex, "設定流程開關功能失敗。");
             }
         }
+
+        
     }
 }

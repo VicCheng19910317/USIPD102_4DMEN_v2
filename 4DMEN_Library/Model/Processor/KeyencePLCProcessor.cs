@@ -179,6 +179,33 @@ namespace _4DMEN_Library.Model
 
         }
         /// <summary>
+        /// 雷射是否出光
+        /// </summary>
+        /// <returns>是/否</returns>
+        internal bool GetLaserOnStatus()
+        {
+            string send_get_status = $"RDS MR4001 1";
+            return plcNet.ReadData(send_get_status).Replace("E", "").Replace("\r\n", "").Replace(" ", "").Contains("0"); // 0:出光/ 1:未出光
+        }
+        /// <summary>
+        /// 雷射準備狀態
+        /// </summary>
+        /// <returns>是/否</returns>
+        internal bool GetLaserReadyStatus()
+        {
+            string send_get_status = $"RDS MR4000 1";
+            return plcNet.ReadData(send_get_status).Replace("E", "").Replace("\r\n", "").Replace(" ", "").Contains("1"); // 0:未準備/ 1:已準備
+        }
+        /// <summary>
+        /// 雷射檔案準備狀態
+        /// </summary>
+        /// <returns>是/否</returns>
+        internal bool GetLaserFileStatus()
+        {
+            string send_get_status = $"RDS MR4002 1";
+            return plcNet.ReadData(send_get_status).Replace("E", "").Replace("\r\n", "").Replace(" ", "").Contains("1"); // 0:未準備/ 1:已準備
+        }
+        /// <summary>
         /// 設定PC錯誤
         /// </summary>
         /// <param name="value">1:開啟錯誤, 0:關閉錯誤</param>

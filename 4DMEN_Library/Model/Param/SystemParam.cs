@@ -92,6 +92,10 @@ namespace _4DMEN_Library.Model
         /// 雷雕Port
         /// </summary>
         public int MarkingPort { get; set; } = 4000;
+        /// <summary>
+        /// 錯誤代碼對照表
+        /// </summary>
+        public Dictionary<string, string> DefectMapping { get; set; } = new Dictionary<string, string>();
 
     }
     public class Range
@@ -189,6 +193,10 @@ namespace _4DMEN_Library.Model
         /// </summary>
         public bool CaseScan { get; set; } = true;
         /// <summary>
+        /// 螺帽放置
+        /// </summary>
+        public bool CasePutNut { get; set; } = true;
+        /// <summary>
         /// 底板折彎
         /// </summary>
         public bool CaseBending { get; set; } = true;
@@ -211,6 +219,7 @@ namespace _4DMEN_Library.Model
     }
     public class MarkingParam
     {
+        
         public string marking_fst_code { get; set; } = "CM_TextObj T1";
         public string marking_fst_txt { get; set; } = "EAB450M12XM35";
         public string marking_snd_code { get; set; } = "CM_TextObj T2";
@@ -225,6 +234,21 @@ namespace _4DMEN_Library.Model
         public int shift_x { get; set; } = 0;
         public int shift_y { get; set; } = 0;
         public int shift_a { get; set; } = 0;
+        public MarkingParam()
+        {
+
+        }
+        public MarkingParam(MarkingParam param)
+        {
+            marking_fst_code = param.marking_fst_code;
+            marking_fst_txt = param.marking_fst_txt;
+            marking_snd_code = param.marking_snd_code;
+            marking_snd_txt = param.marking_snd_txt;
+            marking_snd_index = param.marking_snd_index;
+            marking_2d_code = param.marking_2d_code;
+            marking_2d_txt = param.marking_2d_txt;
+            start_marking_code = param.start_marking_code;
+        }
         public List<string> pass_level { get; set; } = new List<string>();
     }
 }

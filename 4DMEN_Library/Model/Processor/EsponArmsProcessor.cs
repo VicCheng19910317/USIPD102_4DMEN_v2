@@ -290,6 +290,18 @@ namespace _4DMEN_Library.Model
             return result;
         }
         /// <summary>
+        /// 出料手臂移動到NG區
+        /// </summary>
+        /// <returns>成功/失敗</returns>
+        internal virtual bool SetMoveNG()
+        {
+            var logger = MainPresenter.LogDatas();
+            logger = LoggerData.Info($"手臂 {Name} 移動到第二個掃描位置");
+            var result = SendAction($"GONG");
+            logger = LoggerData.Info($"手臂 {Name} 移動到第二個掃描位置完成");
+            return result;
+        }
+        /// <summary>
         /// 自定義手臂動作
         /// </summary>
         /// <param name="action">輸入動作</param>
@@ -503,6 +515,9 @@ namespace _4DMEN_Library.Model
                     break;
                 case "ctwo":
                     success = SetCTwo();
+                    break;
+                case "gong":
+                    success = SetMoveNG();
                     break;
                 default:
                     success = SendAction(action);

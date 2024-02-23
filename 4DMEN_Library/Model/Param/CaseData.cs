@@ -22,6 +22,10 @@ namespace _4DMEN_Library.Model
         /// </summary>
         public bool IsRun { get; set; } = true;
         /// <summary>
+        /// 是否完成取料到台車
+        /// </summary>
+        public bool PickToCast { get; set; } = false;
+        /// <summary>
         /// 當前站號
         /// </summary>
         public int Station { get; set; }
@@ -57,7 +61,13 @@ namespace _4DMEN_Library.Model
             }
             set => _stationName = value;
         }
+        /// <summary>
+        /// 當前流程對應步驟
+        /// </summary>
         public int Step { get; set; }
+        /// <summary>
+        /// 步驟名稱
+        /// </summary>
         public string StepName
         {
             get
@@ -272,19 +282,23 @@ namespace _4DMEN_Library.Model
         /// <summary>
         /// 手動設定NG站別
         /// </summary>
-        public int ManualNGPosition { get; set; } = 0;
+        public List<int> NGPosition { get; set; } = new List<int>();
         /// <summary>
         /// 手動設定NG
         /// </summary>
         public bool ManualNG { get; set; } = false;
         /// <summary>
+        /// 設定NG代碼
+        /// </summary>
+        public List<string> DefectCode { get; set; } = new List<string>();
+        /// <summary>
         /// 量測結果
         /// </summary>
         public List<float> EstResult { get; set; } = new List<float>();
         /// <summary>
-        /// 基準面位置
+        /// 基準面位置公式
         /// </summary>
-        public string BasePost { get; set; } = "";
+        public string BasePosFunc { get; set; } = "";
         /// <summary>
         /// 平面參數
         /// </summary>
@@ -318,6 +332,10 @@ namespace _4DMEN_Library.Model
         /// </summary>
         public string ReaderResult2 { get; set; }
         /// <summary>
+        /// 雷雕等級
+        /// </summary>
+        public string MarkingLevel { get; set; }
+        /// <summary>
         /// 入料時間
         /// </summary>
         public Stopwatch CaseInTime { get; set; } = new Stopwatch();
@@ -329,6 +347,11 @@ namespace _4DMEN_Library.Model
         /// 掃碼時間
         /// </summary>
         public Stopwatch CaseReaderTime { get; set; } = new Stopwatch();
+
+        /// <summary>
+        /// 螺帽放置時間
+        /// </summary>
+        public Stopwatch CasePutNutTime { get; set; } = new Stopwatch();
         /// <summary>
         /// 折彎時間
         /// </summary>

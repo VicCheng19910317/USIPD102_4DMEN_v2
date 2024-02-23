@@ -66,6 +66,24 @@ namespace _4DMEN_Library.Model
             });
             return result;
         }
+        public virtual bool GetHeightVal(out List<float> HeightVal)
+        {
+            HeightVal = new List<float>();
+            var result = true;
+            var processor = MainPresenter.LKProcessor();
+            var pos_list = MainPresenter.SystemParam().MeasurePosition;
+            List<float> tmp = new List<float>();
+            pos_list.ForEach(x =>
+            {
+                PosX = x.X;
+                PosY = x.Y;
+                var success = RunMovePos();
+                tmp.Add(success ? processor.GetEstimateHieghtValue(1) : float.NaN);
+            });
+            HeightVal = tmp;
+            if (HeightVal.Contains(float.NaN)) result = false;
+            return result;
+        }
         #endregion 實作功能
     }
 }

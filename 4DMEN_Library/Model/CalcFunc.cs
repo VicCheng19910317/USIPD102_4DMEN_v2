@@ -65,7 +65,8 @@ namespace _4DMEN_Library.Model
                 };
                 result.Add((float)Math.Round((base_param[0] * pos.X + base_param[1] * pos.Y + base_param[2] * pos.Z + base_param[3]) / Math.Sqrt(Math.Pow(base_param[0], 2) + Math.Pow(base_param[1], 2) + Math.Pow(base_param[2], 2)), 2));
             }
-            return result;
+
+            return new List<float> { result[0], result[1], result[8], result[2], result[3], result[7], result[4], result[5], result[6] };
         }
         /// <summary>
         /// 計算平整度
@@ -77,11 +78,11 @@ namespace _4DMEN_Library.Model
             List<float> result = new List<float>();
             if (cal_dist.Count < 9 || cal_dist.Contains(float.NaN))
                 return result;
-            var tmp = new List<float> { cal_dist[0], cal_dist[1], cal_dist[8] };
+            var tmp = new List<float> { cal_dist[0], cal_dist[1], cal_dist[2] };
             result.Add((float)Math.Round(Math.Abs(tmp.Max() - tmp.Min()), 2));
-            tmp = new List<float> { cal_dist[2], cal_dist[3], cal_dist[7] };
+            tmp = new List<float> { cal_dist[3], cal_dist[4], cal_dist[5] };
             result.Add((float)Math.Round(Math.Abs(tmp.Max() - tmp.Min()), 2));
-            tmp = new List<float> { cal_dist[4], cal_dist[5], cal_dist[6] };
+            tmp = new List<float> { cal_dist[6], cal_dist[7], cal_dist[8] };
             result.Add((float)Math.Round(Math.Abs(tmp.Max() - tmp.Min()), 2));
             return result;
         }

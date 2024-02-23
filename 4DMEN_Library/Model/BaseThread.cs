@@ -16,6 +16,7 @@ namespace _4DMEN_Library.Model
         /// </summary>
         public ThreadState ThreadState { get; set; } = ThreadState.Unstarted;
         private List<LogData> logger = MainPresenter.LogDatas();
+        internal bool IsPause { get; set; } = false;
         #endregion 屬性
         #region 欄位
         private ManualResetEvent _shutdownEvent;
@@ -72,6 +73,7 @@ namespace _4DMEN_Library.Model
             MainPresenter.SetRunFlow(false);
             _pauseEvent.Reset();
             ThreadState = ThreadState.SuspendRequested;
+            IsPause = true;
         }
         /// <summary>
         /// 暫停任務(不等待其他站完成)
@@ -81,6 +83,7 @@ namespace _4DMEN_Library.Model
             MainPresenter.SetRunFlow(false);
             _pauseEvent.Reset();
             ThreadState = ThreadState.SuspendRequested;
+            IsPause = true;
         }
         /// <summary>
         /// 繼續任務
@@ -90,7 +93,7 @@ namespace _4DMEN_Library.Model
             MainPresenter.SetRunFlow(true);
             _pauseEvent.Set();
             ThreadState = ThreadState.Running;
-            
+            IsPause = false;
         }
         /// <summary>
         /// 停止任務

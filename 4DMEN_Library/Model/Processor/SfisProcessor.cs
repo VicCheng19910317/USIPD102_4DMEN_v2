@@ -103,20 +103,36 @@ namespace _4DMEN_Library.Model
         {
             var send_data = "";
             var success = false;
+           
             switch (step)
             {
                 case 1:
                     send_data = $"{param.StationID},{data.ReaderResult1},1,{param.WorkerID},{param.LineID},,OK,,";
                     break;
                 case 2:
-                    //var result = data.InspResult ? $"OK" : $"NG";
-                    //send_data = $"{param.StationID},{data.ReaderResult1},2,{param.WorkerID},{param.LineID},,{result},,,{data.GlueWeight}";
+                    var result = data.DefectCode.Count() > 0 || data.ManualNG ? $"OK" : $"NG";
+                    var defect_code = data.DefectCode.Aggregate("", (total, next) => total += total.Length == 0 ? $"{next}" : $"+{next}");
+                    var manual_defect = data.ManualNG ? "Manual" : "Auto";
+                    var position = data.NGPosition.Count == 0 ? "" : data.NGPosition.Aggregate("", (total, next) => total += total.Length == 0 ? $"{next}" : $"+{next}");
+                    defect_code += defect_code.Length == 0 ? $"{manual_defect}" : $"+{manual_defect}";
+                    send_data = $"{param.StationID},{data.ReaderResult1},3,{param.WorkerID},{param.LineID},,{result},{defect_code},{position},{data.ReaderResult2},,{data.MarkingLevel},,";
                     break;
                 case 3:
-                    //result = data.InspResult && data.ManualNG ? $"OK" : $"NG";
-                    //var defect_code = data.ManualNG ? "Manual" : "Auto";
-                    //var position = data.ManualNGPosition == 0 ? "" : data.ManualNGPosition.ToString();
-                    //send_data = $"{param.StationID},{data.ReaderResult1},2,{param.WorkerID},{param.LineID},,{result},{defect_code},{position},\"[VR]gel weight = \'{data.GlueWeight}\'\"";
+                    result = data.DefectCode.Count() > 0 || data.ManualNG ? $"OK" : $"NG";
+                    defect_code = data.DefectCode.Aggregate("", (total, next) => total += total.Length == 0 ? $"{next}" : $"+{next}");
+                    manual_defect = data.ManualNG ? "Manual" : "Auto";
+                    defect_code += defect_code.Length == 0 ? $"{manual_defect}" : $"+{manual_defect}";
+                    position = data.NGPosition.Count == 0 ? "" : data.NGPosition.Aggregate("", (total, next) => total += total.Length == 0 ? $"{next}" : $"+{next}");
+                    var height = "";
+                    for (int i = 0; i < 3; i++)
+                    {
+                        var avg = Math.Round((data.PlaneDist[3 * i + 0] + data.PlaneDist[3 * i + 1] + data.PlaneDist[3 * i + 2]) / 3, 2);
+                        var tag = i == 0 ? "L" : i == 1 ? "M" : "H";
+                        height += height.Length == 0 ? $"\"[VR]{tag}H1=\'{data.PlaneDist[3 * i + 0]}\'\",\"[VR]{tag}H2=\'{data.PlaneDist[3 * i + 1]}\'\",\"[VR]{tag}H3=\'{data.PlaneDist[3 * i + 2]}\'\",\"[VR]{tag}HA=\'{avg}\'\"" : $",\"[VR]{tag}H1=\'{data.PlaneDist[3 * i + 0]}\'\",\"[VR]{tag}H2=\'{data.PlaneDist[3 * i + 1]}\'\",\"[VR]{tag}H3=\'{data.PlaneDist[3 * i + 2]}\'\",\"[VR]{tag}HA=\'{avg}\'\"";
+                    }
+                    var flatness = $"\"[VR]LF=\'{data.Flatness[0]}\'\",\"[VR]LF=\'{data.Flatness[1]}\'\",\"[VR]LF=\'{data.Flatness[2]}\'\"";
+                    var grade = $"\"[VR]Grade=\'{data.MarkingLevel}\'\"";
+                    send_data = $"{param.StationID},{data.ReaderResult1},2,{param.WorkerID},{param.LineID},,{result},{defect_code},{position},,{data.ReaderResult2},,{grade},{height},{flatness}";
                     break;
             }
             success = SendAction(send_data, "");

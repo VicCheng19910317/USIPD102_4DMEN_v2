@@ -166,10 +166,13 @@ namespace _4DMEN_Library
                 ManualNgSettingAction((ManualNGSettingArgs)e);
             else if (actions == "reset_ng_count_action")
                 ResetNgCountAction();
+            else if (actions == "reset_out_ng_count_action")
+                ResetOutNgCountAction();
             else if (actions == "reset_pc_error_action")
                 ResetPCErrorAction();
             else if (actions == "set_flow")
                 SetSystemFlowAction((SetSystemFlowArgs)e);
+            
         }
         private void MainPresenter_UpdateCaseDataEvent(object sender, List<CaseData> caseDatas)
         {
@@ -177,7 +180,7 @@ namespace _4DMEN_Library
         }
         private void MainPresenter_ShowFlowErrorEvent(object sender, EventArgs e)
         {
-            //CaseAllTask.GetEntity().Status = EnumData.TaskStatus.Pause;
+            CaseAllTask.GetEntity().Status = EnumData.TaskStatus.Pause;
             if (!((SendMessageBoxArgs)e).Message.Contains("Cassette"))
                 main_plc.PCErrorSet(1);
             is_run = false;
@@ -200,6 +203,7 @@ namespace _4DMEN_Library
             try
             {
                 LoadSystemParam();
+                CaseNgOutTask.GetEntity().NgCountLimit = system_param.NgOutCountLimit;
             }
             catch (Exception ex)
             {
@@ -256,706 +260,6 @@ namespace _4DMEN_Library
             catch (Exception ex)
             {
                 logger = LoggerData.Error(ex, "系統關閉失敗。");
-            }
-        }
-        #endregion 實作功能
-        #region 靜態動作
-        internal static Action<bool> SetRunFlow;
-        #endregion 靜態動作
-        #region 靜態功能
-        internal static Func<List<LogData>> LogDatas;
-        internal static Func<SystemParam> SystemParam;
-        internal static Func<LKIFProcessor> LKProcessor;
-        #endregion 靜態功能
-        public MainPresenter(MainView _view)
-        {
-            try
-            {
-                view = _view;
-                view.PresenterSendEvent += PresenterSendEvent;
-                #region 靜態動作
-                SetRunFlow = value => run_flow = value;
-                #endregion 靜態動作
-
-                #region 靜態功能
-                LogDatas = () => logger;
-                SystemParam = () => system_param;
-                LKProcessor = () => lk_processor;
-                #endregion 靜態功能
-
-            }
-            catch (Exception ex)
-            {
-                logger = LoggerData.Error(ex, "初始化Presenter失敗。");
-            }
-
-        }
-        
-        private void SendArmsAction(SendArmsActionArgs e)
-        {
-            try
-            {
-
-                string arms = e.arms.ToUpper();
-                string action = e.action;
-                EsponArmsProcessor processor = arms == "IN" ? in_arms : arms == "OUT" ? out_arms : lid_arms;
-                if (is_run)
-                {
-                    OnPresentResponseEvent("send_arms_action", new SendArmsActionResponseArgs { arms = arms, message = "系統執行中，無法動作。", success = false, show_message = true });
-                    return;
-                }
-                bool success = false;
-                is_run = true;
-                success = processor.SendActionFunction(action);
-                is_run = false;
-                OnPresentResponseEvent("send_arms_action", new SendArmsActionResponseArgs { arms = arms, message = processor.Message, success = success, show_message = !success });
-            }
-            catch (Exception ex)
-            {
-                logger = LoggerData.Error(ex, $"手臂動作失敗，手臂：{e.arms}、動作：{e.action}。");
-            }
-        }
-        private void SendPLCAction(SendPLCActionArgs e)
-        {
-            try
-            {
-
-
-                string station = e.Station;
-                string action_detail = e.ActionDetail;
-                string message = "";
-                bool success = false;
-                switch (station)
-                {
-                    case "主流道":
-                        switch (action_detail)
-                        {
-                            case "臺車移動":
-                                success = main_plc.RunToNextStep();
-                                break;
-                            case "單站初始化":
-                                success = main_plc.RunStationInitialized();
-                                break;
-                            case "全機初始化":
-                                success = main_plc.RunAllInitialized();
-                                break;
-                            case "關閉通訊":
-                                success = main_plc.SendIdle();
-                                break;
-                        }
-                        message = main_plc.Message;
-                        break;
-                   
-                    case "螺帽站":
-                        switch (action_detail)
-                        {
-                            case "放置螺帽":
-                                success = nut_plc.RunPutNut();
-                                break;
-                            case "單站初始化":
-                                success = nut_plc.RunStationInitialized();
-                                break;
-                            case "關閉通訊":
-                                success = nut_plc.SendIdle();
-                                break;
-                        }
-                        message = nut_plc.Message;
-                        break;
-                    case "折彎站":
-                        switch (action_detail)
-                        {
-                            case "折彎":
-                                success = bend_plc.RunBending();
-                                break;
-                            case "單站初始化":
-                                success = bend_plc.RunStationInitialized();
-                                break;
-                            case "關閉通訊":
-                                success = bend_plc.SendIdle();
-                                break;
-                        }
-                        message = bend_plc.Message;
-                        break;
-                    case "壓平站":
-                        switch (action_detail)
-                        {
-                            case "壓平":
-                                success = plate_plc.RunPlate();
-                                break;
-                            case "單站初始化":
-                                success = plate_plc.RunStationInitialized();
-                                break;
-                            case "關閉通訊":
-                                success = plate_plc.SendIdle();
-                                break;
-                        }
-                        message = plate_plc.Message;
-                        break;
-                    case "測高站":
-                        switch (action_detail)
-                        {
-                            case "測高":
-                                height_plc.PosX = e.PosX;
-                                height_plc.PosY = e.PosY;
-                                success = height_plc.RunMovePos();
-                                break;
-                            case "單站初始化":
-                                success = height_plc.RunStationInitialized();
-                                break;
-                            case "關閉通訊":
-                                success = height_plc.SendIdle();
-                                break;
-                        }
-                        message = height_plc.Message;
-                        break;
-                    case "NG站":
-                        switch (action_detail)
-                        {
-                            case "NG出料":
-                                success = ng_plc.RunNGOut();
-                                break;
-                            case "單站初始化":
-                                success = ng_plc.RunStationInitialized();
-                                break;
-                            case "關閉通訊":
-                                success = ng_plc.SendIdle();
-                                break;
-                        }
-                        message = ng_plc.Message;
-                        break;
-                    case "上蓋站":
-                        switch (action_detail)
-                        {
-                            case "換盤":
-                                success = lid_station_plc.RunOneStepFlow();
-                                break;
-                            case "關閉通訊":
-                                success = lid_station_plc.SendIdle();
-                                break;
-                        }
-                        message = lid_station_plc.Message;
-                        break;
-                    case "入料站":
-                        switch (action_detail)
-                        {
-                            case "換盤":
-                                success = in_station_plc.RunOneStepFlow();
-                                break;
-                            case "關閉通訊":
-                                success = in_station_plc.SendIdle();
-                                break;
-                        }
-                        message = in_station_plc.Message;
-                        break;
-                    case "出料站":
-                        switch (action_detail)
-                        {
-                            case "換盤":
-                                success = out_station_plc.RunOneStepFlow();
-                                break;
-                            case "關閉通訊":
-                                success = out_station_plc.SendIdle();
-                                break;
-                        }
-                        message = out_station_plc.Message;
-                        break;
-                }
-                OnPresentResponseEvent("send_plc_action", new SendPLCActionResponseArgs { message = message, success = success, show_message = !success });
-            }
-            catch (Exception ex)
-            {
-                logger = LoggerData.Error(ex, $"PLC動作失敗，PLC:{e.Station}、動作:{e.ActionDetail}。");
-            }
-        }
-        private void SendReaderAction(SendReaderActionArgs e)
-        {
-            try
-            {
-                string station = e.Station;
-                string action = e.Action;
-                KeyenceReaderProcessor processor = null;
-                if (station.ToLower().Contains("reader"))
-                    processor = reader;
-                else if (station.ToLower().Contains("out"))
-                    processor = out_reader;
-                bool success = processor.SendActionFunction(action);
-                OnPresentResponseEvent("send_reader_action", new SendReaderActionResponseArgs { station = station, message = processor.Message, success = success, show_message = !success });
-            }
-            catch (Exception ex)
-            {
-                logger = LoggerData.Error(ex, $"條碼機動作失敗，條碼機{e.Station}、動作{e.Action}。");
-            }
-        }
-        private void SendLaserHeightAction(SendLaserHeightActionsArgs e)
-        {
-            try
-            {
-                var channel = e.Channel;
-                string action = e.Action;
-               
-                bool success = lk_processor.SendActionFunction(channel, action);
-                OnPresentResponseEvent("send_height_action", new SendLaserHeightActionsResponseArgs { channel = channel, message = lk_processor.Message, value = lk_processor.Value, connect_state = lk_processor.ConnectState, success = success, show_message = !success });
-            }
-            catch (Exception ex)
-            {
-                logger = LoggerData.Error(ex, $"測高機動作失敗，測高機 {e.Channel}、動作{e.Action}。");
-            }
-        }
-        private void SendMarkingAction(SendMarkingActionsArgs e)
-        {
-            try
-            {
-                var Message = "";
-                var success = false;
-                switch (e.Action)
-                {
-                    case "SettingParam":
-                        system_param.MarkParam.marking_fst_txt = e.FirstText;
-                        system_param.MarkParam.marking_snd_txt = e.SecondText;
-                        system_param.MarkParam.marking_snd_index = e.SecondIndex;
-                        system_param.MarkParam.marking_2d_txt = e.CodeText;
-                        SaveSystemParam();
-                        success = lfj_processor.SetTextParam(system_param.MarkParam);
-                        Message = success ? $"設定成功。回傳結果:{lfj_processor.Message}" : $"設定失敗。回傳結果:{lfj_processor.Message}";
-                        break;
-                    case "Marking":
-                        success = lfj_processor.StartMarking(system_param.MarkParam.start_marking_code);
-                        Message = success ? $"雷雕成功。回傳結果:{lfj_processor.Message}" : $"雷雕失敗。回傳結果:{lfj_processor.Message}";
-                        break;
-                    case "Connect":
-                        success = lfj_processor.StartConnected();
-                        Message = success ? $"連線成功。回傳結果:{lfj_processor.Message}" : $"連線失敗。回傳結果:{lfj_processor.Message}";
-                        break;
-                    case "Disconnect":
-                        success = lfj_processor.ConnectedClose();
-                        Message = success ? $"關閉連線成功。回傳結果:{lfj_processor.Message}" : $"關閉連線失敗。回傳結果:{lfj_processor.Message}";
-                        break;
-                    case "SetShift":
-                        system_param.MarkParam.shift_x = e.OffsetX;
-                        system_param.MarkParam.shift_y = e.OffsetY;
-                        system_param.MarkParam.shift_a = e.OffsetA;
-                        SaveSystemParam();
-                        success = lfj_processor.SetShiftData(system_param.MarkParam.shift_code, system_param.MarkParam.shift_x, system_param.MarkParam.shift_y, system_param.MarkParam.shift_a);
-                        Message = success ? $"設定偏移成功。回傳結果:{lfj_processor.Message}" : $"設定偏移失敗。回傳結果:{lfj_processor.Message}";
-                        break;
-                    case "SetLevel":
-                        system_param.MarkParam.pass_level = e.PassLevel;
-                        Message = $"設定等級成功。";
-                        success = true;
-                        break;
-                }
-                OnPresentResponseEvent("send_marking_action", new SendMarkingActionResponseArgs { success = success, message = Message, connection = lfj_processor.ConnectedState });
-
-            }
-            catch (Exception ex)
-            {
-                logger = LoggerData.Error(ex, $"雷雕機動作失敗，動作{e.Action}。");
-            }
-        }
-        public void RunSfisStepAction(SfisStepArgs e)
-        {
-            try
-            {
-                var success = false;
-                if (system_param.Sfis.Enable)
-                    success = _sfis.SendStep(e.Step, e.Param, new CaseData { ReaderResult1 = e.Param.BarcodeA, ReaderResult2 = e.Param.BarcodeB });
-                OnPresentResponseEvent("show_message", new SendMessageBoxArgs { Name = "SFIS訊息", Message = success ? "模擬發送成功。" : $"模擬發送訊號失敗。錯誤訊息:{_sfis.Message}", Image = success ? System.Windows.MessageBoxImage.Information : System.Windows.MessageBoxImage.Error });
-            }
-            catch (Exception ex)
-            {
-                logger = LoggerData.Error(ex, $"發送SFIS測試動作錯誤。");
-            }
-        }
-        public void SetArmsShiftAction(ArmsShiftArgs e)
-        {
-            try
-            {
-                var processor = e.Arms.ToLower() == "in" ? in_arms : lid_arms;
-                if (e.Arms.ToLower() == "in")
-                    system_param.ShiftInArms = e.Value;
-                else
-                    system_param.ShiftOutArms = e.Value;
-                processor.SetShiftValue(e.Value);
-                OnPresentResponseEvent("show_message", new SendMessageBoxArgs { Name = "手臂訊息", Message = "設定完成。", Image = System.Windows.MessageBoxImage.Information });
-            }
-            catch (Exception ex)
-            {
-                logger = LoggerData.Error(ex, $"設定手臂偏移錯誤。");
-            }
-        }
-        public void GetArmsShiftAction(ArmsShiftArgs e)
-        {
-            try
-            {
-                var processor = e.Arms.ToLower() == "in" ? in_arms : lid_arms;
-                var val = processor.GetShiftValue();
-                if (e.Arms.ToLower() == "in")
-                    system_param.ShiftInArms = val;
-                else
-                    system_param.ShiftOutArms = val;
-                OnPresentResponseEvent("get_arms_shift_response", new ArmsShiftArgs { Arms = e.Arms, Value = val });
-            }
-            catch (Exception ex)
-            {
-                logger = LoggerData.Error(ex, $"取得手臂偏移參數錯誤。");
-            }
-        }
-        public void SetPlateAccuracyAction(SetPlateAccuracyArgs e)
-        {
-            try
-            {
-                system_param.PlateAccuracy = e.Accuracy;
-                lid_arms.SetPlateAccuracy(system_param.PlateAccuracy);
-                OnPresentResponseEvent("show_message", new SendMessageBoxArgs { Name = "出料手臂訊息", Message = "設定完成。", Image = System.Windows.MessageBoxImage.Information });
-            }
-            catch (Exception ex)
-            {
-                logger = LoggerData.Error(ex, $"設定組裝精度參數錯誤。");
-            }
-        }
-        public void SaveSystemParamAction(SystemParamArgs e)
-        {
-            try
-            {
-                system_param.NgOutCount = e.Param.NgOutCountLimit;
-                system_param.DataRecordCount = e.Param.DataRecordCount;
-                system_param.Sfis.StationID = e.Param.Sfis.StationID;
-                system_param.Sfis.LineID = e.Param.Sfis.LineID;
-                system_param.Sfis.BarcodeA = e.Param.Sfis.BarcodeA;
-                system_param.Sfis.BarcodeB = e.Param.Sfis.BarcodeB;
-                system_param.Sfis.InspLevel = e.Param.Sfis.InspLevel;
-                system_param.Sfis.Enable = e.Param.Sfis.Enable;
-                system_param.MeasurePosition = e.Param.MeasurePosition;
-                system_param.FlatnessUpperLimit = e.Param.FlatnessUpperLimit;
-                system_param.HeightLimit = e.Param.HeightLimit;
-                SaveSystemParam();
-                OnPresentResponseEvent("show_message", new SendMessageBoxArgs { Name = "參數設定", Message = "系統參數儲存成功。", Image = System.Windows.MessageBoxImage.Information });
-            }
-            catch (Exception ex)
-            {
-                logger = LoggerData.Error(ex, $"儲存參數動作錯誤。");
-            }
-        }
-        public void EstHeighAction()
-        {
-            try
-            {
-                var height_val = height_plc.GetHeightVal();
-                var base_param = new List<float>();
-                var plane_func = CalcFunc.CalBasePlane(system_param.MeasurePosition, height_val, out base_param);
-                var dist = CalcFunc.CalDist(system_param.MeasurePosition, height_val, base_param);
-                var flatness = CalcFunc.CalFlatness(dist);
-                OnPresentResponseEvent("estimate_height_response_action", new EstimateHeightResponseActionArgs { HeightValue = height_val, PlaneFunc = plane_func, Distance = dist, Flatness = flatness });
-            }
-            catch (Exception ex)
-            {
-                logger = LoggerData.Error(ex, $"測高機單測功能錯誤。");
-            }
-        }
-        public void SetWorksheetAction(SetWorkSheetArgs e)
-        {
-            try
-            {
-                system_param.Sfis.WorkerID = e.WorkerID;
-                system_param.Sfis.TicketID = e.TicketID;
-                system_param.Sfis.LidLotID = e.LidLotID;
-                system_param.Sfis.NutNo = e.NutLotID;
-                system_param.CaseCount = e.RunCount;
-                system_param.Recipe = e.Recipe;
-                SaveSystemParam();
-            }
-            catch (Exception ex)
-            {
-                logger = LoggerData.Error(ex, $"儲存工單資料錯誤。");
-            }
-        }
-        public void RunMainFlowAction(RunMainFlowArgs e)
-        {
-            try
-            {
-                if (e.Action.ToLower().Contains("start") || e.Action.ToLower().Contains("resume"))
-                {
-                    main_plc.PCErrorSet(0);
-
-                    #region 檢查硬體狀態
-                    var restart = false;
-                    var message = "Start All Cases.";
-                    main_plc.GetStatus();
-                    if (main_plc.IsError || main_plc.IsInitialized || main_plc.IsSend)
-                    {
-                        restart = true;
-                        message = "主流道PLC錯誤，請確認。";
-                    }
-                    nut_plc.GetStatus();
-                    if (!(nut_plc.IsIdle || nut_plc.IsFinish))
-                    {
-                        restart = true;
-                        message = "螺帽站PLC錯誤，請確認。";
-                    }
-                    bend_plc.GetStatus();
-                    if (!(bend_plc.IsIdle || bend_plc.IsFinish))
-                    {
-                        restart = true;
-                        message = "折彎站PLC錯誤，請確認。";
-                    }
-                    plate_plc.GetStatus();
-                    if (!(plate_plc.IsIdle || plate_plc.IsFinish))
-                    {
-                        restart = true;
-                        message = "壓平站PLC錯誤，請確認。";
-                    }
-                    height_plc.GetStatus();
-                    if (!(height_plc.IsIdle || height_plc.IsFinish))
-                    {
-                        restart = true;
-                        message = "測高站PLC錯誤，請確認。";
-                    }
-                    ng_plc.GetStatus();
-                    if (ng_plc.IsError || ng_plc.IsInitialized || ng_plc.IsSend)
-                    {
-                        restart = true;
-                        message = "NG站PLC錯誤，請確認。";
-                    }
-                    
-                    in_station_plc.GetStatus();
-                    if (in_station_plc.IsError)
-                    {
-                        restart = true;
-                        message = "入料站PLC錯誤，請確認。";
-                    }
-                    lid_station_plc.GetStatus();
-                    if (lid_station_plc.IsError)
-                    {
-                        restart = true;
-                        message = "組裝站PLC錯誤，請確認。";
-                    }
-                    out_station_plc.GetStatus();
-                    if (out_station_plc.IsError)
-                    {
-                        restart = true;
-                        message = "出料站PLC錯誤，請確認。";
-                    }
-                    if (!in_arms.IsLogin)
-                    {
-                        restart = true;
-                        message = "入料手臂尚未登入遠端控制，請確認。";
-                    }
-                    if (!lid_arms.IsLogin)
-                    {
-                        restart = true;
-                        message = "組裝手臂尚未登入遠端控制，請確認。";
-                    }
-                    if (!out_arms.IsLogin)
-                    {
-                        restart = true;
-                        message = "出料手臂尚未登入遠端控制，請確認。";
-                    }
-                    if (!lfj_processor.ConnectedState)
-                    {
-                        restart = true;
-                        message = "雷射尚未登入連線，請確認。";
-                    }
-                    if (!lk_processor.ConnectState)
-                    {
-                        restart = true;
-                        message = "測高機尚未登入連線，請確認。";
-                    }
-                    #endregion 檢查硬體狀態
-                    #region 卡控檢查
-
-                    #region 檢查NG數量
-                    //if (CaseNgOutTask.GetEntity().NgCount >= 3)
-                    //{
-                    //    restart = true;
-                    //    message = "NG計數尚未重置，請重置NG數量。";
-                    //}
-                    #endregion 檢查NG數量
-                    #endregion 卡控檢查
-                    if (restart)
-                    {
-                        OnPresentResponseEvent("run_main_flow", new RunMainFlowArgs { ReStartFlow = e.Action.ToLower().Contains("resume") ? false : restart, Message = message });
-                        return;
-                    }
-                }
-                if (e.Action.ToLower().Contains("start"))
-                {
-                    #region 檢查Load/Unload
-                    in_station_plc.GetStatus();
-                    if (in_station_plc.IsChangedCassette)
-                    {
-                        OnPresentResponseEvent("run_main_flow", new RunMainFlowArgs { ReStartFlow = true, Message = "入料站尚未入盤，請先入盤，再按下「Start」按鈕。" });
-                        return;
-                    }
-                    lid_station_plc.GetStatus();
-                    if (lid_station_plc.IsChangedCassette)
-                    {
-                        OnPresentResponseEvent("run_main_flow", new RunMainFlowArgs { ReStartFlow = true, Message = "組裝站尚未入盤，請先入盤，再按下「Start」按鈕。" });
-                        return;
-                    }
-                    out_station_plc.GetStatus();
-                    if (out_station_plc.IsChangedCassette)
-                    {
-                        OnPresentResponseEvent("run_main_flow", new RunMainFlowArgs { ReStartFlow = true, Message = "出料站尚未入盤，請先入盤，再按下「Start」按鈕。" });
-                        return;
-                    }
-                    #endregion 檢查Load/Unload
-                    
-                    
-                    Task.WaitAll(new Task[] {
-                        Task.Run(()=> in_arms.Home()),
-                        Task.Run(()=> lid_arms.Home()),
-                        Task.Run(()=> out_arms.Home()),
-                        Task.Run(()=>main_plc.SwitchAutoMode(1)),
-                        });
-                    in_arms.SetRecipe(system_param.Recipe);
-                    lid_arms.SetRecipe(system_param.Recipe);
-                    out_arms.SetRecipe(system_param.Recipe);
-                    
-                    Thread.Sleep(1000);
-                    //CaseNgOutTask.GetEntity().NgCount = 0;
-                    //if (CaseAllTask.GetEntity().IsRunning)
-                    //{
-                    //    CaseAllTask.GetEntity().Stop();
-                    //    Thread.Sleep(1000);
-                    //}
-                    if (!main_plc.RunAllInitialized())
-                    {
-                        OnPresentResponseEvent("run_main_flow", new RunMainFlowArgs { ReStartFlow = true, Message = "All PLC Initialize Fail." });
-                        return;
-                    }
-                    //CaseAllTask.GetEntity().StartTask();
-                    is_run = true;
-
-                }
-                else if (e.Action.ToLower().Contains("stop"))
-                {
-                    main_plc.PCErrorSet(0);
-                    //CaseAllTask.GetEntity().Stop();
-                    is_run = false;
-                }
-                else if (e.Action.ToLower().Contains("resume"))
-                {
-                    main_plc.PCErrorSet(0);
-                    //CaseAllTask.GetEntity().Resume();
-                    is_run = true;
-                }
-                else if (e.Action.ToLower().Contains("pause"))
-                {
-                    //CaseAllTask.GetEntity().Pause();
-                    is_run = false;
-                }
-            }
-            catch (Exception ex)
-            {
-                OnPresentResponseEvent("run_main_flow", new RunMainFlowArgs { ReStartFlow = true, Message = $"執行主流程動作錯誤，動作{e.Action}。" });
-                logger = LoggerData.Error(ex, $"執行主流程動作錯誤，動作{e.Action}。");
-            }
-        }
-        public void ManualNgSettingAction(ManualNGSettingArgs e)
-        {
-            try
-            {
-                switch (e.station_index)
-                {
-                    case 1:
-                        var case_data = new CaseData();// CaseInTask.GetEntity().case_data;
-                        case_data.IsRun = false;
-                        case_data.ManualNG = true;
-                        case_data.ManualNGPosition = e.station_index;
-                        //CaseInTask.GetEntity().Status = EnumData.TaskStatus.Done;
-                        break;
-                    case 3:
-                        case_data = new CaseData();//CasePlateTask.GetEntity().case_data;
-                        case_data.IsRun = false;
-                        case_data.ManualNG = true;
-                        case_data.ManualNGPosition = e.station_index;
-                        //CasePlateTask.GetEntity().Status = EnumData.TaskStatus.Done;
-                        break;
-                    case 4:
-                        case_data = new CaseData();//CaseGlueTask.GetEntity().case_data;
-                        case_data.IsRun = false;
-                        case_data.ManualNG = true;
-                        case_data.ManualNGPosition = e.station_index;
-                        //CaseGlueTask.GetEntity().Status = EnumData.TaskStatus.Done;
-                        break;
-                    case 6:
-                        case_data = new CaseData();//CaseWeightTask.GetEntity().case_data;
-                        case_data.IsRun = false;
-                        case_data.ManualNG = true;
-                        case_data.ManualNGPosition = e.station_index;
-                        //CaseWeightTask.GetEntity().Status = EnumData.TaskStatus.Done;
-                        break;
-                    case 7:
-                        case_data = new CaseData();//CaseInspTask.GetEntity().case_data;
-                        case_data.IsRun = false;
-                        case_data.ManualNG = true;
-                        case_data.ManualNGPosition = e.station_index;
-                        //CaseInspTask.GetEntity().Status = EnumData.TaskStatus.Done;
-                        break;
-                    case 8:
-                        case_data = new CaseData();//CaseNgOutTask.GetEntity().case_data;
-                        case_data.IsRun = false;
-                        case_data.ManualNG = true;
-                        case_data.ManualNGPosition = e.station_index;
-                        //CaseNgOutTask.GetEntity().Status = EnumData.TaskStatus.Done;
-                        break;
-                    case 11:
-                        case_data = new CaseData();//CaseOutTask.GetEntity().case_data;
-                        case_data.IsRun = false;
-                        case_data.ManualNG = true;
-                        case_data.ManualNGPosition = e.station_index;
-                        if (system_param.Sfis.Enable)
-                        {
-                            _sfis.SendStep(3, MainPresenter.SystemParam().Sfis, case_data);
-                        }
-                        //CaseOutTask.GetEntity().Status = EnumData.TaskStatus.Done;
-                        break;
-                }
-                OnPresentResponseEvent("show_message", new SendMessageBoxArgs { Name = "流程訊息", Message = $"手動NG設定完成，請確認是否已將物料移除。", Image = System.Windows.MessageBoxImage.Information });
-            }
-            catch (Exception ex)
-            {
-                logger = LoggerData.Error(ex, $"手動設定NG站別失敗。");
-            }
-        }
-        public void ResetNgCountAction()
-        {
-            try
-            {
-                //CaseNgOutTask.GetEntity().NgCount = 0;
-                OnPresentResponseEvent("show_message", new SendMessageBoxArgs { Name = "流程訊息", Message = "重置成功。", Image = System.Windows.MessageBoxImage.Information });
-            }
-            catch (Exception ex)
-            {
-                logger = LoggerData.Error(ex, $"重置NG計數失敗。");
-            }
-        }
-        public void ResetPCErrorAction()
-        {
-            try
-            {
-                var success = main_plc.PCErrorSet(0);
-                var message = success ? "成功" : "失敗";
-                OnPresentResponseEvent("show_message", new SendMessageBoxArgs { Name = "流程訊息", Message = $"重置{message}。", Image = success ? System.Windows.MessageBoxImage.Information : System.Windows.MessageBoxImage.Error });
-            }
-            catch (Exception ex)
-            {
-                logger = LoggerData.Error(ex, $"重置NG計數失敗。");
-            }
-        }
-        public void SetSystemFlowAction(SetSystemFlowArgs e)
-        {
-            try
-            {
-                LoggerData.Info($"儲存系統流程參數開始。");
-                system_param.Flow = e.Flow;
-                SaveSystemParam();
-                LoggerData.Info($"儲存系統流程參數完成，參數:{e.Flow.CaseAssemble},{e.Flow.CaseScan},{e.Flow.CaseBending},{e.Flow.CasePlate},{e.Flow.CaseEstHeight},{e.Flow.CaseNgOut},{e.Flow.CaseMarking}。");
-                OnPresentResponseEvent("show_message", new SendMessageBoxArgs { Name = "參數設定", Message = "系統參數儲存成功。", Image = System.Windows.MessageBoxImage.Information });
-            }
-            catch (Exception ex)
-            {
-                logger = LoggerData.Error(ex, $"儲存系統流程參數錯誤。");
             }
         }
         #region 系統參數功能
@@ -1298,12 +602,14 @@ namespace _4DMEN_Library
                     system_param.PlateAccuracy = new PlateAccuracy { X = new Range { Lower = -100, Upper = 100 }, Y = new Range { Lower = -100, Upper = 100 }, U = new Range { Lower = -100, Upper = 100 } };
                     ini_file.Write("CaseAssemble", "True", "Flow");
                     ini_file.Write("CastScan", "True", "Flow");
+                    ini_file.Write("CasePutNut", "True", "Flow");
+                    
                     ini_file.Write("CastBending", "True", "Flow");
                     ini_file.Write("CasePlate", "True", "Flow");
                     ini_file.Write("CaseEstHeight", "True", "Flow");
                     ini_file.Write("CastNgOut", "True", "Flow");
                     ini_file.Write("CastMarking", "True", "Flow");
-                    system_param.Flow = new SystemFlow { CaseAssemble = true, CaseScan = true, CaseBending = true, CasePlate = true, CaseEstHeight = true, CaseNgOut = true, CaseMarking = true };
+                    system_param.Flow = new SystemFlow { CaseAssemble = true, CaseScan = true, CasePutNut = true, CaseBending = true, CasePlate = true, CaseEstHeight = true, CaseNgOut = true, CaseMarking = true };
                     ini_file.Write("EstHeighInLower", "-100", "In");
                     ini_file.Write("EstHeighInUpper", "100", "In");
                     system_param.EstHeighIn = new Range { Lower = -100, Upper = 100 };
@@ -1336,7 +642,7 @@ namespace _4DMEN_Library
                         shift_x = 0,
                         shift_y = 0,
                         shift_a = 0,
-                        pass_level = new List<string> { "A","B" },
+                        pass_level = new List<string> { "A", "B" },
                     };
                     lfj_processor.IP = "127.0.0.1";
                     lfj_processor.Port = 4000;
@@ -1421,6 +727,7 @@ namespace _4DMEN_Library
                     {
                         CaseAssemble = bool.Parse(ini_file.Read("CaseAssemble", "Flow")),
                         CaseScan = bool.Parse(ini_file.Read("CastScan", "Flow")),
+                        CasePutNut = bool.Parse(ini_file.Read("CasePutNut", "Flow")),
                         CaseBending = bool.Parse(ini_file.Read("CastBending", "Flow")),
                         CasePlate = bool.Parse(ini_file.Read("CasePlate", "Flow")),
                         CaseEstHeight = bool.Parse(ini_file.Read("CaseEstHeight", "Flow")),
@@ -1449,9 +756,9 @@ namespace _4DMEN_Library
                     lfj_processor.Port = int.Parse(ini_file.Read("MarkingPort", "Marking"));
                 }
                 lfj_processor.StartConnected();
-                OnPresentResponseEvent("load_system_param", new LoadSystemParamResponseArgs { IP = lfj_processor.IP, Port = lfj_processor.Port, MarkingStatus=lfj_processor.ConnectedState, Param = system_param });
+                OnPresentResponseEvent("load_system_param", new LoadSystemParamResponseArgs { IP = lfj_processor.IP, Port = lfj_processor.Port, MarkingStatus = lfj_processor.ConnectedState, Param = system_param });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger = LoggerData.Error(ex, "讀取系統參數失敗。");
             }
@@ -1479,9 +786,9 @@ namespace _4DMEN_Library
             ini_file.Write("IP", _sfis.IP, "SFIS");
             ini_file.Write("Port", _sfis.Port.ToString(), "SFIS");
 
-            ini_file.Write("MeasurePosition", system_param.MeasurePosition.Aggregate("",(total,next) => total += total.Length == 0 ? $"{next.X},{next.Y}" : $";{next.X},{next.Y}"), "Measure");
+            ini_file.Write("MeasurePosition", system_param.MeasurePosition.Aggregate("", (total, next) => total += total.Length == 0 ? $"{next.X},{next.Y}" : $";{next.X},{next.Y}"), "Measure");
             ini_file.Write("FlatnessUpperLimit", system_param.FlatnessUpperLimit.ToString(), "Measure");
-            ini_file.Write("HeightLimit", system_param.HeightLimit.Aggregate("", (total, next) => total += total.Length ==0 ? $"{next.Lower},{next.Upper}" : $";{next.Lower},{next.Upper}"), "Measure");
+            ini_file.Write("HeightLimit", system_param.HeightLimit.Aggregate("", (total, next) => total += total.Length == 0 ? $"{next.Lower},{next.Upper}" : $";{next.Lower},{next.Upper}"), "Measure");
 
             ini_file.Write("ShiftInArmsPickX", system_param.ShiftInArms.Pick.X.ToString(), "Shift");
             ini_file.Write("ShiftInArmsPickY", system_param.ShiftInArms.Pick.Y.ToString(), "Shift");
@@ -1510,6 +817,7 @@ namespace _4DMEN_Library
 
             ini_file.Write("CaseAssemble", system_param.Flow.CaseAssemble.ToString(), "Flow");
             ini_file.Write("CastScan", system_param.Flow.CaseScan.ToString(), "Flow");
+            ini_file.Write("CasePutNut", system_param.Flow.CasePutNut.ToString(), "Flow");
             ini_file.Write("CastBending", system_param.Flow.CaseBending.ToString(), "Flow");
             ini_file.Write("CasePlate", system_param.Flow.CasePlate.ToString(), "Flow");
             ini_file.Write("CaseEstHeight", system_param.Flow.CaseEstHeight.ToString(), "Flow");
@@ -1531,10 +839,841 @@ namespace _4DMEN_Library
             ini_file.Write("shift_x", system_param.MarkParam.shift_x.ToString(), "Marking");
             ini_file.Write("shift_y", system_param.MarkParam.shift_y.ToString(), "Marking");
             ini_file.Write("shift_a", system_param.MarkParam.shift_a.ToString(), "Marking");
-            ini_file.Write("pass_level", system_param.MarkParam.pass_level.Aggregate("",(total,next) => total += total.Length ==0 ? $"{next}" : $",{next}"), "Marking");
+            ini_file.Write("pass_level", system_param.MarkParam.pass_level.Aggregate("", (total, next) => total += total.Length == 0 ? $"{next}" : $",{next}"), "Marking");
             ini_file.Write("MarkingIP", lfj_processor.IP, "Marking");
             ini_file.Write("MarkingPort", lfj_processor.Port.ToString(), "Marking");
         }
+        private void LoadDefectInfo()
+        {
+            try
+            {
+                if (!File.Exists("DefectList.txt"))
+                {
+                    using (FileStream fs = new FileStream("DefectList.txt", FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite))
+                    {
+                        using (StreamWriter sw = new StreamWriter(fs))
+                        {
+                            sw.WriteLine("高度異常,2D01");
+                            sw.WriteLine("平整度異常,2D02");
+                            sw.WriteLine("BasePlate 2D Code,2D03");
+                            sw.WriteLine("BasePlate/ Lid 2D code異常,2D04");
+                            sw.WriteLine("鐳碼等級異常,2D05");
+                            system_param.DefectMapping.Add("高度異常", "2D01");
+                            system_param.DefectMapping.Add("平整度異常", "2D02");
+                            system_param.DefectMapping.Add("BasePlate 2D Code", "2D03");
+                            system_param.DefectMapping.Add("BasePlate/ Lid 2D code異常", "2D04");
+                            system_param.DefectMapping.Add("鐳碼等級異常", "2D05");
+                        }
+                    }
+                }
+                else
+                {
+                    using (FileStream fs = new FileStream("DefectList.txt", FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
+                    {
+                        using (StreamReader sr = new StreamReader(fs))
+                        {
+                            while (!sr.EndOfStream)
+                            {
+                                var line = sr.ReadLine().Split(',');
+
+                                if (!system_param.DefectMapping.ContainsKey(line[0]))
+                                    system_param.DefectMapping.Add(line[0], line[1]);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, "讀取Defect列表失敗。");
+            }
+        }
         #endregion 系統參數功能
+        #endregion 實作功能
+        #region 靜態動作
+        internal static Action<bool> SetRunFlow;
+        internal static Action<bool> SetRunSingleStep;
+        #endregion 靜態動作
+        #region 靜態功能
+        internal static Func<List<LogData>> LogDatas;
+        internal static Func<SystemParam> SystemParam;
+        
+        internal static Func<bool> GetInitRun;
+        internal static Func<bool> GetManualPause;
+        internal static Func<bool> GetRunSingleStep;
+        internal static Func<EsponArmsProcessor_In> CaseInArms;
+        internal static Func<EsponArmsProcessor> CaseLidArms;
+        internal static Func<EsponArmsProcessor> CaseOutArms;
+        internal static Func<KeyencePLCProcessor> MainPLC;
+        internal static Func<KeyencePLCProcessor> NutPLC;
+        internal static Func<KeyencePLCProcessor> BendPLC;
+        internal static Func<KeyencePLCProcessor> PlatePLC;
+        internal static Func<KeyencePLCProcessor_Height> HeightPLC;
+        internal static Func<KeyencePLCProcessor> NgPLC;
+        internal static Func<KeyenceLoadPLCProcessor> InPLC;
+        internal static Func<KeyenceLoadPLCProcessor> LidPLC;
+        internal static Func<KeyenceLoadPLCProcessor> OutPLC;
+        internal static Func<KeyenceReaderProcessor> Reader;
+        internal static Func<KeyenceReaderProcessor> OutReader;
+        internal static Func<LKIFProcessor> LKProcessor;
+        internal static Func<LFJProcessor> LFJProcessor;
+        internal static Func<SfisProcessor> SFIS;
+        #endregion 靜態功能
+        public MainPresenter(MainView _view)
+        {
+            try
+            {
+                view = _view;
+                view.PresenterSendEvent += PresenterSendEvent;
+                #region 靜態動作
+                SetRunFlow = value => run_flow = value;
+                #endregion 靜態動作
+                SetRunSingleStep = data => run_single_step = data;
+                #region 靜態功能
+                LogDatas = () => logger;
+                SystemParam = () => system_param;
+                GetInitRun = () => init_run;
+                GetManualPause = () => manual_pause;
+                GetRunSingleStep = () => run_single_step;
+                CaseInArms = () => in_arms;
+                CaseLidArms = () => lid_arms;
+                CaseOutArms = () => out_arms;
+                MainPLC = () => main_plc;
+                NutPLC = () => nut_plc;
+                BendPLC = () => bend_plc;
+                PlatePLC = () => plate_plc;
+                HeightPLC = () => height_plc;
+                NgPLC = () => ng_plc;
+                InPLC = () => in_station_plc;
+                LidPLC = () => lid_station_plc;
+                OutPLC = () => out_station_plc;
+                Reader = () => reader;
+                OutReader = () => out_reader;
+                LKProcessor = () => lk_processor;
+                LFJProcessor = () => lfj_processor;
+                SFIS = () => _sfis;
+                #endregion 靜態功能
+
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, "初始化Presenter失敗。");
+            }
+
+        }
+        
+        private void SendArmsAction(SendArmsActionArgs e)
+        {
+            try
+            {
+
+                string arms = e.arms.ToUpper();
+                string action = e.action;
+                EsponArmsProcessor processor = arms == "IN" ? in_arms : arms == "OUT" ? out_arms : lid_arms;
+                if (is_run)
+                {
+                    OnPresentResponseEvent("send_arms_action", new SendArmsActionResponseArgs { arms = arms, message = "系統執行中，無法動作。", success = false, show_message = true });
+                    return;
+                }
+                bool success = false;
+                is_run = true;
+                success = processor.SendActionFunction(action);
+                is_run = false;
+                OnPresentResponseEvent("send_arms_action", new SendArmsActionResponseArgs { arms = arms, message = processor.Message, success = success, show_message = !success });
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, $"手臂動作失敗，手臂：{e.arms}、動作：{e.action}。");
+            }
+        }
+        private void SendPLCAction(SendPLCActionArgs e)
+        {
+            try
+            {
+
+
+                string station = e.Station;
+                string action_detail = e.ActionDetail;
+                string message = "";
+                bool success = false;
+                switch (station)
+                {
+                    case "主流道":
+                        switch (action_detail)
+                        {
+                            case "臺車移動":
+                                success = main_plc.RunToNextStep();
+                                break;
+                            case "單站初始化":
+                                success = main_plc.RunStationInitialized();
+                                break;
+                            case "全機初始化":
+                                success = main_plc.RunAllInitialized();
+                                break;
+                            case "關閉通訊":
+                                success = main_plc.SendIdle();
+                                break;
+                        }
+                        message = main_plc.Message;
+                        break;
+                   
+                    case "螺帽站":
+                        switch (action_detail)
+                        {
+                            case "放置螺帽":
+                                success = nut_plc.RunPutNut();
+                                break;
+                            case "單站初始化":
+                                success = nut_plc.RunStationInitialized();
+                                break;
+                            case "關閉通訊":
+                                success = nut_plc.SendIdle();
+                                break;
+                        }
+                        message = nut_plc.Message;
+                        break;
+                    case "折彎站":
+                        switch (action_detail)
+                        {
+                            case "折彎":
+                                success = bend_plc.RunBending();
+                                break;
+                            case "單站初始化":
+                                success = bend_plc.RunStationInitialized();
+                                break;
+                            case "關閉通訊":
+                                success = bend_plc.SendIdle();
+                                break;
+                        }
+                        message = bend_plc.Message;
+                        break;
+                    case "壓平站":
+                        switch (action_detail)
+                        {
+                            case "壓平":
+                                success = plate_plc.RunPlate();
+                                break;
+                            case "單站初始化":
+                                success = plate_plc.RunStationInitialized();
+                                break;
+                            case "關閉通訊":
+                                success = plate_plc.SendIdle();
+                                break;
+                        }
+                        message = plate_plc.Message;
+                        break;
+                    case "測高站":
+                        switch (action_detail)
+                        {
+                            case "測高":
+                                height_plc.PosX = e.PosX;
+                                height_plc.PosY = e.PosY;
+                                success = height_plc.RunMovePos();
+                                break;
+                            case "單站初始化":
+                                success = height_plc.RunStationInitialized();
+                                break;
+                            case "關閉通訊":
+                                success = height_plc.SendIdle();
+                                break;
+                        }
+                        message = height_plc.Message;
+                        break;
+                    case "NG站":
+                        switch (action_detail)
+                        {
+                            case "NG出料":
+                                success = ng_plc.RunNGOut();
+                                break;
+                            case "單站初始化":
+                                success = ng_plc.RunStationInitialized();
+                                break;
+                            case "關閉通訊":
+                                success = ng_plc.SendIdle();
+                                break;
+                        }
+                        message = ng_plc.Message;
+                        break;
+                    case "上蓋站":
+                        switch (action_detail)
+                        {
+                            case "換盤":
+                                success = lid_station_plc.RunOneStepFlow();
+                                break;
+                            case "關閉通訊":
+                                success = lid_station_plc.SendIdle();
+                                break;
+                        }
+                        message = lid_station_plc.Message;
+                        break;
+                    case "入料站":
+                        switch (action_detail)
+                        {
+                            case "換盤":
+                                success = in_station_plc.RunOneStepFlow();
+                                break;
+                            case "關閉通訊":
+                                success = in_station_plc.SendIdle();
+                                break;
+                        }
+                        message = in_station_plc.Message;
+                        break;
+                    case "出料站":
+                        switch (action_detail)
+                        {
+                            case "換盤":
+                                success = out_station_plc.RunOneStepFlow();
+                                break;
+                            case "關閉通訊":
+                                success = out_station_plc.SendIdle();
+                                break;
+                        }
+                        message = out_station_plc.Message;
+                        break;
+                }
+                OnPresentResponseEvent("send_plc_action", new SendPLCActionResponseArgs { message = message, success = success, show_message = !success });
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, $"PLC動作失敗，PLC:{e.Station}、動作:{e.ActionDetail}。");
+            }
+        }
+        private void SendReaderAction(SendReaderActionArgs e)
+        {
+            try
+            {
+                string station = e.Station;
+                string action = e.Action;
+                KeyenceReaderProcessor processor = null;
+                if (station.ToLower().Contains("reader"))
+                    processor = reader;
+                else if (station.ToLower().Contains("out"))
+                    processor = out_reader;
+                bool success = processor.SendActionFunction(action);
+                OnPresentResponseEvent("send_reader_action", new SendReaderActionResponseArgs { station = station, message = processor.Message, success = success, show_message = !success });
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, $"條碼機動作失敗，條碼機{e.Station}、動作{e.Action}。");
+            }
+        }
+        private void SendLaserHeightAction(SendLaserHeightActionsArgs e)
+        {
+            try
+            {
+                var channel = e.Channel;
+                string action = e.Action;
+               
+                bool success = lk_processor.SendActionFunction(channel, action);
+                OnPresentResponseEvent("send_height_action", new SendLaserHeightActionsResponseArgs { channel = channel, message = lk_processor.Message, value = lk_processor.Value, connect_state = lk_processor.ConnectState, success = success, show_message = !success });
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, $"測高機動作失敗，測高機 {e.Channel}、動作{e.Action}。");
+            }
+        }
+        private void SendMarkingAction(SendMarkingActionsArgs e)
+        {
+            try
+            {
+                var Message = "";
+                var success = false;
+                switch (e.Action)
+                {
+                    case "SettingParam":
+                        system_param.MarkParam.marking_fst_txt = e.FirstText;
+                        system_param.MarkParam.marking_snd_txt = e.SecondText;
+                        system_param.MarkParam.marking_snd_index = e.SecondIndex;
+                        system_param.MarkParam.marking_2d_txt = e.CodeText;
+                        SaveSystemParam();
+                        success = lfj_processor.SetTextParam(system_param.MarkParam);
+                        Message = success ? $"設定成功。回傳結果:{lfj_processor.Message}" : $"設定失敗。回傳結果:{lfj_processor.Message}";
+                        break;
+                    case "Marking":
+                        success = lfj_processor.StartMarking(system_param.MarkParam.start_marking_code);
+                        Message = success ? $"雷雕成功。回傳結果:{lfj_processor.Message}" : $"雷雕失敗。回傳結果:{lfj_processor.Message}";
+                        break;
+                    case "Connect":
+                        success = lfj_processor.StartConnected();
+                        Message = success ? $"連線成功。回傳結果:{lfj_processor.Message}" : $"連線失敗。回傳結果:{lfj_processor.Message}";
+                        break;
+                    case "Disconnect":
+                        success = lfj_processor.ConnectedClose();
+                        Message = success ? $"關閉連線成功。回傳結果:{lfj_processor.Message}" : $"關閉連線失敗。回傳結果:{lfj_processor.Message}";
+                        break;
+                    case "SetShift":
+                        system_param.MarkParam.shift_x = e.OffsetX;
+                        system_param.MarkParam.shift_y = e.OffsetY;
+                        system_param.MarkParam.shift_a = e.OffsetA;
+                        SaveSystemParam();
+                        success = lfj_processor.SetShiftData(system_param.MarkParam.shift_code, system_param.MarkParam.shift_x, system_param.MarkParam.shift_y, system_param.MarkParam.shift_a);
+                        Message = success ? $"設定偏移成功。回傳結果:{lfj_processor.Message}" : $"設定偏移失敗。回傳結果:{lfj_processor.Message}";
+                        break;
+                    case "SetLevel":
+                        system_param.MarkParam.pass_level = e.PassLevel;
+                        Message = $"設定等級成功。";
+                        success = true;
+                        break;
+                }
+                OnPresentResponseEvent("send_marking_action", new SendMarkingActionResponseArgs { success = success, message = Message, connection = lfj_processor.ConnectedState });
+
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, $"雷雕機動作失敗，動作{e.Action}。");
+            }
+        }
+        public void RunSfisStepAction(SfisStepArgs e)
+        {
+            try
+            {
+                var success = false;
+                if (system_param.Sfis.Enable)
+                    success = _sfis.SendStep(e.Step, e.Param, new CaseData { ReaderResult1 = e.Param.BarcodeA, ReaderResult2 = e.Param.BarcodeB });
+                OnPresentResponseEvent("show_message", new SendMessageBoxArgs { Name = "SFIS訊息", Message = success ? "模擬發送成功。" : $"模擬發送訊號失敗。錯誤訊息:{_sfis.Message}", Image = success ? System.Windows.MessageBoxImage.Information : System.Windows.MessageBoxImage.Error });
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, $"發送SFIS測試動作錯誤。");
+            }
+        }
+        public void SetArmsShiftAction(ArmsShiftArgs e)
+        {
+            try
+            {
+                var processor = e.Arms.ToLower() == "in" ? in_arms : lid_arms;
+                if (e.Arms.ToLower() == "in")
+                    system_param.ShiftInArms = e.Value;
+                else
+                    system_param.ShiftOutArms = e.Value;
+                processor.SetShiftValue(e.Value);
+                OnPresentResponseEvent("show_message", new SendMessageBoxArgs { Name = "手臂訊息", Message = "設定完成。", Image = System.Windows.MessageBoxImage.Information });
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, $"設定手臂偏移錯誤。");
+            }
+        }
+        public void GetArmsShiftAction(ArmsShiftArgs e)
+        {
+            try
+            {
+                var processor = e.Arms.ToLower() == "in" ? in_arms : lid_arms;
+                var val = processor.GetShiftValue();
+                if (e.Arms.ToLower() == "in")
+                    system_param.ShiftInArms = val;
+                else
+                    system_param.ShiftOutArms = val;
+                OnPresentResponseEvent("get_arms_shift_response", new ArmsShiftArgs { Arms = e.Arms, Value = val });
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, $"取得手臂偏移參數錯誤。");
+            }
+        }
+        public void SetPlateAccuracyAction(SetPlateAccuracyArgs e)
+        {
+            try
+            {
+                system_param.PlateAccuracy = e.Accuracy;
+                lid_arms.SetPlateAccuracy(system_param.PlateAccuracy);
+                OnPresentResponseEvent("show_message", new SendMessageBoxArgs { Name = "出料手臂訊息", Message = "設定完成。", Image = System.Windows.MessageBoxImage.Information });
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, $"設定組裝精度參數錯誤。");
+            }
+        }
+        public void SaveSystemParamAction(SystemParamArgs e)
+        {
+            try
+            {
+                CaseNgOutTask.GetEntity().NgCountLimit = system_param.NgOutCountLimit = e.Param.NgOutCountLimit;
+                system_param.DataRecordCount = e.Param.DataRecordCount;
+                system_param.Sfis.StationID = e.Param.Sfis.StationID;
+                system_param.Sfis.LineID = e.Param.Sfis.LineID;
+                system_param.Sfis.BarcodeA = e.Param.Sfis.BarcodeA;
+                system_param.Sfis.BarcodeB = e.Param.Sfis.BarcodeB;
+                system_param.Sfis.InspLevel = e.Param.Sfis.InspLevel;
+                system_param.Sfis.Enable = e.Param.Sfis.Enable;
+                system_param.MeasurePosition = e.Param.MeasurePosition;
+                system_param.FlatnessUpperLimit = e.Param.FlatnessUpperLimit;
+                system_param.HeightLimit = e.Param.HeightLimit;
+                SaveSystemParam();
+                OnPresentResponseEvent("show_message", new SendMessageBoxArgs { Name = "參數設定", Message = "系統參數儲存成功。", Image = System.Windows.MessageBoxImage.Information });
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, $"儲存參數動作錯誤。");
+            }
+        }
+        public void EstHeighAction()
+        {
+            try
+            {
+                var height_val = height_plc.GetHeightVal();
+                var base_param = new List<float>();
+                var plane_func = CalcFunc.CalBasePlane(system_param.MeasurePosition, height_val, out base_param);
+                var dist = CalcFunc.CalDist(system_param.MeasurePosition, height_val, base_param);
+                var flatness = CalcFunc.CalFlatness(dist);
+                OnPresentResponseEvent("estimate_height_response_action", new EstimateHeightResponseActionArgs { HeightValue = height_val, PlaneFunc = plane_func, Distance = dist, Flatness = flatness });
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, $"測高機單測功能錯誤。");
+            }
+        }
+        public void SetWorksheetAction(SetWorkSheetArgs e)
+        {
+            try
+            {
+                system_param.Sfis.WorkerID = e.WorkerID;
+                system_param.Sfis.TicketID = e.TicketID;
+                system_param.Sfis.LidLotID = e.LidLotID;
+                system_param.Sfis.NutNo = e.NutLotID;
+                system_param.CaseCount = e.RunCount;
+                system_param.Recipe = e.Recipe;
+                SaveSystemParam();
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, $"儲存工單資料錯誤。");
+            }
+        }
+        public void RunMainFlowAction(RunMainFlowArgs e)
+        {
+            try
+            {
+                if (e.Action.ToLower().Contains("start") || e.Action.ToLower().Contains("resume"))
+                {
+                    main_plc.PCErrorSet(0);
+
+                    #region 檢查硬體狀態
+                    var restart = false;
+                    var message = "Start All Cases.";
+                    main_plc.GetStatus();
+                    if (main_plc.IsError || main_plc.IsInitialized || main_plc.IsSend)
+                    {
+                        restart = true;
+                        message = "主流道PLC錯誤，請確認。";
+                    }
+                    nut_plc.GetStatus();
+                    if (!(nut_plc.IsIdle || nut_plc.IsFinish))
+                    {
+                        restart = true;
+                        message = "螺帽站PLC錯誤，請確認。";
+                    }
+                    bend_plc.GetStatus();
+                    if (!(bend_plc.IsIdle || bend_plc.IsFinish))
+                    {
+                        restart = true;
+                        message = "折彎站PLC錯誤，請確認。";
+                    }
+                    plate_plc.GetStatus();
+                    if (!(plate_plc.IsIdle || plate_plc.IsFinish))
+                    {
+                        restart = true;
+                        message = "壓平站PLC錯誤，請確認。";
+                    }
+                    height_plc.GetStatus();
+                    if (!(height_plc.IsIdle || height_plc.IsFinish))
+                    {
+                        restart = true;
+                        message = "測高站PLC錯誤，請確認。";
+                    }
+                    ng_plc.GetStatus();
+                    if (ng_plc.IsError || ng_plc.IsInitialized || ng_plc.IsSend)
+                    {
+                        restart = true;
+                        message = "NG站PLC錯誤，請確認。";
+                    }
+                    
+                    in_station_plc.GetStatus();
+                    if (in_station_plc.IsError)
+                    {
+                        restart = true;
+                        message = "入料站PLC錯誤，請確認。";
+                    }
+                    lid_station_plc.GetStatus();
+                    if (lid_station_plc.IsError)
+                    {
+                        restart = true;
+                        message = "組裝站PLC錯誤，請確認。";
+                    }
+                    out_station_plc.GetStatus();
+                    if (out_station_plc.IsError)
+                    {
+                        restart = true;
+                        message = "出料站PLC錯誤，請確認。";
+                    }
+                    if (!in_arms.IsLogin)
+                    {
+                        restart = true;
+                        message = "入料手臂尚未登入遠端控制，請確認。";
+                    }
+                    if (!lid_arms.IsLogin)
+                    {
+                        restart = true;
+                        message = "組裝手臂尚未登入遠端控制，請確認。";
+                    }
+                    if (!out_arms.IsLogin)
+                    {
+                        restart = true;
+                        message = "出料手臂尚未登入遠端控制，請確認。";
+                    }
+                    if (!lfj_processor.ConnectedState)
+                    {
+                        restart = true;
+                        message = "雷射尚未登入連線，請確認。";
+                    }
+                    if (!lk_processor.ConnectState)
+                    {
+                        restart = true;
+                        message = "測高機尚未登入連線，請確認。";
+                    }
+                    #endregion 檢查硬體狀態
+                    #region 卡控檢查
+
+                    #region 檢查NG數量
+                    if (CaseNgOutTask.GetEntity().NgCount >= system_param.NgOutCountLimit)
+                    {
+                        restart = true;
+                        message = "NG計數尚未重置，請重置NG數量。";
+                    }
+                    if (CaseOutTask.GetEntity().NGCount >= CaseOutTask.GetEntity().NGCountLimit)
+                    {
+                        restart = true;
+                        message = "NG計數尚未重置，請重置NG數量。";
+                    }
+                    #endregion 檢查NG數量
+                    #endregion 卡控檢查
+                    if (restart)
+                    {
+                        OnPresentResponseEvent("run_main_flow", new RunMainFlowArgs { ReStartFlow = e.Action.ToLower().Contains("resume") ? false : restart, Message = message });
+                        return;
+                    }
+                }
+                if (e.Action.ToLower().Contains("start"))
+                {
+                    #region 檢查Load/Unload
+                    in_station_plc.GetStatus();
+                    if (in_station_plc.IsChangedCassette)
+                    {
+                        OnPresentResponseEvent("run_main_flow", new RunMainFlowArgs { ReStartFlow = true, Message = "入料站尚未入盤，請先入盤，再按下「Start」按鈕。" });
+                        return;
+                    }
+                    lid_station_plc.GetStatus();
+                    if (lid_station_plc.IsChangedCassette)
+                    {
+                        OnPresentResponseEvent("run_main_flow", new RunMainFlowArgs { ReStartFlow = true, Message = "組裝站尚未入盤，請先入盤，再按下「Start」按鈕。" });
+                        return;
+                    }
+                    out_station_plc.GetStatus();
+                    if (out_station_plc.IsChangedCassette)
+                    {
+                        OnPresentResponseEvent("run_main_flow", new RunMainFlowArgs { ReStartFlow = true, Message = "出料站尚未入盤，請先入盤，再按下「Start」按鈕。" });
+                        return;
+                    }
+                    #endregion 檢查Load/Unload
+                    #region 初始化手臂並將PLC設定成自動模式
+                    Task.WaitAll(new Task[] {
+                        Task.Run(()=> in_arms.Home()),
+                        Task.Run(()=> lid_arms.Home()),
+                        Task.Run(()=> out_arms.Home()),
+                        Task.Run(()=>main_plc.SwitchAutoMode(1)),
+                        });
+                    Task.WaitAll(new Task[] {
+                        Task.Run(()=> in_arms.SetRecipe(system_param.Recipe)),
+                        Task.Run(() => lid_arms.SetRecipe(system_param.Recipe)),
+                        Task.Run(() => out_arms.SetRecipe(system_param.Recipe)),
+                    });
+                    #endregion 初始化手臂並將PLC設定成自動模式
+
+                    #region 重置計數
+                    CaseNgOutTask.GetEntity().NgCount = 0;
+                    CaseOutTask.GetEntity().NGCount = 0;
+                    #endregion 重置計數
+                    Thread.Sleep(500);
+                    if (CaseAllTask.GetEntity().IsRunning)
+                    {
+                        CaseAllTask.GetEntity().Stop();
+                        Thread.Sleep(1000);
+                    }
+                    if (!main_plc.RunAllInitialized())
+                    {
+                        OnPresentResponseEvent("run_main_flow", new RunMainFlowArgs { ReStartFlow = true, Message = "All PLC Initialize Fail." });
+                        return;
+                    }
+                    CaseAllTask.GetEntity().StartTask();
+                    is_run = true;
+
+                }
+                else if (e.Action.ToLower().Contains("stop"))
+                {
+                    main_plc.PCErrorSet(0);
+                    CaseAllTask.GetEntity().Stop();
+                    is_run = false;
+                }
+                else if (e.Action.ToLower().Contains("resume"))
+                {
+                    main_plc.PCErrorSet(0);
+                    CaseAllTask.GetEntity().Resume();
+                    is_run = true;
+                }
+                else if (e.Action.ToLower().Contains("pause"))
+                {
+                    CaseAllTask.GetEntity().Pause();
+                    is_run = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                OnPresentResponseEvent("run_main_flow", new RunMainFlowArgs { ReStartFlow = true, Message = $"執行主流程動作錯誤，動作{e.Action}。" });
+                logger = LoggerData.Error(ex, $"執行主流程動作錯誤，動作{e.Action}。");
+            }
+        }
+        public void ManualNgSettingAction(ManualNGSettingArgs e)
+        {
+            try
+            {
+                switch (e.station_index)
+                {
+                    case 1:
+                        var case_data = CaseInTask.GetEntity().case_data;
+                        case_data.IsRun = false;
+                        case_data.ManualNG = true;
+                        case_data.NGPosition.Add(e.station_index);
+                        CaseInTask.GetEntity().SetStep(0);
+                        break;
+                    case 5:
+                        case_data = CaseLidTask.GetEntity().case_data;
+                        case_data.IsRun = false;
+                        case_data.ManualNG = true;
+                        CaseLidTask.GetEntity().PutCaseFinish = true;
+                        case_data.NGPosition.Add(e.station_index);
+                        CaseLidTask.GetEntity().SetStep(6);
+                        break;
+                    case 7:
+                        case_data = CaseScanCodeTask.GetEntity().case_data;
+                        case_data.IsRun = false;
+                        case_data.ManualNG = true;
+                        case_data.NGPosition.Add(e.station_index);
+                        CaseScanCodeTask.GetEntity().Status = EnumData.TaskStatus.Done;
+                        break;
+                    case 8:
+                        case_data = CasePutNutTask.GetEntity().case_data;
+                        case_data.IsRun = false;
+                        case_data.ManualNG = true;
+                        case_data.NGPosition.Add(e.station_index);
+                        CasePutNutTask.GetEntity().Status = EnumData.TaskStatus.Done;
+                        break;
+                    case 9:
+                    case 10:
+                        case_data = CaseBendTask.GetEntity().case_data;
+                        case_data.IsRun = false;
+                        case_data.ManualNG = true;
+                        case_data.NGPosition.Add(e.station_index);
+                        CaseBendTask.GetEntity().Status = EnumData.TaskStatus.Done;
+                        break;
+                    case 11:
+                        case_data = CasePlateTask.GetEntity().case_data;
+                        case_data.IsRun = false;
+                        case_data.ManualNG = true;
+                        case_data.NGPosition.Add(e.station_index);
+                        CasePlateTask.GetEntity().Status = EnumData.TaskStatus.Done;
+                        break;
+                    case 13:
+                        case_data = CaseEstHeightTask.GetEntity().case_data;
+                        case_data.IsRun = false;
+                        case_data.ManualNG = true;
+                        case_data.NGPosition.Add(e.station_index);
+                        CaseEstHeightTask.GetEntity().Status = EnumData.TaskStatus.Done;
+                        break;
+                    case 14:
+                        case_data = CaseNgOutTask.GetEntity().case_data;
+                        case_data.IsRun = false;
+                        case_data.ManualNG = true;
+                        case_data.NGPosition.Add(e.station_index);
+                        CaseNgOutTask.GetEntity().Status = EnumData.TaskStatus.Done;
+                        break;
+                    case 15:
+                        case_data = CaseMarkingTask.GetEntity().case_data;
+                        case_data.IsRun = false;
+                        case_data.ManualNG = true;
+                        case_data.NGPosition.Add(e.station_index);
+                        CaseMarkingTask.GetEntity().Status = EnumData.TaskStatus.Done;
+                        break;
+                    case 20:
+                        case_data = CaseOutTask.GetEntity().case_data;
+                        case_data.IsRun = false;
+                        case_data.ManualNG = true;
+                        case_data.NGPosition.Add(e.station_index);
+                        if (system_param.Sfis.Enable)
+                        {
+                            _sfis.SendStep(3, MainPresenter.SystemParam().Sfis, case_data);
+                        }
+                        CaseOutTask.GetEntity().Status = EnumData.TaskStatus.Done;
+                        break;
+                }
+                OnPresentResponseEvent("show_message", new SendMessageBoxArgs { Name = "流程訊息", Message = $"手動NG設定完成，請確認是否已將物料移除。", Image = System.Windows.MessageBoxImage.Information });
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, $"手動設定NG站別失敗。");
+            }
+        }
+        public void ResetNgCountAction()
+        {
+            try
+            {
+                CaseNgOutTask.GetEntity().NgCount = 0;
+                OnPresentResponseEvent("show_message", new SendMessageBoxArgs { Name = "流程訊息", Message = "重置成功。", Image = System.Windows.MessageBoxImage.Information });
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, $"重置NG計數失敗。");
+            }
+        }
+        public void ResetOutNgCountAction()
+        {
+            try
+            {
+                CaseOutTask.GetEntity().NGCount = 0;
+                OnPresentResponseEvent("show_message", new SendMessageBoxArgs { Name = "流程訊息", Message = "重置成功。", Image = System.Windows.MessageBoxImage.Information });
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, $"重置出料NG計數失敗。");
+            }
+        }
+        public void ResetPCErrorAction()
+        {
+            try
+            {
+                var success = main_plc.PCErrorSet(0);
+                var message = success ? "成功" : "失敗";
+                OnPresentResponseEvent("show_message", new SendMessageBoxArgs { Name = "流程訊息", Message = $"重置{message}。", Image = success ? System.Windows.MessageBoxImage.Information : System.Windows.MessageBoxImage.Error });
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, $"重置NG計數失敗。");
+            }
+        }
+        public void SetSystemFlowAction(SetSystemFlowArgs e)
+        {
+            try
+            {
+                LoggerData.Info($"儲存系統流程參數開始。");
+                system_param.Flow = e.Flow;
+                SaveSystemParam();
+                LoggerData.Info($"儲存系統流程參數完成，參數:{e.Flow.CaseAssemble},{e.Flow.CaseScan},{e.Flow.CasePutNut},{e.Flow.CaseBending},{e.Flow.CasePlate},{e.Flow.CaseEstHeight},{e.Flow.CaseNgOut},{e.Flow.CaseMarking}。");
+                OnPresentResponseEvent("show_message", new SendMessageBoxArgs { Name = "參數設定", Message = "系統參數儲存成功。", Image = System.Windows.MessageBoxImage.Information });
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, $"儲存系統流程參數錯誤。");
+            }
+        }
+       
     }
 }

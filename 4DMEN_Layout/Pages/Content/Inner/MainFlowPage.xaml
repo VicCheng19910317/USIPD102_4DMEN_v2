@@ -83,6 +83,7 @@
                             <RowDefinition Height="2*" />
                             <RowDefinition Height=".5*" />
                             <RowDefinition Height="2*" />
+                            <RowDefinition Height="2*" />
                         </Grid.RowDefinitions>
                         <TextBlock Text="Operator ID：" TextAlignment="Right" VerticalAlignment="Center" FontSize="18" Grid.Row="0" Grid.Column="0" />
                         <TextBox x:Name="OPNameTxt"  TextAlignment="Center"  VerticalAlignment="Center" FontSize="18" Grid.Row="0" Grid.Column="1" TextChanged="Sheet_TextChanged"/>
@@ -139,6 +140,7 @@
                         <Separator Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource MaterialDesignDarkSeparator}" />
                         <Button x:Name="NgCountResetBtn" Style="{StaticResource MaterialDesignOutlinedSecondaryDarkButton}" Grid.Row="16" Grid.Column="0" Content="Ng Reset" Margin="3" Height="50" FontSize="16" Click="NgCountResetBtn_Click" />
                         <Button x:Name="PCErrorResetBtn" Style="{StaticResource MaterialDesignOutlinedSecondaryDarkButton}" Grid.Row="16" Grid.Column="1" Content="PC Error Reset" Margin="3" Height="50" FontSize="16" Click="PCErrorResetBtn_Click" />
+                        <Button x:Name="OutNgCountResetBtn" Style="{StaticResource MaterialDesignOutlinedSecondaryDarkButton}" Grid.Row="17" Grid.Column="0" Content="Out NG Reset" Margin="3" Height="50" FontSize="16" Click="OutNgCountResetBtn_Click" />
                     </Grid>
                 </TabItem>
                 <TabItem Height="60" Width="20">
@@ -156,6 +158,7 @@
                         <StackPanel Grid.Row="0" Grid.Column="0">
                             <CheckBox x:Name="CaseAssembleCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="上蓋組裝" />
                             <CheckBox x:Name="CaseScanCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="塗膠檢測"  />
+                            <CheckBox x:Name="CasePutNutCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="放置螺帽" />
                             <CheckBox x:Name="CaseBendingCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="底板折彎" />
                             <CheckBox x:Name="CasePlateCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="底板壓平"  />
                             <CheckBox x:Name="CaseEstHeightCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="高度測試" />
