@@ -29,7 +29,7 @@ namespace USIPD102_4DMEN
     {
         #region 屬性參數
         private readonly PaletteHelper _paletteHelper = new PaletteHelper();
-        private readonly string version = "2.31.1.20240223";
+        private readonly string version = "2.33.2.20240223";
         private static Logger logger = LogManager.GetCurrentClassLogger();
         #endregion 屬性參數
         #region 靜態動作
@@ -85,6 +85,10 @@ namespace USIPD102_4DMEN
                     SingleStationRunResponse((SendSingleStationFlowArgs)e);
                 else if (response_name == "send_flow_error")
                     SendFlowErrorResponse((SendMessageBoxArgs)e);
+                else if (response_name == "update_logger_data")
+                    UpdateLoggerData((UpdateLoggerArgs)e);
+                else if (response_name == "load_log_datas")
+                    LoadLogDatas((UpdateLoggerArgs)e);
             }
             catch (Exception ex)
             {
@@ -174,7 +178,8 @@ namespace USIPD102_4DMEN
         {
             try
             {
-                ReaderPage.SetLaserHeightrResponseMessage(e.connect_state, e.channel,e.value,e.message);
+                BottomPage.ChangeLaserHeightStatus(e.connect_state);
+                ReaderPage.SetLaserHeightResponseMessage(e.connect_state, e.channel,e.value,e.message);
                 if (e.show_message)
                     MessageBox.Show(e.message, "測高機傳訊息", MessageBoxButton.OK, e.success ? MessageBoxImage.Information : MessageBoxImage.Error);
             }
@@ -187,6 +192,7 @@ namespace USIPD102_4DMEN
         {
             try
             {
+                BottomPage.ChangeLaserHeightStatus(e.connect_state);
                 ReaderPage.LoadLaserHeightParam(e.connect_state, e.IP, e.message);
                 if (!e.success)
                     MessageBox.Show(e.message, "測高機傳訊息", MessageBoxButton.OK, e.success ? MessageBoxImage.Information : MessageBoxImage.Error);
@@ -198,6 +204,7 @@ namespace USIPD102_4DMEN
         }
         private void SendMarkingActionResponse(SendMarkingActionResponseArgs e)
         {
+            BottomPage.ChangeLaserStatus(e.connection);
             MarkingPage.SetConnectionStatus(e.connection);
             MarkingPage.SetMessage(e.message);
             MessageBox.Show(e.message, "雷雕機傳訊息", MessageBoxButton.OK, e.success ? MessageBoxImage.Information : MessageBoxImage.Error);
@@ -296,12 +303,36 @@ namespace USIPD102_4DMEN
             {
                 MainFlowPage.SetSystemFlow(e.Param.Flow);
                 MainFlowPage.SetWorksheetInfo(e.Param.Sfis, e.Param.CaseCount, e.Param.Recipe);
+                BottomPage.ChangeSfisStatus(e.Param.Sfis.Enable);
+                BottomPage.ChangeLaserStatus(e.MarkingStatus);
                 SystemParamSettingPage.SetInitParam(e.Param);
                 MarkingPage.LoadMarkingParam(e.IP, e.Port, e.MarkingStatus, e.Param.MarkParam);
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "初始化測高機錯誤。");
+            }
+        }
+        public void UpdateLoggerData(UpdateLoggerArgs e)
+        {
+            try
+            {
+                if (SystemInfoPage.UpdateLogDatas != null)
+                    SystemInfoPage.UpdateLogDatas(e.Datas);
+            }
+            catch (Exception)
+            {
+            }
+        }
+        public void LoadLogDatas(UpdateLoggerArgs e)
+        {
+            try
+            {
+                SystemInfoPage.LoadLogDatas(e.Datas);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "讀取Logger資料錯誤。");
             }
         }
         #endregion MVP架構事件

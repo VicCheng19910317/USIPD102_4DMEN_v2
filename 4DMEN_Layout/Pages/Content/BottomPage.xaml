@@ -33,10 +33,10 @@
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.7*" />
-            <ColumnDefinition Width="0.7*" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width=".9*" />
+            <ColumnDefinition Width=".9*" />
+            <ColumnDefinition Width=".9*" />
+            <ColumnDefinition Width=".9*" />
             <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
@@ -58,32 +58,21 @@
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Text="SFIS：" Grid.Row="0" Grid.Column="0"  Style="{StaticResource DisplayTitleTxt}" Grid.ColumnSpan="3" Margin="10,5,0,5"/>
+                <Image  x:Name="DisplaySfisSignalImg" Grid.Row="1" Grid.Column="1" Source="White_Button.png" Margin="10,0,0,0" ></Image>
                 <TextBlock x:Name="DisplaySfusSignalTxt"  Grid.Row="1" Grid.Column="2"  Text="OFF" Style="{StaticResource DisplayTxt}" Width="Auto" FontSize="32" HorizontalAlignment="Left"/>
             </Grid>
         </materialDesign:Card>
         <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp12" Grid.Row="0" Grid.Column="2" Margin="5">
             <StackPanel>
-                <TextBlock Text="Glue Update Time：" Style="{StaticResource DisplayTitleTxt}"/>
-                <TextBlock x:Name="DisplayGlueTxt" Text="2023/08/08 12:30" Style="{StaticResource DisplayTxt}" FontSize="30"/>
+                <TextBlock Text="Laser Height Status：" Style="{StaticResource DisplayTitleTxt}"/>
+                <TextBlock x:Name="LaserHeiStatusTxt" Text="連線" FontWeight="Bold" Style="{StaticResource DisplayTxt}" FontSize="40"/>
             </StackPanel>
         </materialDesign:Card>
         <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp12" Grid.Row="0" Grid.Column="3" Margin="5">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.6*"/>
-                    <ColumnDefinition Width="1.8*"/>
-                    <ColumnDefinition Width="2.2*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="2*"/>
-                </Grid.RowDefinitions>
-                <TextBlock Text="Needle Teach：" Grid.Row="0" Grid.Column="0"  Style="{StaticResource DisplayTitleTxt}" Grid.ColumnSpan="3" Margin="10,5,0,5"/>
-                
-                <TextBlock x:Name="DisplayNiddleSignalTxt"  Grid.Row="1" Grid.Column="1"  Text="Initialize" Style="{StaticResource DisplayTxt}" Width="Auto" FontSize="28"/>
-                <TextBlock x:Name="DisplayNiddleTxt"  Grid.Row="1" Grid.Column="2" Text="08/08 10:04" Style="{StaticResource DisplayTxt}" Width="Auto" />
-            </Grid>
-
+            <StackPanel>
+                <TextBlock Text="Laser Status：" Style="{StaticResource DisplayTitleTxt}"/>
+                <TextBlock x:Name="LaserStatusTxt" Text="連線" FontWeight="Bold" Style="{StaticResource DisplayTxt}" FontSize="40"/>
+            </StackPanel>
         </materialDesign:Card>
         <materialDesign:Card materialDesign:ElevationAssist.Elevation="Dp12" Grid.Row="0" Grid.Column="4" Margin="5">
             <StackPanel>

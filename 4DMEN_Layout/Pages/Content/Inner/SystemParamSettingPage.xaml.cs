@@ -349,6 +349,7 @@ namespace USIPD102_4DMEN.Pages
                     new Range { Lower = heigh_min_2, Upper = heigh_max_2 },
                     new Range { Lower = heigh_min_3, Upper = heigh_max_3 },
                 };
+                BottomPage.ChangeSfisStatus(param.Sfis.Enable);
                 MainWindow.SendPresenterData("save_system_param", new SystemParamArgs { Param = param });
             }
             catch (Exception ex)

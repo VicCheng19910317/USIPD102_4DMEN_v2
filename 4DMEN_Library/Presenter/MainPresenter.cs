@@ -180,6 +180,8 @@ namespace _4DMEN_Library
                 SendSingleStationFlow((SendSingleStationFlowArgs)e);
             else if (actions == "send_single_station_control_flow")
                 SendSingleStationControlFlow((SendSingleStationFlowArgs)e);
+            else if (actions == "load_log_datas")
+                LoadLogDatasAction();
         }
         private void MainPresenter_UpdateCaseDataEvent(object sender, List<CaseData> caseDatas)
         {
@@ -255,7 +257,14 @@ namespace _4DMEN_Library
             {
                 logger = LoggerData.Error(ex, "測高機初始化失敗。");
             }
-            
+            try
+            {
+                logger = LoggerData.LoadLogData();
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, "歷史資料Logger數初始化失敗。");
+            }
             init_run = true;
         }
         private void Closing()
@@ -1832,6 +1841,17 @@ namespace _4DMEN_Library
             catch (Exception ex)
             {
                 logger = LoggerData.Error(ex, $"執行單動控制流程錯誤，動作{e.Station}。");
+            }
+        }
+        public void LoadLogDatasAction()
+        {
+            try
+            {
+                OnPresentResponseEvent("load_log_datas", new UpdateLoggerArgs { Datas = _logger });
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, $"讀取檢測膠量設定資料失敗。");
             }
         }
     }

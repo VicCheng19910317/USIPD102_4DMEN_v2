@@ -32,6 +32,9 @@ namespace USIPD102_4DMEN.Pages
         public static Action<string> ChangeSystemTime;
         public static Action<string> ChangeSystemVersion;
         public static Action CloseSystem;
+        public static Action<bool> ChangeSfisStatus;
+        public static Action<bool> ChangeLaserHeightStatus;
+        public static Action<bool> ChangeLaserStatus;
         #endregion 頁面動作
         #region 方法
         public void UpdateTime()
@@ -62,6 +65,32 @@ namespace USIPD102_4DMEN.Pages
                         SystemStatusTxt.Text = status;
                     });
 
+                };
+                ChangeSfisStatus = status =>
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        string url_path = status ? "Signal/Green_Button.png" : "Signal/White_Button.png";
+                        var startup_path = Directory.GetCurrentDirectory();
+                        DisplaySfisSignalImg.Source = new BitmapImage(new Uri($"{startup_path}\\{url_path}"));
+                        DisplaySfusSignalTxt.Text = status ? "ON" : "OFF";
+                    });
+                };
+                ChangeLaserHeightStatus = status =>
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        LaserHeiStatusTxt.Text = status ? "連線" : "未連線";
+                        LaserHeiStatusTxt.Foreground = status ? (Brush)new BrushConverter().ConvertFrom("#1A237E") : (Brush)new BrushConverter().ConvertFrom("#FF0000");
+                    });
+                };
+                ChangeLaserStatus = status =>
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        LaserStatusTxt.Text = status ? "連線" : "未連線";
+                        LaserStatusTxt.Foreground = status ? (Brush)new BrushConverter().ConvertFrom("#1A237E") : (Brush)new BrushConverter().ConvertFrom("#FF0000");
+                    });
                 };
                 ChangeSystemTime = time => Dispatcher.Invoke(() => DisplayTimeTxt.Text = time);
                 ChangeSystemVersion = version => Dispatcher.Invoke(() => DisplayVersionTxt.Text = $"ver. {version}.");

@@ -29,7 +29,7 @@ namespace USIPD102_4DMEN.Pages
         public static Action<string, string> SetReaderResponseMessage;
         public static Action<KeyenceReaderParam, KeyenceReaderParam> LoadReaderData;
 
-        public static Action<bool, int, float, string> SetLaserHeightrResponseMessage;
+        public static Action<bool, int, float, string> SetLaserHeightResponseMessage;
         public static Action<bool> SetConnectionStatus;
         public static Action<bool, string, string> LoadLaserHeightParam;
         #endregion 靜態動作
@@ -72,7 +72,7 @@ namespace USIPD102_4DMEN.Pages
                     OutDG.ItemsSource = _action;
                 });
             };
-            SetLaserHeightrResponseMessage = (connect, channel, value, message) =>
+            SetLaserHeightResponseMessage = (connect, channel, value, message) =>
             {
                 Dispatcher.Invoke(() =>
                 {
