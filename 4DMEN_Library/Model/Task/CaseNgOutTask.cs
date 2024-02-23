@@ -121,16 +121,16 @@ namespace _4DMEN_Library.Model
         public override void PauseTask()
         {
             IsPause = true;
-            //while (true)
-            //{
-            //    if (CaseInTask.GetEntity().WaitForPause || CasePlateTask.GetEntity().WaitForPause || CaseGlueTask.GetEntity().IsRunning || CaseWeightTask.GetEntity().WaitForPause ||
-            //        CaseInspTask.GetEntity().WaitForPause || CaseOutTask.GetEntity().WaitForPause)
-            //    {
-            //        System.Threading.Thread.Sleep(100);
-            //        continue;
-            //    }
-            //    break;
-            //}
+            while (true)
+            {
+                if (CaseScanCodeTask.GetEntity().WaitForPause || CasePutNutTask.GetEntity().WaitForPause || CaseBendTask.GetEntity().WaitForPause || CasePlateTask.GetEntity().WaitForPause ||
+                    CaseEstHeightTask.GetEntity().WaitForPause || CaseMarkingTask.GetEntity().WaitForPause || CaseOutTask.GetEntity().WaitForPause)
+                {
+                    System.Threading.Thread.Sleep(100);
+                    continue;
+                }
+                break;
+            }
             MainPresenter.SetRunFlow(false);
             _pauseEvent.Reset();
             ThreadState = System.Threading.ThreadState.SuspendRequested;

@@ -927,8 +927,9 @@ namespace _4DMEN_Library
                 view.PresenterSendEvent += PresenterSendEvent;
                 #region 靜態動作
                 SetRunFlow = value => run_flow = value;
-                #endregion 靜態動作
                 SetRunSingleStep = data => run_single_step = data;
+                #endregion 靜態動作
+
                 #region 靜態功能
                 LogDatas = () => logger;
                 SystemParam = () => system_param;
@@ -953,7 +954,25 @@ namespace _4DMEN_Library
                 LFJProcessor = () => lfj_processor;
                 SFIS = () => _sfis;
                 #endregion 靜態功能
-
+                #region 流程錯誤訊息串接
+                CaseInTask.GetEntity().ShowErrorMessageEvent += MainPresenter_ShowFlowErrorEvent;
+                CaseLidTask.GetEntity().ShowErrorMessageEvent += MainPresenter_ShowFlowErrorEvent;
+                CaseScanCodeTask.GetEntity().ShowErrorMessageEvent += MainPresenter_ShowFlowErrorEvent;
+                CasePutNutTask.GetEntity().ShowErrorMessageEvent += MainPresenter_ShowFlowErrorEvent;
+                CaseBendTask.GetEntity().ShowErrorMessageEvent += MainPresenter_ShowFlowErrorEvent;
+                CasePlateTask.GetEntity().ShowErrorMessageEvent += MainPresenter_ShowFlowErrorEvent;
+                CaseEstHeightTask.GetEntity().ShowErrorMessageEvent += MainPresenter_ShowFlowErrorEvent;
+                CaseNgOutTask.GetEntity().ShowErrorMessageEvent += MainPresenter_ShowFlowErrorEvent;
+                CaseMarkingTask.GetEntity().ShowErrorMessageEvent += MainPresenter_ShowFlowErrorEvent;
+                CaseOutTask.GetEntity().ShowErrorMessageEvent += MainPresenter_ShowFlowErrorEvent;
+                CaseAllTask.GetEntity().UpdateCaseDataEvent += MainPresenter_UpdateCaseDataEvent;
+                CaseAllTask.GetEntity().ShowErrorMessageEvent += MainPresenter_ShowMessageEvent;
+                CaseAllTask.GetEntity().FinishCaseEvent += MainPresenter_FinishCaseEvent;
+                CaseDoorCheckTask.GetEntity().ShowErrorMessageEvent += MainPresenter_ShowFlowErrorEvent;
+                CaseInStationTask.GetEntity().ShowErrorMessageEvent += MainPresenter_ShowFlowErrorEvent;
+                CaseLidStationTask.GetEntity().ShowErrorMessageEvent += MainPresenter_ShowFlowErrorEvent;
+                CaseOutStationTask.GetEntity().ShowErrorMessageEvent += MainPresenter_ShowFlowErrorEvent;
+                #endregion 流程錯誤訊息串接
             }
             catch (Exception ex)
             {

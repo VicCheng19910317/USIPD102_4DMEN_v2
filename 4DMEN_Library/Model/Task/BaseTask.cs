@@ -31,6 +31,7 @@ namespace _4DMEN_Library.Model
         public bool IsReady =>
            this.Status == EnumData.TaskStatus.Idle ||
            this.Status == EnumData.TaskStatus.Ready;
+        public bool WaitForPause => (IsRunning && !IsPause);
         /// <summary>
         /// 任務是否完成訊號
         /// </summary>

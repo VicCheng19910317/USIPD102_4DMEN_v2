@@ -193,5 +193,24 @@ namespace _4DMEN_Library.Model
             }
         }
         #endregion 實作方法
+        #region 覆寫方法
+        public override void PauseTask()
+        {
+            IsPause = true;
+            while (true)
+            {
+                if (CaseScanCodeTask.GetEntity().WaitForPause || CasePutNutTask.GetEntity().WaitForPause || CaseBendTask.GetEntity().WaitForPause || CasePlateTask.GetEntity().WaitForPause ||
+                    CaseEstHeightTask.GetEntity().WaitForPause || CaseNgOutTask.GetEntity().WaitForPause || CaseMarkingTask.GetEntity().WaitForPause)
+                {
+                    Thread.Sleep(100);
+                    continue;
+                }
+                break;
+            }
+            MainPresenter.SetRunFlow(false);
+            _pauseEvent.Reset();
+            ThreadState = System.Threading.ThreadState.SuspendRequested;
+        }
+        #endregion 覆寫方法
     }
 }

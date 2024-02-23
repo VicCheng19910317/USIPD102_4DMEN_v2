@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace _4DMEN_Library.Model
@@ -91,16 +92,16 @@ namespace _4DMEN_Library.Model
         public override void PauseTask()
         {
             IsPause = true;
-            //while (true)
-            //{
-            //    if (CaseInTask.GetEntity().WaitForPause || CaseGlueTask.GetEntity().WaitForPause || CaseWeightTask.GetEntity().WaitForPause ||
-            //        CaseInspTask.GetEntity().WaitForPause || CaseOutTask.GetEntity().WaitForPause)
-            //    {
-            //        Thread.Sleep(100);
-            //        continue;
-            //    }
-            //    break;
-            //}
+            while (true)
+            {
+                if (CaseScanCodeTask.GetEntity().WaitForPause || CasePutNutTask.GetEntity().WaitForPause || CaseBendTask.GetEntity().WaitForPause || CasePlateTask.GetEntity().WaitForPause ||
+                    CaseNgOutTask.GetEntity().WaitForPause || CaseMarkingTask.GetEntity().WaitForPause || CaseOutTask.GetEntity().WaitForPause)
+                {
+                    Thread.Sleep(100);
+                    continue;
+                }
+                break;
+            }
             MainPresenter.SetRunFlow(false);
             _pauseEvent.Reset();
             ThreadState = System.Threading.ThreadState.SuspendRequested;
