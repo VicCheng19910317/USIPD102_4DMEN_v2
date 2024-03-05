@@ -91,7 +91,10 @@ namespace _4DMEN_Library.Model
         {
             var logger = MainPresenter.LogDatas();
             logger = LoggerData.Info($"手臂 {Name} 手臂放料");
+            var _timeout = Timeout;
+            timeout = 20000;
             var success = SendAction($"PUTP");
+            timeout = Timeout;
             logger = LoggerData.Info($"手臂 {Name} 手臂放料完成");
             return success;
         }
@@ -103,7 +106,10 @@ namespace _4DMEN_Library.Model
         {
             var logger = MainPresenter.LogDatas();
             logger = LoggerData.Info($"手臂 {Name} 手臂回原點");
+            var _timeout = Timeout;
+            timeout = 20000;
             var success = SendAction($"HOME");
+            timeout = Timeout;
             logger = LoggerData.Info($"手臂 {Name} 手臂回原點完成");
             return success;
         }
@@ -116,7 +122,11 @@ namespace _4DMEN_Library.Model
         {
             var logger = MainPresenter.LogDatas();
             logger = LoggerData.Info($"手臂 {Name} 設定取/放料位置");
+            var _timeout = Timeout;
+            timeout = 20000;
             var result = SendAction($"SYPU;{index}");
+            result = SendAction($"SYPK;{index}");
+            timeout = Timeout;
             logger = LoggerData.Info($"手臂 {Name} 設定取/放料位置完成");
             return result;
         }
@@ -128,7 +138,10 @@ namespace _4DMEN_Library.Model
         {
             var logger = MainPresenter.LogDatas();
             logger = LoggerData.Info($"手臂 {Name} 暫停");
+            var _timeout = Timeout;
+            timeout = 20000;
             var success = SendAction("Pause");
+            timeout = Timeout;
             logger = LoggerData.Info($"手臂 {Name} 暫停完成");
             return success;
         }
@@ -140,7 +153,10 @@ namespace _4DMEN_Library.Model
         {
             var logger = MainPresenter.LogDatas();
             logger = LoggerData.Info($"手臂 {Name} 暫停恢復");
+            var _timeout = Timeout;
+            timeout = 20000;
             var success = SendAction($"Resume");
+            timeout = Timeout;
             logger = LoggerData.Info($"手臂 {Name} 暫停恢復");
             return success;
         }
@@ -465,6 +481,7 @@ namespace _4DMEN_Library.Model
                     success = Home();
                     break;
                 case "sypu":
+                case "sypk":
                     if (action.Split(';').Length < 2)
                     {
                         success = false;
@@ -545,11 +562,12 @@ namespace _4DMEN_Library.Model
                     {
                         try
                         {
-                            System.Threading.Thread.Sleep(200);
+                            System.Threading.Thread.Sleep(250);
                             byte[] buffer = new byte[1024];
                             int bytesRead = buffer.Length;
                             if (networkStream.ReadAsync(buffer, 0, buffer.Length).Wait(timeout))
                                 resMessage = Encoding.ASCII.GetString(buffer).Replace("\0", "").Replace("\r\n", "");
+                               
                             else
                                 resMessage = $"{IP} 讀取回傳訊號超時";
                         }
@@ -701,6 +719,7 @@ namespace _4DMEN_Library.Model
                         System.Threading.Thread.Sleep(500);
                         success = StartConnected();
                         message = (success) ? message : $"登入控制錯誤，錯誤內容:{message}";
+                        IsLogin = success;
                         // 設定產品編號
                         success = SetRecipe(MainPresenter.SystemParam().Recipe);
                     }

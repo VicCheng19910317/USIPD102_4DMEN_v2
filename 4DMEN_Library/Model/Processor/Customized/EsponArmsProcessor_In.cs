@@ -19,7 +19,7 @@ namespace _4DMEN_Library.Model
             logger = LoggerData.Info($"手臂 {Name} 手臂取料");
             var _timeout = Timeout;
             _timeout = 10000;
-            var success = SendAction($"PICK", $"OnPosGauge");
+            var success = SendAction($"PICK", $"ONPOSGAUGE");
             if (success)
             {
                 var val = MainPresenter.LKProcessor().GetEstimateHieghtValue(0);

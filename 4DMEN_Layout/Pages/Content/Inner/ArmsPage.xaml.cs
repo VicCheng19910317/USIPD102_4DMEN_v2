@@ -57,6 +57,7 @@ namespace USIPD102_4DMEN.Pages
                             List<DisplayArmsAction> _action = new List<DisplayArmsAction>();
                             data.Action_Name.ForEach(x => _action.Add(new DisplayArmsAction { Name = x }));
                             LidArmsDG.ItemsSource = _action;
+                            LidPickIndexCB.SelectedIndex = 0;
                         }
                         else if (data.Name == "Arms Out")
                         {
@@ -151,7 +152,7 @@ namespace USIPD102_4DMEN.Pages
             {
                 var index = ((sender as ComboBox).SelectedItem as ComboBoxItem).Content.ToString();
                 var name = (sender as ComboBox).Name;
-                var tmp_dg = name.ToLower().Contains("out") ? OutArmsDG : name.ToLower().Contains("in") ? InArmsDG : LidArmsDG;
+                var tmp_dg = name.Substring(0, 3).ToLower().Contains("out") ? OutArmsDG : name.Substring(0, 3).ToLower().Contains("in") ? InArmsDG : LidArmsDG;
                 var items = tmp_dg.ItemsSource as List<DisplayArmsAction>;
                 var _item = items.Where(x => x.Name.Contains("SYPU")).FirstOrDefault();
                 if(_item != null)
@@ -159,6 +160,9 @@ namespace USIPD102_4DMEN.Pages
                 _item = items.Where(x => x.Name.Contains("SYPK")).FirstOrDefault();
                 if (_item != null)
                     _item.Name = $"SYPK;{index}";
+                _item = items.Where(x => x.Name.Contains("PROD")).FirstOrDefault();
+                if (_item != null)
+                    _item.Name = $"PROD;{int.Parse(index) - 1}";
                 tmp_dg.ItemsSource = null;
                 tmp_dg.ItemsSource = items;
             }

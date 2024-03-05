@@ -38,13 +38,14 @@ namespace _4DMEN_Library.Model
                 if (CaseDoorCheckTask.GetEntity().DoorOpen)
                     PauseTaskWithoutWait();
                 WaitOne();
-                if (case_data != null && !case_data.ManualNG)
-                    RunStep();
+
                 if (Status == EnumData.TaskStatus.Done)
                 {
                     ThreadState = System.Threading.ThreadState.Stopped;
                     break;
                 }
+
+                RunStep();
             }
         }
 
@@ -60,7 +61,7 @@ namespace _4DMEN_Library.Model
                         case_data.Step = Step = 3;
                         break;
                     }
-                    case_data.Step = Step = (case_data == null || !case_data.IsRun) ? 3 : 1;
+                    case_data.Step = Step = (case_data == null || !case_data.IsRun || case_data.ManualNG) ? 3 : 1;
                     case_data?.CaseEstHeiTime.Start();
                     break;
                 case 1: ///執行測高

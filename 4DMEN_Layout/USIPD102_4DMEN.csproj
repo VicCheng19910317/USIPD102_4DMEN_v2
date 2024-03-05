@@ -117,6 +117,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\Content\Inner\OPSettingPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Pages\Content\Inner\PLCPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -169,6 +173,9 @@
     </Compile>
     <Compile Include="Pages\Content\Inner\MarkingPage.xaml.cs">
       <DependentUpon>MarkingPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Content\Inner\OPSettingPage.xaml.cs">
+      <DependentUpon>OPSettingPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Content\Inner\PLCPage.xaml.cs">
       <DependentUpon>PLCPage.xaml</DependentUpon>

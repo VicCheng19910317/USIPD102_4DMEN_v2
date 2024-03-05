@@ -9,6 +9,7 @@ namespace _4DMEN_Library.Model
     internal class KeyenceReaderProcessor : KeyenceReaderParam
     {
         internal string ReadResult = "";
+        internal string ReadLevel = "";
         /// <summary>
         /// 資料轉換使用
         /// </summary>
@@ -76,8 +77,10 @@ namespace _4DMEN_Library.Model
             if (message.ToUpper().Contains(match_data))
             {
                 ReadResult = message.Split(':')[0].Replace("\r", "");
-                result = true;
-                Message = $"發送訊號成功，回傳結果：{message}";
+                if(message.Split(':').Count()>1)
+                    ReadLevel = message.Split(':')[1].Replace("\r", "");
+                result = ReadResult.ToLower().Contains("error") ? false : true;
+                Message = result ? $"發送訊號成功，回傳結果：{message}" : $"讀取條碼失敗，回傳結果：{message}";
             }
             else
                 Message = $"發送訊號比對錯誤，發送訊號:{action}，比對訊號:{match_data}";

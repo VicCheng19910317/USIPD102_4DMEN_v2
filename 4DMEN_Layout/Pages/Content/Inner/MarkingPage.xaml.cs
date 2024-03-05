@@ -30,6 +30,7 @@ namespace USIPD102_4DMEN.Pages
         public static Action<bool> SetConnectionStatus;
         public static Action<string> SetMessage;
         public static Action<string,int,bool, MarkingParam> LoadMarkingParam;
+        public static Action<string, string, string, string> ChangeMarkingParam;
         #endregion 靜態動作
         public MarkingPage()
         {
@@ -73,6 +74,16 @@ namespace USIPD102_4DMEN.Pages
                     param.pass_level.ForEach(x => PassLevelLV.Items.Add(x));
                 });
             };
+            ChangeMarkingParam = (fst_txt, snd_txt, snd_index, code_txt) => {
+                Dispatcher.Invoke(() =>
+                {
+
+                    TextObjectFstInpTxt.Text = fst_txt;
+                    TextObjectSndInpTxt.Text = snd_txt;
+                    TextObjectSndInpCountTxt.Text = snd_index;
+                    TextCodeInpTxt.Text = code_txt;
+                });
+            };
             #endregion 靜態動作
         }
 
@@ -89,6 +100,7 @@ namespace USIPD102_4DMEN.Pages
                     MessageBox.Show("設定第二行文字編號錯誤，請重新輸入。");
                     return;
                 }
+                OPSettingPage.ChangeMarkingParam(fst_txt, snd_txt, index.ToString(), code_txt);
                 MainWindow.SendPresenterData("send_marking_action", new SendMarkingActionsArgs { Action = "SettingParam", FirstText = fst_txt, SecondText = snd_txt, SecondIndex = index, CodeText = code_txt });
             }
             catch (Exception ex)

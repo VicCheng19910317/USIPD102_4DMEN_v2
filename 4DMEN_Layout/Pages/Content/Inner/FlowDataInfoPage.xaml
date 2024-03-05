@@ -79,60 +79,52 @@
                             </DataTemplate>
                         </DataGridTextColumn.HeaderTemplate>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding BeforeWeight}" FontSize="20" Width="150" >
+                    <DataGridTextColumn Binding="{Binding EstResultString}" FontSize="20" Width="690" >
                         <DataGridTextColumn.HeaderTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="Before Wei." />
+                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="Est. Hei." />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTextColumn.HeaderTemplate>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding AfterWeight}" FontSize="20" Width="150" >
+                    <!--<DataGridTextColumn Binding="{Binding BaseParamString}" FontSize="20" Width="150" >
                         <DataGridTextColumn.HeaderTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="After Wei." />
+                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="Plate Param." />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTextColumn.HeaderTemplate>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding GlueWeight}" FontSize="20" Width="150" >
+                    <DataGridTextColumn Binding="{Binding PlaneDistString}" FontSize="20" Width="150" >
                         <DataGridTextColumn.HeaderTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="Glue Wei." />
+                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="Plane Dist." />
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTextColumn.HeaderTemplate>
+                    </DataGridTextColumn>-->
+                    <DataGridTextColumn Binding="{Binding FlatnessString}" FontSize="20" Width="300" >
+                        <DataGridTextColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="Flatness" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTextColumn.HeaderTemplate>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding Width}" FontSize="20" Width="120" >
+                    <DataGridTextColumn Binding="{Binding MarkingLevel}" FontSize="20" Width="240" >
                         <DataGridTextColumn.HeaderTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="Width" />
+                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="Marking Level" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTextColumn.HeaderTemplate>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding Position}" FontSize="20" Width="120" >
-                        <DataGridTextColumn.HeaderTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="Position" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </DataGridTextColumn.HeaderTemplate>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding Length}" FontSize="20" Width="120" >
-                        <DataGridTextColumn.HeaderTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="Length" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </DataGridTextColumn.HeaderTemplate>
-                    </DataGridTextColumn>
+                   
                     <DataGridTextColumn Binding="{Binding ReaderResult1}" FontSize="20" Width="300" >
                         <DataGridTextColumn.HeaderTemplate>
                             <DataTemplate>

@@ -29,7 +29,7 @@ namespace USIPD102_4DMEN
     {
         #region 屬性參數
         private readonly PaletteHelper _paletteHelper = new PaletteHelper();
-        private readonly string version = "2.33.2.20240223";
+        private readonly string version = "2.44.40.20240305";
         private static Logger logger = LogManager.GetCurrentClassLogger();
         #endregion 屬性參數
         #region 靜態動作
@@ -207,7 +207,8 @@ namespace USIPD102_4DMEN
             BottomPage.ChangeLaserStatus(e.connection);
             MarkingPage.SetConnectionStatus(e.connection);
             MarkingPage.SetMessage(e.message);
-            MessageBox.Show(e.message, "雷雕機傳訊息", MessageBoxButton.OK, e.success ? MessageBoxImage.Information : MessageBoxImage.Error);
+            if(!e.success)
+                MessageBox.Show(e.message, "雷雕機傳訊息", MessageBoxButton.OK, e.success ? MessageBoxImage.Information : MessageBoxImage.Error);
         }
         public void GetArmsShiftResponse(ArmsShiftArgs e)
         {
@@ -307,6 +308,7 @@ namespace USIPD102_4DMEN
                 BottomPage.ChangeLaserStatus(e.MarkingStatus);
                 SystemParamSettingPage.SetInitParam(e.Param);
                 MarkingPage.LoadMarkingParam(e.IP, e.Port, e.MarkingStatus, e.Param.MarkParam);
+                OPSettingPage.LoadMarkingParam(e.IP, e.Port, e.MarkingStatus, e.Param.MarkParam);
             }
             catch (Exception ex)
             {

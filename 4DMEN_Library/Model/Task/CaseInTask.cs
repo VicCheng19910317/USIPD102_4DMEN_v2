@@ -46,13 +46,14 @@ namespace _4DMEN_Library.Model
                 if (CaseDoorCheckTask.GetEntity().DoorOpen)
                     PauseTaskWithoutWait();
                 WaitOne();
-                if (case_data != null && !case_data.ManualNG)
-                    RunStep();
+                
                 if (Status == EnumData.TaskStatus.Done)
                 {
                     ThreadState = System.Threading.ThreadState.Stopped;
                     break;
                 }
+
+                RunStep();
             }
         }
 
@@ -63,9 +64,10 @@ namespace _4DMEN_Library.Model
                 case 0: ///是否需要執行
                     RecordData.RecordProcessData(MainPresenter.SystemParam(), $"入料流程開始");
                     Status = EnumData.TaskStatus.Running;
+                    case_data.Step = Step = (!case_data.IsRun || case_data.ManualNG) ? 6 : 1;
                     case_data?.CaseInTime.Start();
                     case_data?.CaseTotalTime.Start();
-                    case_data.Step = Step = 1;
+                    
                     break;
                 case 1: ///設定手臂取料順序
                     if (!DoArmsAction(() => MainPresenter.CaseInArms().SetPickPos((case_data.Index % 12) + 1), MainPresenter.CaseInArms())) break;
@@ -102,11 +104,10 @@ namespace _4DMEN_Library.Model
                         break;
                     }
                     PutCaseFinish = true;
-                    case_data.PickToCast = true;
                     case_data.Step = Step = 6;
                     break;
                 case 6: ///判斷入料平台是否要換Tray
-                    if ((case_data.Index + 1) == MainPresenter.SystemParam().CaseCount || ((case_data.Index + 1) % MainPresenter.SystemParam().TrayCount == 0 && case_data.Index > 0))
+                    if (!MainPresenter.GetRunSingleFlow() && ((case_data.Index + 1) == MainPresenter.SystemParam().CaseCount || ((case_data.Index + 1) % MainPresenter.SystemParam().TrayCount == 0 && case_data.Index > 0)))
                     {
                         CaseInStationTask.GetEntity().PassDetect = (case_data.Index + 1) == MainPresenter.SystemParam().CaseCount;
                         CaseInStationTask.GetEntity().StartTask(); //開始換Tray

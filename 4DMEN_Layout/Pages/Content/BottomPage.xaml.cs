@@ -41,8 +41,16 @@ namespace USIPD102_4DMEN.Pages
         {
             while (system_run)
             {
-                ChangeSystemTime(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
-                Thread.Sleep(1000);
+                try
+                {
+                    ChangeSystemTime(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
+                    Thread.Sleep(1000);
+                }
+                catch(Exception ex)
+                {
+
+                }
+                
             }
 
         }
@@ -81,7 +89,7 @@ namespace USIPD102_4DMEN.Pages
                     Dispatcher.Invoke(() =>
                     {
                         LaserHeiStatusTxt.Text = status ? "連線" : "未連線";
-                        LaserHeiStatusTxt.Foreground = status ? (Brush)new BrushConverter().ConvertFrom("#1A237E") : (Brush)new BrushConverter().ConvertFrom("#FF0000");
+                        LaserHeiStatusTxt.Foreground = status ? (Brush)new BrushConverter().ConvertFrom("#00FF00") : (Brush)new BrushConverter().ConvertFrom("#FF0000");
                     });
                 };
                 ChangeLaserStatus = status =>
@@ -89,7 +97,7 @@ namespace USIPD102_4DMEN.Pages
                     Dispatcher.Invoke(() =>
                     {
                         LaserStatusTxt.Text = status ? "連線" : "未連線";
-                        LaserStatusTxt.Foreground = status ? (Brush)new BrushConverter().ConvertFrom("#1A237E") : (Brush)new BrushConverter().ConvertFrom("#FF0000");
+                        LaserStatusTxt.Foreground = status ? (Brush)new BrushConverter().ConvertFrom("#00FF00") : (Brush)new BrushConverter().ConvertFrom("#FF0000");
                     });
                 };
                 ChangeSystemTime = time => Dispatcher.Invoke(() => DisplayTimeTxt.Text = time);

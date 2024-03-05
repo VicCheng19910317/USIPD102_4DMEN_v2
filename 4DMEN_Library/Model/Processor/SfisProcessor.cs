@@ -45,6 +45,7 @@ namespace _4DMEN_Library.Model
         {
             var result = false;
             string message = SendMessage(action);
+            RecordData.RecordSFISData(MainPresenter.SystemParam(), $"SFIS回傳:{message}");
             if (message.Contains("超時") || message.Contains("未連線"))
             {
                 Message = $"發送SFIS訊號失敗，失敗訊息：{Message}";
@@ -110,7 +111,7 @@ namespace _4DMEN_Library.Model
                     send_data = $"{param.StationID},{data.ReaderResult1},1,{param.WorkerID},{param.LineID},,OK,,";
                     break;
                 case 2:
-                    var result = data.DefectCode.Count() > 0 || data.ManualNG ? $"OK" : $"NG";
+                    var result = data.DefectCode.Count() > 0 || data.ManualNG ? $"NG" : $"OK";
                     var defect_code = data.DefectCode.Aggregate("", (total, next) => total += total.Length == 0 ? $"{next}" : $"+{next}");
                     var manual_defect = data.ManualNG ? "Manual" : "Auto";
                     var position = data.NGPosition.Count == 0 ? "" : data.NGPosition.Aggregate("", (total, next) => total += total.Length == 0 ? $"{next}" : $"+{next}");
@@ -119,23 +120,32 @@ namespace _4DMEN_Library.Model
                     break;
                 case 3:
                     result = data.DefectCode.Count() > 0 || data.ManualNG ? $"OK" : $"NG";
-                    defect_code = data.DefectCode.Aggregate("", (total, next) => total += total.Length == 0 ? $"{next}" : $"+{next}");
+                    defect_code = data.DefectCode.GroupBy(x=>x).Aggregate("", (total, next) => total += total.Length == 0 ? $"{next.Key}" : $"+{next.Key}");
                     manual_defect = data.ManualNG ? "Manual" : "Auto";
                     defect_code += defect_code.Length == 0 ? $"{manual_defect}" : $"+{manual_defect}";
-                    position = data.NGPosition.Count == 0 ? "" : data.NGPosition.Aggregate("", (total, next) => total += total.Length == 0 ? $"{next}" : $"+{next}");
-                    var height = "";
-                    for (int i = 0; i < 3; i++)
+                    position = data.NGPosition.Count == 0 ? "" : data.NGPosition.GroupBy(x=>x).Aggregate("", (total, next) => total += total.Length == 0 ? $"{next.Key}" : $"+{next.Key}");
+                    var height = "N/A";
+                    if (data.PlaneDist.Count >= 9)
                     {
-                        var avg = Math.Round((data.PlaneDist[3 * i + 0] + data.PlaneDist[3 * i + 1] + data.PlaneDist[3 * i + 2]) / 3, 2);
-                        var tag = i == 0 ? "L" : i == 1 ? "M" : "H";
-                        height += height.Length == 0 ? $"\"[VR]{tag}H1=\'{data.PlaneDist[3 * i + 0]}\'\",\"[VR]{tag}H2=\'{data.PlaneDist[3 * i + 1]}\'\",\"[VR]{tag}H3=\'{data.PlaneDist[3 * i + 2]}\'\",\"[VR]{tag}HA=\'{avg}\'\"" : $",\"[VR]{tag}H1=\'{data.PlaneDist[3 * i + 0]}\'\",\"[VR]{tag}H2=\'{data.PlaneDist[3 * i + 1]}\'\",\"[VR]{tag}H3=\'{data.PlaneDist[3 * i + 2]}\'\",\"[VR]{tag}HA=\'{avg}\'\"";
+                        height = "";
+                        for (int i = 0; i < 3; i++)
+                        {
+                            var avg = Math.Round((data.PlaneDist[3 * i + 0] + data.PlaneDist[3 * i + 1] + data.PlaneDist[3 * i + 2]) / 3, 2);
+                            var tag = i == 0 ? "L" : i == 1 ? "M" : "R";
+                            height += height.Length == 0 ? $"\"[VR]{tag}H1=\'{data.PlaneDist[3 * i + 0]}\'\",\"[VR]{tag}H2=\'{data.PlaneDist[3 * i + 1]}\'\",\"[VR]{tag}H3=\'{data.PlaneDist[3 * i + 2]}\'\",\"[VR]{tag}HA=\'{avg}\'\"" : $",\"[VR]{tag}H1=\'{data.PlaneDist[3 * i + 0]}\'\",\"[VR]{tag}H2=\'{data.PlaneDist[3 * i + 1]}\'\",\"[VR]{tag}H3=\'{data.PlaneDist[3 * i + 2]}\'\",\"[VR]{tag}HA=\'{avg}\'\"";
+                        }
                     }
-                    var flatness = $"\"[VR]LF=\'{data.Flatness[0]}\'\",\"[VR]LF=\'{data.Flatness[1]}\'\",\"[VR]LF=\'{data.Flatness[2]}\'\"";
-                    var grade = $"\"[VR]Grade=\'{data.MarkingLevel}\'\"";
+
+                    var flatness = "N/A";
+                    if(data.Flatness.Count >= 3)
+                        flatness = $"\"[VR]LF=\'{data.Flatness[0]}\'\",\"[VR]LF=\'{data.Flatness[1]}\'\",\"[VR]LF=\'{data.Flatness[2]}\'\"";
+                    var _grade = data.MarkingLevel == null ? "N/A" : data.MarkingLevel;
+                    var grade = $"\"[VR]Grade=\'{_grade}\'\"";
                     send_data = $"{param.StationID},{data.ReaderResult1},2,{param.WorkerID},{param.LineID},,{result},{defect_code},{position},,{data.ReaderResult2},,{grade},{height},{flatness}";
                     break;
             }
             success = SendAction(send_data, "");
+            RecordData.RecordSFISData(MainPresenter.SystemParam(), send_data);
             return success;
         }
         #endregion 實作方法

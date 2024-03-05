@@ -38,13 +38,14 @@ namespace _4DMEN_Library.Model
                 if (CaseDoorCheckTask.GetEntity().DoorOpen)
                     PauseTaskWithoutWait();
                 WaitOne();
-                if (case_data != null && !case_data.ManualNG)
-                    RunStep();
+                
                 if (Status == EnumData.TaskStatus.Done)
                 {
                     ThreadState = System.Threading.ThreadState.Stopped;
                     break;
                 }
+
+                RunStep();
             }
         }
 
@@ -60,21 +61,20 @@ namespace _4DMEN_Library.Model
                         case_data.Step = Step = 2;
                         break;
                     }
-                    case_data.Step = Step = (case_data == null || !case_data.IsRun) ? 2 : 1;
+                    case_data.Step = Step = (case_data == null || !case_data.IsRun || case_data.ManualNG) ? 2 : 1;
                     case_data?.CaseReaderTime.Start();
                     break;
                 case 1: ///執行掃碼
                     var reader = MainPresenter.Reader();
-                    string read_data = "";
-                    var internal_finish = DoReaderAction(() => reader.Read(), reader, out read_data, "掃碼讀取訊號超時，請按下「Resume」系統進行後續放料流程。\n錯誤訊號：", false);
+                    string read_data = "", read_level = "" ;
+                    var internal_finish = DoReaderAction(() => reader.Read(), reader, out read_data, out read_level, "掃碼讀取訊號超時，請按下「Resume」系統進行後續放料流程。\n錯誤訊號：", false);
                     if (internal_finish) ///判斷是否成功
                         case_data.ReaderResult1 = read_data;
                     else
                     {
                         Step = 2;
-                        case_data.DefectCode.Add(MainPresenter.SystemParam().DefectMapping["Case 2D Code 異常"]);
+                        case_data.DefectCode.Add(MainPresenter.SystemParam().DefectMapping["BasePlate 2D Code"]);
                         case_data.NGPosition.Add(7);
-                        reader.Close();
                         case_data.IsRun = false;
                         break;
                     }

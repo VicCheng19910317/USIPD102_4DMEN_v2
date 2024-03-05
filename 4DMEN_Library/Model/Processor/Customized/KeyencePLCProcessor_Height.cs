@@ -81,7 +81,7 @@ namespace _4DMEN_Library.Model
                 tmp.Add(success ? processor.GetEstimateHieghtValue(1) : float.NaN);
             });
             HeightVal = tmp;
-            if (HeightVal.Contains(float.NaN)) result = false;
+            //if (HeightVal.Contains(float.NaN)) result = false;
             return result;
         }
         #endregion 實作功能

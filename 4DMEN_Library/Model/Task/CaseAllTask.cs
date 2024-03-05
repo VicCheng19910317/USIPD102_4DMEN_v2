@@ -73,11 +73,11 @@ namespace _4DMEN_Library.Model
                 OnUpdateCaseData(case_datas);
                 #region 檢查流程動作是否完成
                 if (!MainPresenter.GetInitRun() || MainPresenter.GetManualPause()) continue;
-                if (!CaseInTask.GetEntity().PutCaseFinish || !CaseLidTask.GetEntity().PutCaseFinish || CasePutNutTask.GetEntity().IsRunning || CaseBendTask.GetEntity().IsRunning ||
+                if (!CaseInTask.GetEntity().PutCaseFinish || !CaseLidTask.GetEntity().PutCaseFinish || CaseScanCodeTask.GetEntity().IsRunning || CasePutNutTask.GetEntity().IsRunning || CaseBendTask.GetEntity().IsRunning ||
                     CasePlateTask.GetEntity().IsRunning || CaseEstHeightTask.GetEntity().IsRunning || CaseNgOutTask.GetEntity().IsRunning || CaseMarkingTask.GetEntity().IsRunning ||
                     CaseOutTask.GetEntity().IsRunning) continue;
                 #endregion 檢查流程動作是否完成
-                if (case_datas.Where(x => x.Station >= 12).Count() == MainPresenter.SystemParam().CaseCount)
+                if (case_datas.Where(x => x.Station >= 20).Count() == MainPresenter.SystemParam().CaseCount)
                 {
                     
                     RecordData.RecordDataResult(MainPresenter.SystemParam(), case_datas);
@@ -242,7 +242,7 @@ namespace _4DMEN_Library.Model
                 CaseBendTask.GetEntity().ResumeTask();
             if (CasePlateTask.GetEntity().ThreadState == System.Threading.ThreadState.SuspendRequested || CasePlateTask.GetEntity().ThreadState == System.Threading.ThreadState.Suspended)
                 CasePlateTask.GetEntity().ResumeTask();
-            if (CaseEstHeightTask.GetEntity().ThreadState == System.Threading.ThreadState.SuspendRequested || CasePlateTask.GetEntity().ThreadState == System.Threading.ThreadState.Suspended)
+            if (CaseEstHeightTask.GetEntity().ThreadState == System.Threading.ThreadState.SuspendRequested || CaseEstHeightTask.GetEntity().ThreadState == System.Threading.ThreadState.Suspended)
                 CaseEstHeightTask.GetEntity().ResumeTask();
             if (CaseNgOutTask.GetEntity().ThreadState == System.Threading.ThreadState.SuspendRequested || CaseNgOutTask.GetEntity().ThreadState == System.Threading.ThreadState.Suspended)
                 CaseNgOutTask.GetEntity().ResumeTask();

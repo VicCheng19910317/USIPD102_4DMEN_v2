@@ -111,7 +111,7 @@ namespace _4DMEN_Library.Model
                 Message = "尚未連線，請先進行連線確認。";
                 return success;
             }
-            success = SendAction($"{code};", "");
+            success = SendAction($"{code}", "");
             return success;
         }
         /// <summary>
@@ -142,9 +142,9 @@ namespace _4DMEN_Library.Model
         {
             string _message = "";
             var success_fst = SetMarkText(param.marking_fst_code, param.marking_fst_txt);
-            _message += Message;
+            _message += $"{Message}\n";
             var success_snd = SetMarkText(param.marking_snd_code, $"{param.marking_snd_txt}{param.marking_snd_index_txt}");
-            _message += Message;
+            _message += $"{Message}\n";
             var success_code = SetMarkCode(param.marking_2d_code, param.marking_2d_result);
             _message += Message;
             Message = _message;
@@ -161,7 +161,7 @@ namespace _4DMEN_Library.Model
             string message = SendMessage($"{action}");
             if (message.ToUpper().Contains(match_data))
             {
-                var res_data = message.Replace(match_data, "");
+                var res_data = message.Replace("\r\n", "");
                 
                 Message = $"雷雕發送訊號成功，發送內容:{action}，回傳內容:{message}";
                 var logger = MainPresenter.LogDatas();

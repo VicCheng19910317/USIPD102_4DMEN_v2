@@ -50,13 +50,14 @@ namespace _4DMEN_Library.Model
                 if (CaseDoorCheckTask.GetEntity().DoorOpen)
                     PauseTaskWithoutWait();
                 WaitOne();
-                //if (case_data != null && !case_data.ManualNG)
-                    RunStep();
+                    
                 if (Status == EnumData.TaskStatus.Done)
                 {
                     ThreadState = System.Threading.ThreadState.Stopped;
                     break;
                 }
+
+                RunStep();
             }
         }
         protected void RunStep()
@@ -67,15 +68,11 @@ namespace _4DMEN_Library.Model
                     RecordData.RecordProcessData(MainPresenter.SystemParam(), $"組裝上蓋流程開始");
                     Status = EnumData.TaskStatus.Running;
                     case_data?.CaseAssembleTime.Start();
-                    if (case_data.Index > 0)
-                        case_data.Step = 1;
-                    Step = 1;
+                    case_data.Step = Step = 1;
                     break;
                 case 1: ///設定手臂取料順序
                     if (!DoArmsAction(() => MainPresenter.CaseLidArms().SetPickPos(PickSequence % MainPresenter.SystemParam().LidTrayCount), MainPresenter.CaseLidArms())) break;
-                    if (case_data.Index > 0)
-                        case_data.Step = 2;
-                    Step = 2;
+                        case_data.Step = Step = 2;
                     break;
                 case 2: ///判斷換Tray是否完成
                     if (!(CaseLidStationTask.GetEntity().Status == EnumData.TaskStatus.Done || CaseLidStationTask.GetEntity().Status == EnumData.TaskStatus.Idle))
@@ -83,9 +80,7 @@ namespace _4DMEN_Library.Model
                         System.Threading.Thread.Sleep(300);
                         break;
                     }
-                    if (case_data.Index > 0)
-                        case_data.Step = 3;
-                    Step = 3;
+                    case_data.Step = Step = 3;
                     break;
                 case 3: ///手臂取料
                     if (!DoArmsAction(() => MainPresenter.CaseLidArms().Pick(), MainPresenter.CaseLidArms(), "組裝手臂取料錯誤，請重新將手臂回Home再行後續動作"))
@@ -101,9 +96,7 @@ namespace _4DMEN_Library.Model
                         PickSequence++;
                         break;
                     }
-                    if (case_data.Index > 0)
-                        case_data.Step = 4;
-                    Step = 4;
+                    case_data.Step = Step = 4;
                     break;
                 case 4: ///判斷是否可以進行放料
                     if (!CanPutCase) break;
@@ -111,7 +104,7 @@ namespace _4DMEN_Library.Model
                     CanPutCase = false;
                     break;
                 case 5: ///手臂放料台車上
-                    if (!case_data.IsRun || !MainPresenter.SystemParam().Flow.CaseAssemble)
+                    if (!case_data.IsRun || case_data.ManualNG || !MainPresenter.SystemParam().Flow.CaseAssemble)
                     {
                         case_data.Step = Step = 6;
                         PutCaseFinish = true;
@@ -127,7 +120,7 @@ namespace _4DMEN_Library.Model
                     case_data.Step = Step = 6;
                     break;
                 case 6: ///判斷入料平台是否要換Tray
-                    if ((case_data.Index + 1) == MainPresenter.SystemParam().CaseCount || PickSequence % MainPresenter.SystemParam().TrayCount == 0)
+                    if (!MainPresenter.GetRunSingleFlow() && ((case_data.Index + 1) == MainPresenter.SystemParam().CaseCount || PickSequence % MainPresenter.SystemParam().TrayCount == 0))
                     {
                         CaseInStationTask.GetEntity().PassDetect = (case_data.Index + 1) == MainPresenter.SystemParam().CaseCount;
                         CaseInStationTask.GetEntity().StartTask(); //開始換Tray
@@ -140,7 +133,7 @@ namespace _4DMEN_Library.Model
                 case 7: ///完成流程
                     RecordData.RecordProcessData(MainPresenter.SystemParam(), $"組裝上蓋流程完成");
                     case_data.Step = Step = 0;
-                    if (!case_data.IsRun || !MainPresenter.SystemParam().Flow.CaseAssemble)
+                    if (!case_data.IsRun || case_data.ManualNG || !MainPresenter.SystemParam().Flow.CaseAssemble)
                         Step = 4;
                     case_data?.CaseAssembleTime.Stop();
                     if ((case_data.Index + 1) == MainPresenter.SystemParam().CaseCount || MainPresenter.GetRunSingleFlow())

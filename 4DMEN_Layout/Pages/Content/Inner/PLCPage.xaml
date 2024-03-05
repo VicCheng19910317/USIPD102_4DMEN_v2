@@ -66,9 +66,9 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource DisplayLabel}" Text="X："/>
-                <TextBox Grid.Row="0" Grid.Column="1" x:Name="HeightXTxt" Style="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" VerticalAlignment="Center" TextAlignment="Center" FontSize="24"/>
+                <TextBox Grid.Row="0" Grid.Column="1" x:Name="HeightXTxt" Text="7700" Style="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" VerticalAlignment="Center" TextAlignment="Center" FontSize="24"/>
                 <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource DisplayLabel}" Text="Y："/>
-                <TextBox Grid.Row="0" Grid.Column="3" x:Name="HeightYTxt" Style="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" VerticalAlignment="Center" TextAlignment="Center" FontSize="24"/>
+                <TextBox Grid.Row="0" Grid.Column="3" x:Name="HeightYTxt" Text="600" Style="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" VerticalAlignment="Center" TextAlignment="Center" FontSize="24"/>
             </Grid>
         </GroupBox>
         <DataGrid x:Name="AddressPLCDG" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="6" CanUserAddRows="False" AutoGenerateColumns="False" Margin="20,0,20,0" IsReadOnly="True">

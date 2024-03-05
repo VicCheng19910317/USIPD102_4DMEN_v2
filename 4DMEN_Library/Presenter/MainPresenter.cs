@@ -265,17 +265,35 @@ namespace _4DMEN_Library
             {
                 logger = LoggerData.Error(ex, "歷史資料Logger數初始化失敗。");
             }
+            try
+            {
+                LoadDefectInfo();
+            }
+            catch(Exception ex)
+            {
+                logger = LoggerData.Error(ex, "讀取Defect資料失敗。");
+            }
             init_run = true;
         }
         private void Closing()
         {
             try
             {
-               
+                in_arms.SendActionFunction("LOGOUT");
+                lid_arms.SendActionFunction("LOGOUT");
+                out_arms.SendActionFunction("LOGOUT");
             }
             catch (Exception ex)
             {
-                logger = LoggerData.Error(ex, "系統關閉失敗。");
+                logger = LoggerData.Error(ex, "手臂遠端關閉失敗。");
+            }
+            try
+            {
+                main_plc.plcNet.CloseConnect();
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, "關閉PLC發送訊息失敗。");
             }
         }
         #region 系統參數功能
@@ -840,8 +858,8 @@ namespace _4DMEN_Library
             ini_file.Write("CastNgOut", system_param.Flow.CaseNgOut.ToString(), "Flow");
             ini_file.Write("CastMarking", system_param.Flow.CaseMarking.ToString(), "Flow");
 
-            ini_file.Write("EstHeighInLower", system_param.EstHeighIn.Upper.ToString(), "In");
-            ini_file.Write("EstHeighInUpper", system_param.EstHeighIn.Lower.ToString(), "In");
+            ini_file.Write("EstHeighInLower", system_param.EstHeighIn.Lower.ToString(), "In");
+            ini_file.Write("EstHeighInUpper", system_param.EstHeighIn.Upper.ToString(), "In");
 
             ini_file.Write("marking_fst_code", system_param.MarkParam.marking_fst_code.ToString(), "Marking");
             ini_file.Write("marking_fst_txt", system_param.MarkParam.marking_fst_txt.ToString(), "Marking");
@@ -1038,7 +1056,7 @@ namespace _4DMEN_Library
                 bool success = false;
                 switch (station)
                 {
-                    case "主流道":
+                    case "主流道站(A)":
                         switch (action_detail)
                         {
                             case "臺車移動":
@@ -1057,7 +1075,7 @@ namespace _4DMEN_Library
                         message = main_plc.Message;
                         break;
                    
-                    case "螺帽站":
+                    case "螺帽站(B3)":
                         switch (action_detail)
                         {
                             case "放置螺帽":
@@ -1072,7 +1090,7 @@ namespace _4DMEN_Library
                         }
                         message = nut_plc.Message;
                         break;
-                    case "折彎站":
+                    case "折彎站(B4)":
                         switch (action_detail)
                         {
                             case "折彎":
@@ -1087,7 +1105,7 @@ namespace _4DMEN_Library
                         }
                         message = bend_plc.Message;
                         break;
-                    case "壓平站":
+                    case "下壓站(B4)":
                         switch (action_detail)
                         {
                             case "壓平":
@@ -1102,7 +1120,7 @@ namespace _4DMEN_Library
                         }
                         message = plate_plc.Message;
                         break;
-                    case "測高站":
+                    case "測高站(B5)":
                         switch (action_detail)
                         {
                             case "測高":
@@ -1119,7 +1137,7 @@ namespace _4DMEN_Library
                         }
                         message = height_plc.Message;
                         break;
-                    case "NG站":
+                    case "NG站(B6)":
                         switch (action_detail)
                         {
                             case "NG出料":
@@ -1134,7 +1152,7 @@ namespace _4DMEN_Library
                         }
                         message = ng_plc.Message;
                         break;
-                    case "上蓋站":
+                    case "組裝站Loader":
                         switch (action_detail)
                         {
                             case "換盤":
@@ -1146,7 +1164,7 @@ namespace _4DMEN_Library
                         }
                         message = lid_station_plc.Message;
                         break;
-                    case "入料站":
+                    case "入料站Loader":
                         switch (action_detail)
                         {
                             case "換盤":
@@ -1158,7 +1176,7 @@ namespace _4DMEN_Library
                         }
                         message = in_station_plc.Message;
                         break;
-                    case "出料站":
+                    case "出料站Loader":
                         switch (action_detail)
                         {
                             case "換盤":
@@ -1466,6 +1484,23 @@ namespace _4DMEN_Library
                         restart = true;
                         message = "雷射尚未登入連線，請確認。";
                     }
+                    if (main_plc.GetLaserOnStatus())
+                    {
+                        restart = true;
+                        message = "雷射出光中，請確認雷射狀態是否異常。";
+                    }
+                    if (!main_plc.GetLaserReadyStatus())
+                    {
+                        restart = true;
+                        message = "雷射準備狀態尚未完成，請確認鑰匙是否開啟。";
+                        
+                    }
+                    if (!main_plc.GetLaserFileStatus())
+                    {
+                        restart = true;
+                        message = "雷射檔案尚未準備完成，請確認LFJ軟體是否開啟。";
+                       
+                    }
                     if (!lk_processor.ConnectState)
                     {
                         restart = true;
@@ -1475,15 +1510,15 @@ namespace _4DMEN_Library
                     #region 卡控檢查
 
                     #region 檢查NG數量
-                    if (CaseNgOutTask.GetEntity().NgCount >= system_param.NgOutCountLimit)
+                    if (CaseNgOutTask.GetEntity().NgCount >= system_param.NgOutCountLimit && e.Action.ToLower().Contains("resume"))
                     {
                         restart = true;
-                        message = "NG計數尚未重置，請重置NG數量。";
+                        message = "NG站計數尚未重置，請重置NG站數量。";
                     }
-                    if (CaseOutTask.GetEntity().NGCount >= CaseOutTask.GetEntity().NGCountLimit)
+                    if (CaseOutTask.GetEntity().NGCount >= CaseOutTask.GetEntity().NGCountLimit && e.Action.ToLower().Contains("resume"))
                     {
                         restart = true;
-                        message = "NG計數尚未重置，請重置NG數量。";
+                        message = "出料NG計數尚未重置，請重置出料NG數量。";
                     }
                     #endregion 檢查NG數量
                     #endregion 卡控檢查
@@ -1532,6 +1567,10 @@ namespace _4DMEN_Library
                     #region 重置計數
                     CaseNgOutTask.GetEntity().NgCount = 0;
                     CaseOutTask.GetEntity().NGCount = 0;
+                    CaseInTask.GetEntity().CanPutCase = false;
+                    CaseInTask.GetEntity().PutCaseFinish = true;
+                    CaseLidTask.GetEntity().CanPutCase = false;
+                    CaseLidTask.GetEntity().PutCaseFinish = true;
                     #endregion 重置計數
                     Thread.Sleep(500);
                     if (CaseAllTask.GetEntity().IsRunning)
@@ -1725,60 +1764,75 @@ namespace _4DMEN_Library
                     run_single_flow = run_flow = true;
                     if (e.Station == "In")
                     {
+                        e.CaseDatas[0].Station = 1;
+                        CaseInTask.GetEntity().CanPutCase = true;
                         CaseInTask.GetEntity().case_data = e.CaseDatas[0]; CaseInTask.GetEntity().StartTask();
                     }
                     else if (e.Station == "Lid")
                     {
+                        e.CaseDatas[0].Station = 5;
+                        CaseLidTask.GetEntity().CanPutCase = true;
                         CaseLidTask.GetEntity().case_data = e.CaseDatas[0]; CaseLidTask.GetEntity().StartTask();
                     }
                     else if (e.Station == "Scan")
                     {
+                        e.CaseDatas[0].Station = 7;
                         CaseScanCodeTask.GetEntity().case_data = e.CaseDatas[0]; CaseScanCodeTask.GetEntity().StartTask();
                     }
                     else if (e.Station == "PutNut")
                     {
+                        e.CaseDatas[0].Station = 8;
                         CasePutNutTask.GetEntity().case_data = e.CaseDatas[0]; CasePutNutTask.GetEntity().StartTask();
                     }
                     else if (e.Station == "Bend")
                     {
+                        e.CaseDatas[0].Station = 9;
                         CaseBendTask.GetEntity().case_data = e.CaseDatas[0]; CaseBendTask.GetEntity().StartTask();
                     }
                     else if (e.Station == "Plate")
                     {
+                        e.CaseDatas[0].Station = 11;
                         CasePlateTask.GetEntity().case_data = e.CaseDatas[0]; CasePlateTask.GetEntity().StartTask();
                     }
                     else if (e.Station == "EstHeight")
                     {
-                        CasePlateTask.GetEntity().case_data = e.CaseDatas[0]; CaseEstHeightTask.GetEntity().StartTask();
+                        e.CaseDatas[0].Station = 13;
+                        CaseEstHeightTask.GetEntity().case_data = e.CaseDatas[0]; CaseEstHeightTask.GetEntity().StartTask();
                     }
                     else if (e.Station == "NgOut")
                     {
+                        e.CaseDatas[0].Station = 14;
                         CaseNgOutTask.GetEntity().case_data = e.CaseDatas[0]; CaseNgOutTask.GetEntity().StartTask();
                     }
                     else if (e.Station == "Marking")
                     {
+                        e.CaseDatas[0].Station = 15;
                         CaseMarkingTask.GetEntity().case_data = e.CaseDatas[0]; CaseMarkingTask.GetEntity().StartTask();
                     }
                     else if (e.Station == "Out")
                     {
+                        e.CaseDatas[0].Station = 20;
                         CaseOutTask.GetEntity().case_data = e.CaseDatas[0]; CaseOutTask.GetEntity().StartTask();
                     }
                     else if (e.Station == "InStation")
                     {
+                        e.CaseDatas[0].Station = 21;
                         CaseInStationTask.GetEntity().StartTask();
                     }
                     else if (e.Station == "LidStation")
                     {
+                        e.CaseDatas[0].Station = 21;
                         CaseLidStationTask.GetEntity().StartTask();
                     }
                     else if (e.Station == "OutStation")
                     {
+                        e.CaseDatas[0].Station = 21;
                         CaseOutStationTask.GetEntity().StartTask();
                     }
                     else if (e.Station == "NextStep")
                     {
                         main_plc.RunToNextStep();
-                        run_flow = false;
+                        run_single_flow = run_flow = false;
                     }
                     Task.Run(() =>
                     {
@@ -1787,6 +1841,7 @@ namespace _4DMEN_Library
                             Thread.Sleep(200);
                             OnPresentResponseEvent("send_single_station_response", new SendSingleStationFlowArgs { Station = e.Station, CaseDatas = e.CaseDatas });
                         };
+                        OnPresentResponseEvent("show_message", new SendMessageBoxArgs { Name = "流程訊息", Message = $"單站流程製作完成。", Image =  System.Windows.MessageBoxImage.Information});
                     });
                 }
             }

@@ -42,13 +42,14 @@ namespace _4DMEN_Library.Model
                 if (CaseDoorCheckTask.GetEntity().DoorOpen)
                     PauseTaskWithoutWait();
                 WaitOne();
-                if (case_data != null && !case_data.ManualNG)
-                    RunStep();
+                    
                 if (Status == EnumData.TaskStatus.Done)
                 {
                     ThreadState = System.Threading.ThreadState.Stopped;
                     break;
                 }
+
+                RunStep();
             }
         }
         protected void RunStep()
@@ -58,7 +59,7 @@ namespace _4DMEN_Library.Model
                 case 0:
                     RecordData.RecordProcessData(MainPresenter.SystemParam(), $"出料流程開始");
                     Status = EnumData.TaskStatus.Running;
-                    if (case_data == null || !case_data.IsRun)
+                    if (case_data == null || !case_data.IsRun || case_data.ManualNG)
                     {
                         case_data.Step = Step = 11;
                         break;
@@ -74,17 +75,16 @@ namespace _4DMEN_Library.Model
                     case_data.Step = Step = 2;
                     break;
                 case 2: //執行雷雕掃碼辨識
-                    var reader = MainPresenter.Reader();
-                    string read_data = "";
-                    var internal_finish = DoReaderAction(() => reader.Read(), reader, out read_data, "掃碼讀取訊號超時，請按下「Resume」系統進行後續放料流程。\n錯誤訊號：", false);
+                    var reader = MainPresenter.OutReader();
+                    string read_data = "", read_level = "";
+                    var internal_finish = DoReaderAction(() => reader.Read(), reader, out read_data,out read_level, "掃碼讀取訊號超時，請按下「Resume」系統進行後續放料流程。\n錯誤訊號：", false);
                     if (internal_finish)
                     { ///判斷是否成功
-                        case_data.ReaderResult2 = read_data.Split(',')[0];
-                        case_data.MarkingLevel = read_data.Split(',')[1];
+                        case_data.ReaderResult2 = read_data;
+                        case_data.MarkingLevel = read_level;
                     }
                     else
                     {
-                        reader.Close();
                         IsNG = true;
                         Step = 6;
                         case_data.DefectCode.Add(MainPresenter.SystemParam().DefectMapping["BasePlate/ Lid 2D code異常"]);
@@ -109,9 +109,10 @@ namespace _4DMEN_Library.Model
                     case_data.Step = Step = 5;
                     break;
                 case 5: // 進行底板掃碼並判斷是否正確
-                    reader = MainPresenter.Reader();
+                    reader = MainPresenter.OutReader();
                     read_data = "";
-                    internal_finish = DoReaderAction(() => reader.Read(), reader, out read_data, "掃碼讀取訊號超時，請按下「Resume」系統進行後續放料流程。\n錯誤訊號：", false);
+                    read_level = "";
+                    internal_finish = DoReaderAction(() => reader.Read(), reader, out read_data, out read_level, "掃碼讀取訊號超時，請按下「Resume」系統進行後續放料流程。\n錯誤訊號：", false);
                     if (internal_finish && read_data == case_data.ReaderResult1)  { ///判斷是否成功
                         case_data.Step = Step = 6;
                         break;
@@ -121,7 +122,6 @@ namespace _4DMEN_Library.Model
                         Step = 6;
                         case_data.DefectCode.Add(MainPresenter.SystemParam().DefectMapping["BasePlate/ Lid 2D code異常"]);
                         case_data.NGPosition.Add(20);
-                        reader.Close();
                         IsNG = true;
                         break;
                     }
@@ -148,7 +148,7 @@ namespace _4DMEN_Library.Model
                         NGCount++;
                     }   
                     else
-                        if (!DoArmsAction(() => MainPresenter.CaseInArms().Put(), MainPresenter.CaseInArms(), "出料手臂放料錯誤，請重新將手臂回Home再行後續動作")) break;
+                        if (!DoArmsAction(() => MainPresenter.CaseOutArms().Put(), MainPresenter.CaseInArms(), "出料手臂放料錯誤，請重新將手臂回Home再行後續動作")) break;
                     case_data.IsRun = false;
                     
                     case_data.Step = Step = 10;
@@ -172,7 +172,7 @@ namespace _4DMEN_Library.Model
                     case_data.Step = Step = 12;
                     break;
                 case 12: //判斷出料平台是否要換Tray
-                    if ((case_data.Index + 1) == MainPresenter.SystemParam().CaseCount || ((case_data.Index + 1) % MainPresenter.SystemParam().TrayCount == 0 && case_data.Index > 0))
+                    if (!MainPresenter.GetRunSingleFlow() && ((case_data.Index + 1) == MainPresenter.SystemParam().CaseCount || ((case_data.Index + 1) % MainPresenter.SystemParam().TrayCount == 0 && case_data.Index > 0)))
                     {
                         Thread.Sleep(1000);
                         if ((case_data.Index + 1) == MainPresenter.SystemParam().CaseCount) CaseOutStationTask.GetEntity().PassDetect = true;

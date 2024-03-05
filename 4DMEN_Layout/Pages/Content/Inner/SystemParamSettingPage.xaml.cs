@@ -311,7 +311,7 @@ namespace USIPD102_4DMEN.Pages
                 var param = new SystemParam();
                 int keep_day = 0;
                 float flatness_upper = 0, heigh_min_1 = 0, heigh_min_2 = 0, heigh_min_3 = 0, heigh_max_1 = 0, heigh_max_2 = 0, heigh_max_3 = 0;
-                if (int.TryParse(RecordKeepDayTxt.Text, out keep_day))
+                if (!int.TryParse(RecordKeepDayTxt.Text, out keep_day))
                 {
                     MessageBox.Show("保存紀錄天數設定錯誤，請確認。", "設定錯誤", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
@@ -336,9 +336,9 @@ namespace USIPD102_4DMEN.Pages
                 param.Sfis.InspLevel = MarkingLevelTxt.Text;
                 param.Sfis.Enable = DisplaySfisSignalTxt.Text.ToLower() == "on";
                 var position = new List<EstimatePosition>();
-                foreach (ListViewItem item in LocationLV.Items)
+                foreach (var item in LocationLV.Items)
                 {
-                    var split = item.Content.ToString().Split(',');
+                    var split = item.ToString().Split(',');
                     position.Add(new EstimatePosition { X = int.Parse(split[0]), Y = int.Parse(split[1]) });
                 }
                 param.MeasurePosition = position;

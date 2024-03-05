@@ -49,7 +49,7 @@ namespace USIPD102_4DMEN.Pages
             {
                 Dispatcher.Invoke(() =>
                 {
-                    var message_textbox = station.ToUpper() == "Reader" ? ReaderMessageTB : OutMessageTB;
+                    var message_textbox = station.ToUpper() == "READER" ? ReaderMessageTB : OutMessageTB;
                     message_textbox.Text = message_textbox.Text.Insert(0, $"{message}\n");
                 });
             };

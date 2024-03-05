@@ -66,6 +66,14 @@ namespace USIPD102_4DMEN.Pages
             signal_img.Add(DisplayStation10);
             signal_img.Add(DisplayStation11);
             signal_img.Add(DisplayStation12);
+            signal_img.Add(DisplayStation13);
+            signal_img.Add(DisplayStation14);
+            signal_img.Add(DisplayStation15);
+            signal_img.Add(DisplayStation16);
+            signal_img.Add(DisplayStation17);
+            signal_img.Add(DisplayStation18);
+            signal_img.Add(DisplayStation19);
+            signal_img.Add(DisplayStation20);
             //foreach (var img in )
             //{
             //    if (img.Name.Contains("DisplayStation"))

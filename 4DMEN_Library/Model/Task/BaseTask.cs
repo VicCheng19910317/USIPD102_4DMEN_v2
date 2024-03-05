@@ -173,9 +173,10 @@ namespace _4DMEN_Library.Model
             }
             return success;
         }
-        protected virtual bool DoReaderAction(Func<bool> _Func, KeyenceReaderProcessor processor, out string read_data, string message = "", bool pause_flow = true, System.Windows.MessageBoxButton _btn = System.Windows.MessageBoxButton.OK)
+        protected virtual bool DoReaderAction(Func<bool> _Func, KeyenceReaderProcessor processor, out string read_data, out string read_level, string message = "", bool pause_flow = true, System.Windows.MessageBoxButton _btn = System.Windows.MessageBoxButton.OK)
         {
             read_data = "";
+            read_level = "";
             var success = _Func();
             success = !(processor.ReadResult.Contains("超時") || processor.ReadResult.Contains("錯誤") || processor.ReadResult.ToLower().Contains("error"));
             if (!success && pause_flow)
@@ -185,6 +186,7 @@ namespace _4DMEN_Library.Model
                 ErrorMessage = $"{message}:{processor.Message}";
             }
             read_data = success ? processor.ReadResult : "read error";
+            read_level = success ? processor.ReadLevel : "Err";
             return success;
         }
         /// <summary>

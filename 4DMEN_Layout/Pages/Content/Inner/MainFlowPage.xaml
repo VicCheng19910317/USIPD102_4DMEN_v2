@@ -38,16 +38,16 @@
         <Image  x:Name="DisplayStation8" Tag="8" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="959,452,390,404" IsEnabled="False" Visibility="Hidden" />
         <Image  x:Name="DisplayStation9" Tag="9" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="1073,453,276,403" IsEnabled="False" Visibility="Hidden" />
         <Image  x:Name="DisplayStation10" Tag="10" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="1190,453,159,403" IsEnabled="False" Visibility="Hidden" />
-        <Image  x:Name="DisplayStation11" Tag="11" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="144,375,1204,481" IsEnabled="False" Visibility="Hidden" />
-        <Image  x:Name="DisplayStation12" Tag="12" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="261,375,1088,481" IsEnabled="False" Visibility="Hidden" />
-        <Image  x:Name="DisplayStation13" Tag="13" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="378,375,971,481" IsEnabled="False" Visibility="Hidden" />
-        <Image  x:Name="DisplayStation14" Tag="14" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="493,375,856,481" IsEnabled="False" Visibility="Hidden" />
-        <Image  x:Name="DisplayStation15" Tag="15" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="610,375,739,481" IsEnabled="False" Visibility="Hidden" />
-        <Image  x:Name="DisplayStation16" Tag="16" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="725,375,624,481" IsEnabled="False" Visibility="Hidden" />
-        <Image  x:Name="DisplayStation17" Tag="17" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="842,375,507,481" IsEnabled="False" Visibility="Hidden" />
-        <Image  x:Name="DisplayStation18" Tag="18" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="959,375,390,481" IsEnabled="False" Visibility="Hidden" />
-        <Image  x:Name="DisplayStation19" Tag="19" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="1073,375,276,481" IsEnabled="False" Visibility="Hidden" />
-        <Image  x:Name="DisplayStation20" Tag="20" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="1190,375,159,481" IsEnabled="False" Visibility="Hidden" />
+        <Image  x:Name="DisplayStation11" Tag="20" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="144,375,1204,481" IsEnabled="False" Visibility="Hidden" />
+        <Image  x:Name="DisplayStation12" Tag="19" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="261,375,1088,481" IsEnabled="False" Visibility="Hidden" />
+        <Image  x:Name="DisplayStation13" Tag="18" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="378,375,971,481" IsEnabled="False" Visibility="Hidden" />
+        <Image  x:Name="DisplayStation14" Tag="17" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="493,375,856,481" IsEnabled="False" Visibility="Hidden" />
+        <Image  x:Name="DisplayStation15" Tag="16" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="610,375,739,481" IsEnabled="False" Visibility="Hidden" />
+        <Image  x:Name="DisplayStation16" Tag="15" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="725,375,624,481" IsEnabled="False" Visibility="Hidden" />
+        <Image  x:Name="DisplayStation17" Tag="14" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="842,375,507,481" IsEnabled="False" Visibility="Hidden" />
+        <Image  x:Name="DisplayStation18" Tag="13" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="959,375,390,481" IsEnabled="False" Visibility="Hidden" />
+        <Image  x:Name="DisplayStation19" Tag="12" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="1073,375,276,481" IsEnabled="False" Visibility="Hidden" />
+        <Image  x:Name="DisplayStation20" Tag="11" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="1190,375,159,481" IsEnabled="False" Visibility="Hidden" />
         <Grid Grid.Row="0" Grid.Column="1" Style="{StaticResource CCDGrid}">
             <TabControl 
                     materialDesign:ColorZoneAssist.Mode="SecondaryMid"
@@ -157,7 +157,7 @@
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Grid.Column="0">
                             <CheckBox x:Name="CaseAssembleCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="上蓋組裝" />
-                            <CheckBox x:Name="CaseScanCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="塗膠檢測"  />
+                            <CheckBox x:Name="CaseScanCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="掃碼檢測"  />
                             <CheckBox x:Name="CasePutNutCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="放置螺帽" />
                             <CheckBox x:Name="CaseBendingCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="底板折彎" />
                             <CheckBox x:Name="CasePlateCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="底板壓平"  />

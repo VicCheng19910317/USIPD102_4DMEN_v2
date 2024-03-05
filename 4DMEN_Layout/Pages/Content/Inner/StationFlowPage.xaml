@@ -90,18 +90,18 @@
                             </DataTemplate>
                         </DataGridTextColumn.HeaderTemplate>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding StationName}" FontSize="20" Width="120" >
+                    <DataGridTextColumn Binding="{Binding StationName}" FontSize="20" Width="150" >
 
 
                         <DataGridTextColumn.HeaderTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="站號" />
+                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="站別" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTextColumn.HeaderTemplate>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding StepName}" FontSize="20" Width="300" >
+                    <DataGridTextColumn Binding="{Binding StepName}" FontSize="20" Width="350" >
                         <DataGridTextColumn.HeaderTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -110,60 +110,52 @@
                             </DataTemplate>
                         </DataGridTextColumn.HeaderTemplate>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding BeforeWeight}" FontSize="20" Width="150" >
+                    <DataGridTextColumn Binding="{Binding EstResultString}" FontSize="20" Width="690" >
                         <DataGridTextColumn.HeaderTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="膠前重" />
+                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="量測高度" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTextColumn.HeaderTemplate>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding AfterWeight}" FontSize="20" Width="150" >
+                    <!--<DataGridTextColumn Binding="{Binding BaseParamString}" FontSize="20" Width="150" >
                         <DataGridTextColumn.HeaderTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="膠後重" />
+                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="平面參數" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTextColumn.HeaderTemplate>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding GlueWeight}" FontSize="20" Width="150" >
+                    <DataGridTextColumn Binding="{Binding PlaneDistString}" FontSize="20" Width="150" >
                         <DataGridTextColumn.HeaderTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="膠重" />
+                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="平面距離" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTextColumn.HeaderTemplate>
+                    </DataGridTextColumn>-->
+                    <DataGridTextColumn Binding="{Binding FlatnessString}" FontSize="20" Width="300" >
+                        <DataGridTextColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="平整度" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTextColumn.HeaderTemplate>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding Width}" FontSize="20" Width="120" >
+                    <DataGridTextColumn Binding="{Binding MarkingLevel}" FontSize="20" Width="240" >
                         <DataGridTextColumn.HeaderTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="檢測過粗" />
+                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="雷雕等級" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTextColumn.HeaderTemplate>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding Position}" FontSize="20" Width="120" >
-                        <DataGridTextColumn.HeaderTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="檢測偏移" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </DataGridTextColumn.HeaderTemplate>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding Length}" FontSize="20" Width="120" >
-                        <DataGridTextColumn.HeaderTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="0,0,0,0" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" FontSize="20"  Text="檢測斷膠" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </DataGridTextColumn.HeaderTemplate>
-                    </DataGridTextColumn>
+                    
                     <DataGridTextColumn Binding="{Binding ReaderResult1}" FontSize="20" Width="300" >
                         <DataGridTextColumn.HeaderTemplate>
                             <DataTemplate>

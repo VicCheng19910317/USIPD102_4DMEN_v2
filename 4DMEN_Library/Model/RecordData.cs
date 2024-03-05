@@ -47,7 +47,40 @@ namespace _4DMEN_Library.Model
                 }
                 using (StreamWriter sw = new StreamWriter(new FileStream(file_name, FileMode.Append, FileAccess.Write,FileShare.ReadWrite)))
                 {
-                    sw.WriteLine($"{date_time.ToString("HH: mm:ss.ffff")},{data}");
+                    sw.WriteLine($"{date_time.ToString("HH:mm:ss.ffff")},{data}");
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "儲存資料錯誤。");
+            }
+
+        }
+        internal static void RecordSFISData(SystemParam param, string data, string folder = @"C:/4DMEN/SFISData")
+        {
+            try
+            {
+                var logger = MainPresenter.LogDatas();
+                var date_time = DateTime.Now;
+                Directory.CreateDirectory($"{folder}/{date_time.ToString("yyyyMM")}/{date_time.ToString("yyyyMMdd")}");
+                var file_name = $"{folder}/{date_time.ToString("yyyyMM")}/{date_time.ToString("yyyyMMdd")}/{param.Sfis.TicketID}.csv";
+
+
+                if (!File.Exists(file_name))
+                {
+                    var txt = "";
+                    txt += $"站別：{param.Sfis.StationID}\n";
+                    txt += $"線別：{param.Sfis.LineID}\n";
+                    txt += $"Lid編號：{param.Sfis.LidLotID}\n";
+                    txt += $"Nut編號：{param.Sfis.NutNo}\n";
+                    txt += $"工單：{param.Sfis.TicketID}\n";
+                    txt += $"操作員：{param.Sfis.WorkerID}\n";
+                    txt += $"=============================\n";
+                    File.WriteAllText(file_name, txt);
+                }
+                using (StreamWriter sw = new StreamWriter(new FileStream(file_name, FileMode.Append, FileAccess.Write, FileShare.ReadWrite)))
+                {
+                    sw.WriteLine($"{date_time.ToString("HH:mm:ss.ffff")},{data}");
                 }
             }
             catch (Exception ex)

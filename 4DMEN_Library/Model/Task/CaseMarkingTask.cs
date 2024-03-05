@@ -61,7 +61,7 @@ namespace _4DMEN_Library.Model
                         break;
                     }
                     case_data.Step = Step = (case_data == null || !case_data.IsRun) ? 5 : 1;
-                    case_data?.CasePlateTime.Start();
+                    case_data?.CaseMarkingTime.Start();
                     break;
                 case 1: ///檢查雷雕訊號是否正常
                     var processor = MainPresenter.LFJProcessor();
@@ -123,7 +123,7 @@ namespace _4DMEN_Library.Model
                 case 5: //完成流程
                     RecordData.RecordProcessData(MainPresenter.SystemParam(), $"雷雕站完成");
                     case_data.Step = Step = 0;
-                    case_data?.CasePlateTime.Stop();
+                    case_data?.CaseMarkingTime.Stop();
                     MainPresenter.SetRunSingleFlow(false);
                     MainPresenter.SetRunFlow(false);
                     Status = EnumData.TaskStatus.Done;

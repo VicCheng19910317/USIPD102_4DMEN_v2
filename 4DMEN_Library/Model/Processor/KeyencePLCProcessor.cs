@@ -182,19 +182,20 @@ namespace _4DMEN_Library.Model
         /// 雷射是否出光
         /// </summary>
         /// <returns>是/否</returns>
-        internal bool GetLaserOnStatus()
+        internal bool GetLaserReadyStatus()
         {
             string send_get_status = $"RDS MR4001 1";
-            return plcNet.ReadData(send_get_status).Replace("E", "").Replace("\r\n", "").Replace(" ", "").Contains("0"); // 0:出光/ 1:未出光
+            return plcNet.ReadData(send_get_status).Replace("E", "").Replace("\r\n", "").Replace(" ", "").Contains("1"); // 0:未準備/ 1:已準備
         }
         /// <summary>
         /// 雷射準備狀態
         /// </summary>
         /// <returns>是/否</returns>
-        internal bool GetLaserReadyStatus()
+        internal bool GetLaserOnStatus()
         {
             string send_get_status = $"RDS MR4000 1";
-            return plcNet.ReadData(send_get_status).Replace("E", "").Replace("\r\n", "").Replace(" ", "").Contains("1"); // 0:未準備/ 1:已準備
+            var row_data = plcNet.ReadData(send_get_status);
+            return row_data.Replace("E", "").Replace("\r\n", "").Replace(" ", "").Contains("0"); // 0:出光/ 1:未出光
         }
         /// <summary>
         /// 雷射檔案準備狀態
@@ -237,7 +238,7 @@ namespace _4DMEN_Library.Model
         /// <returns>成功/失敗</returns>
         public bool ResetPLCErrorList(int value)
         {
-            string send_data = $"WRS MR203 1 {value}";
+            string send_data = $"WRS MR2215 1 {value}";
             string status = plcNet.WriteData(send_data).Replace("E", "").Replace("\r\n", "");
             var logger = MainPresenter.LogDatas();
             if (!status.Contains("OK"))
@@ -447,6 +448,8 @@ namespace _4DMEN_Library.Model
                 }
             }
             result = initialize_finish;
+            if (result)
+                SwitchAutoMode(1);
             Timeout = _timeout;
             logger = LoggerData.Info("PLC執行全機初始化完成");
             return result;
@@ -474,7 +477,10 @@ namespace _4DMEN_Library.Model
         {
             var logger = MainPresenter.LogDatas();
             logger = LoggerData.Info("PLC放置螺帽");
+            var _timeout = Timeout;
+            Timeout = 30000;
             var result = RunOneStepFlow();
+            Timeout = _timeout;
             logger = LoggerData.Info("PLC放置螺帽完成");
             return result;
         }
@@ -486,7 +492,10 @@ namespace _4DMEN_Library.Model
         {
             var logger = MainPresenter.LogDatas();
             logger = LoggerData.Info("PLC執行折彎");
+            var _timeout = Timeout;
+            Timeout = 30000;
             var result = RunOneStepFlow();
+            Timeout = _timeout;
             logger = LoggerData.Info("PLC執行折彎完成");
             return result;
         }
@@ -498,7 +507,10 @@ namespace _4DMEN_Library.Model
         {
             var logger = MainPresenter.LogDatas();
             logger = LoggerData.Info("PLC執行壓平");
+            var _timeout = Timeout;
+            Timeout = 30000;
             var result = RunOneStepFlow();
+            Timeout = _timeout;
             logger = LoggerData.Info("PLC執行壓平完成");
             return result;
         }

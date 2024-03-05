@@ -24,7 +24,7 @@ namespace _4DMEN_Library.Model
         /// <summary>
         /// 是否完成取料到台車
         /// </summary>
-        public bool PickToCast { get; set; } = false;
+        public bool PickToCast { get; set; } = true;
         /// <summary>
         /// 當前站號
         /// </summary>
@@ -36,27 +36,43 @@ namespace _4DMEN_Library.Model
                 if (Station == 1)
                     _stationName = "入料站";
                 else if(Station == 2)
-                    _stationName = "入料->塗膠(2)";
+                    _stationName = "入料->組裝(2)";
                 else if (Station == 3)
-                    _stationName = "下壓站";
+                    _stationName = "入料->組裝(3)";
                 else if (Station == 4)
-                    _stationName = "塗膠站";
+                    _stationName = "入料->組裝(4)";
                 else if (Station == 5)
-                    _stationName = "塗膠->秤重(5)";
+                    _stationName = "組裝站";
                 else if (Station == 6)
-                    _stationName = "秤重站";
+                    _stationName = "組裝->掃碼(6)";
                 else if (Station == 7)
-                    _stationName = "檢測站";
+                    _stationName = "掃碼站";
                 else if (Station == 8)
-                    _stationName = "NG出料站";
+                    _stationName = "螺帽站";
                 else if (Station == 9)
-                    _stationName = "NG->翻轉(9)";
+                    _stationName = "折彎站(9)";
                 else if (Station == 10)
-                    _stationName = "翻轉站";
+                    _stationName = "折彎站(10)";
                 else if (Station == 11)
-                    _stationName = "出料站";
+                    _stationName = "壓平站";
                 else if (Station == 12)
-                    _stationName = "出料完成";
+                    _stationName = "壓平->測高(11)";
+                else if (Station == 13)
+                    _stationName = "測高站";
+                else if (Station == 14)
+                    _stationName = "NG站";
+                else if (Station == 15)
+                    _stationName = "雷雕站";
+                else if (Station == 16)
+                    _stationName = "雷雕->出料(16)";
+                else if (Station == 17)
+                    _stationName = "雷雕->出料(17)";
+                else if (Station == 18)
+                    _stationName = "雷雕->出料(18)";
+                else if (Station == 19)
+                    _stationName = "雷雕->出料(19)";
+                else if (Station == 20)
+                    _stationName = "出料站";
                 return _stationName;
             }
             set => _stationName = value;
@@ -87,13 +103,13 @@ namespace _4DMEN_Library.Model
                                 _stepName = "判斷換Tray是否完成";
                                 break;
                             case 3:
-                                _stepName = "手臂取料置秤重站";
+                                _stepName = "手臂取料";
                                 break;
                             case 4:
-                                _stepName = "讀取秤重資料";
+                                _stepName = "判斷是否可以進行放料";
                                 break;
                             case 5:
-                                _stepName = "手臂取料置台車上";
+                                _stepName = "手臂放料到台車上";
                                 break;
                             case 6:
                                 _stepName = "判斷入料平台是否要換Tray";
@@ -103,73 +119,36 @@ namespace _4DMEN_Library.Model
                                 break;
                         }
                         break;
-                    case 3:
+                    case 5:
                         switch (Step)
                         {
                             case 0:
                                 _stepName = "等待流程開始";
                                 break;
                             case 1:
-                                _stepName = "執行下壓動作";
+                                _stepName = "設定手臂取料順序";
                                 break;
                             case 2:
-                                _stepName = "檢查下壓是否完成";
+                                _stepName = "判斷換Tray是否完成";
                                 break;
                             case 3:
-                                _stepName = "下壓回原點";
+                                _stepName = "手臂取料";
                                 break;
                             case 4:
-                                _stepName = "檢查下壓回原點是否完成";
+                                _stepName = "判斷是否可以進行放料";
                                 break;
                             case 5:
-                                _stepName = "完成流程";
-                                break;
-                        }
-                        break;
-
-                    case 4:
-                        switch (Step)
-                        {
-                            case 0:
-                                _stepName = "等待流程開始";
-                                break;
-                            case 1:
-                                _stepName = "開始進行塗膠";
-                                break;
-                            case 2:
-                                _stepName = "完成流程";
-                                break;
-                        }
-                        break;
-                    case 6:
-                        switch (Step)
-                        {
-                            case 0:
-                                _stepName = "等待流程開始";
-                                break;
-                            case 1:
-                                _stepName = "取料到QR Code讀碼器上";
-                                break;
-                            case 2:
-                                _stepName = "讀碼器讀碼";
-                                break;
-                            case 3:
-                                _stepName = "取料到秤重機上";
-                                break;
-                            case 4:
-                                _stepName = "讀取秤重資料";
-                                break;
-                            case 5:
-                                _stepName = "發送SFIS資料";
+                                _stepName = "手臂放料台車上";
                                 break;
                             case 6:
-                                _stepName = "取料至台車上";
+                                _stepName = "判斷入料平台是否要換Tray";
                                 break;
                             case 7:
                                 _stepName = "完成流程";
                                 break;
                         }
                         break;
+
                     case 7:
                         switch (Step)
                         {
@@ -177,12 +156,9 @@ namespace _4DMEN_Library.Model
                                 _stepName = "等待流程開始";
                                 break;
                             case 1:
-                                _stepName = "設定檢測模式";
+                                _stepName = "執行掃碼";
                                 break;
                             case 2:
-                                _stepName = "進行檢測";
-                                break;
-                            case 3:
                                 _stepName = "完成流程";
                                 break;
                         }
@@ -194,19 +170,14 @@ namespace _4DMEN_Library.Model
                                 _stepName = "等待流程開始";
                                 break;
                             case 1:
-                                _stepName = "檢查重量";
+                                _stepName = "執行放置螺帽";
                                 break;
                             case 2:
-                                _stepName = "檢查檢測結果";
-                                break;
-                            case 3:
-                                _stepName = "NG出料";
-                                break;
-                            case 4:
                                 _stepName = "完成流程";
                                 break;
                         }
                         break;
+                    case 9:
                     case 10:
                         switch (Step)
                         {
@@ -214,12 +185,9 @@ namespace _4DMEN_Library.Model
                                 _stepName = "等待流程開始";
                                 break;
                             case 1:
-                                _stepName = "PLC翻料";
+                                _stepName = "執行折彎";
                                 break;
                             case 2:
-                                _stepName = "是否需要更換料槽";
-                                break;
-                            case 3:
                                 _stepName = "完成流程";
                                 break;
                         }
@@ -231,43 +199,134 @@ namespace _4DMEN_Library.Model
                                 _stepName = "等待流程開始";
                                 break;
                             case 1:
-                                _stepName = "確認翻轉完成";
+                                _stepName = "執行壓平";
                                 break;
                             case 2:
-                                _stepName = "手臂取料";
-                                break;
-                            case 3:
-                                _stepName = "手臂組裝並取置掃碼器上";
-                                break;
-                            case 4:
-                                _stepName = "掃碼器掃描條碼";
-                                break;
-                            case 5:
-                                _stepName = "發送SFIS資料";
-                                break;
-                            case 6:
-                                _stepName = "設定放料位置";
-                                break;
-                            case 7:
-                                _stepName = "判斷換Tray是否完成";
-                                break;
-                            case 8:
-                                _stepName = "執行放料至Case上";
-                                break;
-                            case 9:
-                                _stepName = "判斷出料平台是否要換Tray";
-                                break;
-                            case 10:
                                 _stepName = "完成流程";
                                 break;
                         }
                         break;
-                    case 12:
+                    case 13:
+                        switch (Step)
+                        {
+                            case 0:
+                                _stepName = "等待流程開始";
+                                break;
+                            case 1:
+                                _stepName = "執行測高";
+                                break;
+                            case 2:
+                                _stepName = "計算公式";
+                                break;
+                            case 3:
+                                _stepName = "完成流程";
+                                break;
+                        }
+                        break;
+                    case 14:
+                        switch (Step)
+                        {
+                            case 0:
+                                _stepName = "等待流程開始";
+                                break;
+                            case 1:
+                                _stepName = "檢查平整度";
+                                break;
+                            case 2:
+                                _stepName = "檢查高度";
+                                break;
+                            case 3:
+                                _stepName = "NG出料";
+                                break;
+                            case 4:
+                                _stepName = "完成流程";
+                                break;
+                        }
+                        break;
+                    case 15:
+                        switch (Step)
+                        {
+                            case 0:
+                                _stepName = "等待流程開始";
+                                break;
+                            case 1:
+                                _stepName = "檢查雷雕訊號是否正常";
+                                break;
+                            case 2:
+                                _stepName = "設定雷射雕刻文字";
+                                break;
+                            case 3:
+                                _stepName = "執行雷雕";
+                                break;
+                            case 4:
+                                _stepName = "確認雷雕是否結束";
+                                break;
+                            case 5:
+                                _stepName = "完成流程";
+                                break;
+                        }
+                        break;
+                    case 20:
+                        switch (Step)
+                        {
+                            case 0:
+                                _stepName = "等待流程開始";
+                                break;
+                            case 1:
+                                _stepName = "手臂移到雷雕掃碼處";
+                                break;
+                            case 2:
+                                _stepName = "執行雷雕掃碼辨識";
+                                break;
+                            case 3:
+                                _stepName = "判斷雷雕品質";
+                                break;
+                            case 4:
+                                _stepName = "手臂移到底板掃碼處";
+                                break;
+                            case 5:
+                                _stepName = "進行底板掃碼並判斷是否正確";
+                                break;
+                            case 6:
+                                _stepName = "手臂取料";
+                                break;
+                            case 7:
+                                _stepName = "設定手臂放料順序";
+                                break;
+                            case 8:
+                                _stepName = "判斷換Tray是否完成";
+                                break;
+                            case 9:
+                                _stepName = "手臂放料台車上";
+                                break;
+                            case 10:
+                                _stepName = "判斷NG是否超過上限";
+                                break;
+                            case 11:
+                                _stepName = "發送SFIS資料";
+                                break;
+                            case 12:
+                                _stepName = "判斷出料平台是否要換Tray";
+                                break;
+                            case 13:
+                                _stepName = "完成流程";
+                                break;
+                                
+                        }
+                        break;
+                    
+                    case 21:
                         _stepName = "動作完成";
                         break;
                     case 2:
-                    case 5:
-                    case 9:
+                    case 3:
+                    case 4:
+                    case 6:
+                    case 12:
+                    case 16:
+                    case 17:
+                    case 18:
+                    case 19:
                         _stepName = "完成上一站流程，等待下一站開始";
                         break;
                 }
@@ -296,6 +355,10 @@ namespace _4DMEN_Library.Model
         /// </summary>
         public List<float> EstResult { get; set; } = new List<float>();
         /// <summary>
+        /// 量測高度(顯示)
+        /// </summary>
+        public string EstResultString { get => EstResult.Aggregate("", (total, next) => total += total.Length == 0 ? $"{next}" : $",{next}"); }
+        /// <summary>
         /// 基準面位置公式
         /// </summary>
         public string BasePosFunc { get; set; } = "";
@@ -304,13 +367,25 @@ namespace _4DMEN_Library.Model
         /// </summary>
         public List<float> BaseParam { get; set; } = new List<float>();
         /// <summary>
+        /// 平面參數(顯示)
+        /// </summary>
+        public string BaseParamString { get => BaseParam.Aggregate("", (total, next) => total += total.Length == 0 ? $"{next}" : $",{next}"); }
+        /// <summary>
         /// 平面距離
         /// </summary>
         public List<float> PlaneDist { get; set; } = new List<float>();
         /// <summary>
+        /// 平面距離(顯示)
+        /// </summary>
+        public string PlaneDistString { get => PlaneDist.Aggregate("", (total, next) => total += total.Length == 0 ? $"{next}" : $",{next}"); }
+        /// <summary>
         /// 平整度
         /// </summary>
         public List<float> Flatness { get; set; } = new List<float>();
+        /// <summary>
+        /// 平整度(顯示)
+        /// </summary>
+        public string FlatnessString { get => Flatness.Aggregate("", (total, next) => total += total.Length == 0 ? $"{next}" : $",{next}"); }
         /// <summary>
         /// 量測NG
         /// </summary>
@@ -365,7 +440,7 @@ namespace _4DMEN_Library.Model
         /// </summary>
         public Stopwatch CaseEstHeiTime { get; set; } = new Stopwatch();
         /// <summary>
-        /// NG初料時間
+        /// NG出料時間
         /// </summary>
         public Stopwatch CaseNgTime { get; set; } = new Stopwatch();
         /// <summary>

@@ -38,13 +38,14 @@ namespace _4DMEN_Library.Model
                 if (CaseDoorCheckTask.GetEntity().DoorOpen)
                     PauseTaskWithoutWait();
                 WaitOne();
-                if (case_data != null && !case_data.ManualNG)
-                    RunStep();
+
                 if (Status == EnumData.TaskStatus.Done)
                 {
                     ThreadState = System.Threading.ThreadState.Stopped;
                     break;
                 }
+
+                RunStep();
             }
         }
 
@@ -53,14 +54,14 @@ namespace _4DMEN_Library.Model
             switch (Step)
             {
                 case 0: ///是否需要執行
-                    RecordData.RecordProcessData(MainPresenter.SystemParam(), $"掃碼站開始");
+                    RecordData.RecordProcessData(MainPresenter.SystemParam(), $"螺帽站開始");
                     Status = EnumData.TaskStatus.Running;
                     if (!MainPresenter.SystemParam().Flow.CasePutNut)
                     {
                         case_data.Step = Step = 2;
                         break;
                     }
-                    case_data.Step = Step = (case_data == null || !case_data.IsRun) ? 2 : 1;
+                    case_data.Step = Step = (case_data == null || !case_data.IsRun || case_data.ManualNG) ? 2 : 1;
                     case_data?.CasePutNutTime.Start();
                     break;
                 case 1: ///執行放置螺帽
@@ -73,7 +74,7 @@ namespace _4DMEN_Library.Model
                     case_data.Step = Step = 2;
                     break;
                 case 2: ///完成流程
-                    RecordData.RecordProcessData(MainPresenter.SystemParam(), $"掃碼站完成");
+                    RecordData.RecordProcessData(MainPresenter.SystemParam(), $"螺帽站完成");
                     case_data.Step = Step = 0;
                     case_data?.CasePutNutTime.Stop();
                     MainPresenter.SetRunSingleFlow(false);

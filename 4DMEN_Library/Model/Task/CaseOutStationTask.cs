@@ -92,14 +92,6 @@ namespace _4DMEN_Library.Model
                     Step = 2;
                     break;
                 case 2: //完成流程
-                    plc = MainPresenter.OutPLC();
-                    plc.GetStatus(); //取得出料平台狀態
-                    if (!(plc.IsFinish || plc.IsIdle))
-                    {
-                        Step = 1;
-                        timer = DateTime.Now;
-                        break;
-                    }
                     RecordData.RecordProcessData(MainPresenter.SystemParam(), $"出料站流程完成");
                     Step = 0;
                     MainPresenter.SetRunSingleFlow(false);

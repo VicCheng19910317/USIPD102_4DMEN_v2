@@ -130,6 +130,7 @@ namespace _4DMEN_Library.Model
                 case "測高":
                     Value = GetEstimateHieghtValue(channel);
                     success = !float.IsNaN(Value);
+                    Message = success ? $"回傳數值：{Value}." : "測高失敗";
                     break;
                 case "連線":
                     success = OpenDevice();

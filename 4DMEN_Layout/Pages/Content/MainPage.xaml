@@ -30,6 +30,7 @@
                         <TextBlock Text="OP Setting" FontSize="20" FontWeight="Bold"/>
                     </TabItem.Header>
                     <Grid Width="1820" Background="LightGray" >
+                        <local:OPSettingPage/>
                     </Grid>
                 </TabItem>
                 <TabItem Height="60" Width="200">
