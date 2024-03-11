@@ -106,7 +106,7 @@ namespace _4DMEN_Library.Model
                 txt += $"工單：{param.Sfis.TicketID}\n";
                 txt += $"操作員：{param.Sfis.WorkerID}\n";
                 txt += $"==============================================\n";
-                txt += $"時間,編號,量測結果,基準面位置公式,平面參數,平面距離,平整度,條碼結果1,條碼結果2,入料站耗時,組裝站耗時,掃碼站耗時,螺帽站耗時,折彎站耗時,下壓站耗時,測高站耗時,NG站耗時,雷雕站耗時,出料站耗時,CT時間,總耗時\n";
+                txt += $"時間,編號,量測結果,基準面位置公式,平面距離,平整度,條碼結果1,條碼結果2,入料站耗時,組裝站耗時,掃碼站耗時,螺帽站耗時,折彎站耗時,下壓站耗時,測高站耗時,NG站耗時,雷雕站耗時,出料站耗時,CT時間,總耗時\n";
                 File.WriteAllText(file_name, txt);
             }
             using (StreamWriter sw = new StreamWriter(new FileStream(file_name, FileMode.Append, FileAccess.Write, FileShare.ReadWrite)))

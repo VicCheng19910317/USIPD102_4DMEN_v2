@@ -96,7 +96,11 @@ namespace _4DMEN_Library.Model
                     MarkingParam param = new MarkingParam(MainPresenter.SystemParam().MarkParam);
                     param.marking_snd_index = case_data.Index + 1;
                     param.marking_2d_txt = case_data.ReaderResult1;
-
+                    if(case_data.ReaderResult1 == null || case_data.ReaderResult1 == "")
+                    {
+                        case_data.Step = Step = 5;
+                        break;
+                    }
                     if (!processor.SetTextParam(param))
                     {
                         ErrorMessage = "雷射參數設定失敗，請確認LFJ軟體是否開啟，再按下「Resume」按鈕繼續流程。";

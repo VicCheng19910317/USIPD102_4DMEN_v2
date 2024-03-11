@@ -115,7 +115,7 @@ namespace _4DMEN_Library.Model
             {
                 logger = LoggerData.Error(ex, $"停止任務錯誤");
             }
-           
+            IsPause = false;
         }
         /// <summary>
         /// 封鎖執行緒執行，直到收到訊號為止

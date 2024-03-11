@@ -1615,6 +1615,8 @@ namespace _4DMEN_Library
         {
             try
             {
+                CaseAllTask.GetEntity().PauseTaskWithoutWait();
+                Thread.Sleep(500);
                 switch (e.station_index)
                 {
                     case 1:

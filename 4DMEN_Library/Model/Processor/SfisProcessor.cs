@@ -119,7 +119,7 @@ namespace _4DMEN_Library.Model
                     send_data = $"{param.StationID},{data.ReaderResult1},3,{param.WorkerID},{param.LineID},,{result},{defect_code},{position},{data.ReaderResult2},,{data.MarkingLevel},,";
                     break;
                 case 3:
-                    result = data.DefectCode.Count() > 0 || data.ManualNG ? $"OK" : $"NG";
+                    result = data.DefectCode.Count() > 0 || data.ManualNG ? $"NG" : $"OK";
                     defect_code = data.DefectCode.GroupBy(x=>x).Aggregate("", (total, next) => total += total.Length == 0 ? $"{next.Key}" : $"+{next.Key}");
                     manual_defect = data.ManualNG ? "Manual" : "Auto";
                     defect_code += defect_code.Length == 0 ? $"{manual_defect}" : $"+{manual_defect}";
@@ -135,7 +135,6 @@ namespace _4DMEN_Library.Model
                             height += height.Length == 0 ? $"\"[VR]{tag}H1=\'{data.PlaneDist[3 * i + 0]}\'\",\"[VR]{tag}H2=\'{data.PlaneDist[3 * i + 1]}\'\",\"[VR]{tag}H3=\'{data.PlaneDist[3 * i + 2]}\'\",\"[VR]{tag}HA=\'{avg}\'\"" : $",\"[VR]{tag}H1=\'{data.PlaneDist[3 * i + 0]}\'\",\"[VR]{tag}H2=\'{data.PlaneDist[3 * i + 1]}\'\",\"[VR]{tag}H3=\'{data.PlaneDist[3 * i + 2]}\'\",\"[VR]{tag}HA=\'{avg}\'\"";
                         }
                     }
-
                     var flatness = "N/A";
                     if(data.Flatness.Count >= 3)
                         flatness = $"\"[VR]LF=\'{data.Flatness[0]}\'\",\"[VR]LF=\'{data.Flatness[1]}\'\",\"[VR]LF=\'{data.Flatness[2]}\'\"";
