@@ -401,11 +401,11 @@ namespace _4DMEN_Library.Model
         /// <summary>
         /// 掃碼結果1
         /// </summary>
-        public string ReaderResult1 { get; set; }
+        public string ReaderResult1 { get; set; } = "N/A";
         /// <summary>
         /// 掃碼結果2
         /// </summary>
-        public string ReaderResult2 { get; set; }
+        public string ReaderResult2 { get; set; } = "N/A";
         /// <summary>
         /// 雷雕等級
         /// </summary>

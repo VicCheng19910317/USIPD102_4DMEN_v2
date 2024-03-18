@@ -124,7 +124,7 @@ namespace _4DMEN_Library.Model
                     manual_defect = data.ManualNG ? "Manual" : "Auto";
                     defect_code += defect_code.Length == 0 ? $"{manual_defect}" : $"+{manual_defect}";
                     position = data.NGPosition.Count == 0 ? "" : data.NGPosition.GroupBy(x=>x).Aggregate("", (total, next) => total += total.Length == 0 ? $"{next.Key}" : $"+{next.Key}");
-                    var height = "N/A";
+                    var height = $"\"[VR]LH1=\'N/A\'\",\"[VR]LH2=\'N/A\'\",\"[VR]LH3=\'N/A\'\",\"[VR]LHA=\'N/A\'\",\"[VR]MH1=\'N/A\'\",\"[VR]MH2=\'N/A\'\",\"[VR]MH3=\'N/A\'\",\"[VR]MHA=\'N/A\'\",\"[VR]RH1=\'N/A\'\",\"[VR]RH2=\'N/A\'\",\"[VR]RH3=\'N/A\'\",\"[VR]RHA=\'N/A\'\"";
                     if (data.PlaneDist.Count >= 9)
                     {
                         height = "";
@@ -135,9 +135,9 @@ namespace _4DMEN_Library.Model
                             height += height.Length == 0 ? $"\"[VR]{tag}H1=\'{data.PlaneDist[3 * i + 0]}\'\",\"[VR]{tag}H2=\'{data.PlaneDist[3 * i + 1]}\'\",\"[VR]{tag}H3=\'{data.PlaneDist[3 * i + 2]}\'\",\"[VR]{tag}HA=\'{avg}\'\"" : $",\"[VR]{tag}H1=\'{data.PlaneDist[3 * i + 0]}\'\",\"[VR]{tag}H2=\'{data.PlaneDist[3 * i + 1]}\'\",\"[VR]{tag}H3=\'{data.PlaneDist[3 * i + 2]}\'\",\"[VR]{tag}HA=\'{avg}\'\"";
                         }
                     }
-                    var flatness = "N/A";
+                    var flatness = $"\"[VR]LF=\'N/A\'\",\"[VR]MF=\'N/A\'\",\"[VR]RF=\'N/A\'\"";
                     if(data.Flatness.Count >= 3)
-                        flatness = $"\"[VR]LF=\'{data.Flatness[0]}\'\",\"[VR]LF=\'{data.Flatness[1]}\'\",\"[VR]LF=\'{data.Flatness[2]}\'\"";
+                        flatness = $"\"[VR]LF=\'{data.Flatness[0]}\'\",\"[VR]MF=\'{data.Flatness[1]}\'\",\"[VR]RF=\'{data.Flatness[2]}\'\"";
                     var _grade = data.MarkingLevel == null ? "N/A" : data.MarkingLevel;
                     var grade = $"\"[VR]Grade=\'{_grade}\'\"";
                     send_data = $"{param.StationID},{data.ReaderResult1},2,{param.WorkerID},{param.LineID},,{result},{defect_code},{position},,{data.ReaderResult2},,{grade},{height},{flatness}";
