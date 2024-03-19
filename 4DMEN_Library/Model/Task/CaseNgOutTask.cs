@@ -80,16 +80,20 @@ namespace _4DMEN_Library.Model
                 case 1: //檢查平整度
                     if (case_data.Flatness.Count() < 3 || case_data.PlaneDist.Contains(float.NaN) || case_data.Flatness.Where(x => x > MainPresenter.SystemParam().FlatnessUpperLimit).Count() > 0)
                     {
-                        case_data.DefectCode.Add(MainPresenter.SystemParam().DefectMapping["平整度異常"]);
-                        case_data.NGPosition.Add(14);
+                        if (!case_data.DefectCode.Contains(MainPresenter.SystemParam().DefectMapping["平整度異常"]))
+                            case_data.DefectCode.Add(MainPresenter.SystemParam().DefectMapping["平整度異常"]);
+                        if (!case_data.NGPosition.Contains(13))
+                            case_data.NGPosition.Add(13);
                     }
                     case_data.Step = Step = 2;
                     break;
                 case 2: //檢查高度
                     if(case_data.PlaneDist.Count < 9 || case_data.PlaneDist.Contains(float.NaN))
                     {
-                        case_data.DefectCode.Add(MainPresenter.SystemParam().DefectMapping["高度異常"]);
-                        case_data.NGPosition.Add(14);
+                        if (!case_data.DefectCode.Contains(MainPresenter.SystemParam().DefectMapping["高度異常"]))
+                            case_data.DefectCode.Add(MainPresenter.SystemParam().DefectMapping["高度異常"]);
+                        if (!case_data.NGPosition.Contains(13))
+                            case_data.NGPosition.Add(13);
                         case_data.MeasureNG = true;
                         case_data.Step = Step = 3;
                         break;
@@ -101,8 +105,10 @@ namespace _4DMEN_Library.Model
                         dist2.Where(x => x > (float)MainPresenter.SystemParam().HeightLimit[1].Upper || x < (float)MainPresenter.SystemParam().HeightLimit[1].Lower).Count() > 0 ||
                         dist3.Where(x => x > (float)MainPresenter.SystemParam().HeightLimit[2].Upper || x < (float)MainPresenter.SystemParam().HeightLimit[2].Lower).Count() > 0)
                     {
-                        case_data.DefectCode.Add(MainPresenter.SystemParam().DefectMapping["高度異常"]);
-                        case_data.NGPosition.Add(14);
+                        if (!case_data.DefectCode.Contains(MainPresenter.SystemParam().DefectMapping["高度異常"]))
+                            case_data.DefectCode.Add(MainPresenter.SystemParam().DefectMapping["高度異常"]);
+                        if (!case_data.NGPosition.Contains(13))
+                            case_data.NGPosition.Add(13);
                         case_data.MeasureNG = true;
                         case_data.Step = Step = 3;
                         break;

@@ -73,8 +73,10 @@ namespace _4DMEN_Library.Model
                     else
                     {
                         Step = 2;
-                        case_data.DefectCode.Add(MainPresenter.SystemParam().DefectMapping["BasePlate 2D Code"]);
-                        case_data.NGPosition.Add(7);
+                        if (!case_data.DefectCode.Contains(MainPresenter.SystemParam().DefectMapping["BasePlate 2D Code"]))
+                            case_data.DefectCode.Add(MainPresenter.SystemParam().DefectMapping["BasePlate 2D Code"]);
+                        if (!case_data.NGPosition.Contains(7))
+                            case_data.NGPosition.Add(7);
                         case_data.IsRun = false;
                         break;
                     }

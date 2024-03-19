@@ -119,12 +119,14 @@ namespace _4DMEN_Library.Model
                     send_data = $"{param.StationID},{data.ReaderResult1},3,{param.WorkerID},{param.LineID},,{result},{defect_code},{position},{data.ReaderResult2},,{data.MarkingLevel},,";
                     break;
                 case 3:
-                    result = data.DefectCode.Count() > 0 || data.ManualNG ? $"NG" : $"OK";
+                    result = data.DefectCode.Count() > 0 || data.ManualNG ? $"FAIL" : $"OK";
                     defect_code = data.DefectCode.GroupBy(x=>x).Aggregate("", (total, next) => total += total.Length == 0 ? $"{next.Key}" : $"+{next.Key}");
                     manual_defect = data.ManualNG ? "Manual" : "Auto";
-                    defect_code += defect_code.Length == 0 ? $"{manual_defect}" : $"+{manual_defect}";
+                    defect_code += defect_code.Length == 0 ? (data.NGPosition.Count > 0 ? $"{manual_defect}" : $"") : $"+{manual_defect}";
                     position = data.NGPosition.Count == 0 ? "" : data.NGPosition.GroupBy(x=>x).Aggregate("", (total, next) => total += total.Length == 0 ? $"{next.Key}" : $"+{next.Key}");
-                    var height = $"\"[VR]LH1=\'N/A\'\",\"[VR]LH2=\'N/A\'\",\"[VR]LH3=\'N/A\'\",\"[VR]LHA=\'N/A\'\",\"[VR]MH1=\'N/A\'\",\"[VR]MH2=\'N/A\'\",\"[VR]MH3=\'N/A\'\",\"[VR]MHA=\'N/A\'\",\"[VR]RH1=\'N/A\'\",\"[VR]RH2=\'N/A\'\",\"[VR]RH3=\'N/A\'\",\"[VR]RHA=\'N/A\'\"";
+                    var defect_position = defect_code.Length == 0 && position.Length == 0 ? "" : $"{defect_code}:{position}";
+
+                    var height = $"\"[VR]LH1=\'N/A\'\" \"[VR]LH2=\'N/A\'\" \"[VR]LH3=\'N/A\'\" \"[VR]LHA=\'N/A\'\" \"[VR]MH1=\'N/A\'\" \"[VR]MH2=\'N/A\'\" \"[VR]MH3=\'N/A\'\" \"[VR]MHA=\'N/A\'\" \"[VR]RH1=\'N/A\'\" \"[VR]RH2=\'N/A\'\" \"[VR]RH3=\'N/A\'\" \"[VR]RHA=\'N/A\'\"";
                     if (data.PlaneDist.Count >= 9)
                     {
                         height = "";
@@ -132,19 +134,21 @@ namespace _4DMEN_Library.Model
                         {
                             var avg = Math.Round((data.PlaneDist[3 * i + 0] + data.PlaneDist[3 * i + 1] + data.PlaneDist[3 * i + 2]) / 3, 2);
                             var tag = i == 0 ? "L" : i == 1 ? "M" : "R";
-                            height += height.Length == 0 ? $"\"[VR]{tag}H1=\'{data.PlaneDist[3 * i + 0]}\'\",\"[VR]{tag}H2=\'{data.PlaneDist[3 * i + 1]}\'\",\"[VR]{tag}H3=\'{data.PlaneDist[3 * i + 2]}\'\",\"[VR]{tag}HA=\'{avg}\'\"" : $",\"[VR]{tag}H1=\'{data.PlaneDist[3 * i + 0]}\'\",\"[VR]{tag}H2=\'{data.PlaneDist[3 * i + 1]}\'\",\"[VR]{tag}H3=\'{data.PlaneDist[3 * i + 2]}\'\",\"[VR]{tag}HA=\'{avg}\'\"";
+                            height += $"\"[VR]{tag}H1=\'{data.PlaneDist[3 * i + 0]} mm\'\" \"[VR]{tag}H2=\'{data.PlaneDist[3 * i + 1]} mm\'\" \"[VR]{tag}H3=\'{data.PlaneDist[3 * i + 2]} mm\'\" \"[VR]{tag}HA=\'{avg} mm\'\"";
                         }
                     }
-                    var flatness = $"\"[VR]LF=\'N/A\'\",\"[VR]MF=\'N/A\'\",\"[VR]RF=\'N/A\'\"";
+                    var flatness = $"\"[VR]LF=\'N/A\'\" \"[VR]MF=\'N/A\'\" \"[VR]RF=\'N/A\'\"";
                     if(data.Flatness.Count >= 3)
-                        flatness = $"\"[VR]LF=\'{data.Flatness[0]}\'\",\"[VR]MF=\'{data.Flatness[1]}\'\",\"[VR]RF=\'{data.Flatness[2]}\'\"";
+                        flatness = $"\"[VR]LF=\'{data.Flatness[0]} mm\'\" \"[VR]MF=\'{data.Flatness[1]} mm\'\" \"[VR]RF=\'{data.Flatness[2]} mm\'\"";
                     var _grade = data.MarkingLevel == null ? "N/A" : data.MarkingLevel;
                     var grade = $"\"[VR]Grade=\'{_grade}\'\"";
-                    send_data = $"{param.StationID},{data.ReaderResult1},2,{param.WorkerID},{param.LineID},,{result},{defect_code},{position},,{data.ReaderResult2},,{grade},{height},{flatness}";
+                    var base_plate_lid_id = $"\"[VR]BASEPLATE LID ID=\'{data.ReaderResult2}\'\"";
+                    send_data = $"{param.StationID},{data.ReaderResult1},2,{param.WorkerID},{param.LineID},,{result},,{defect_position},{grade} {height} {flatness} {base_plate_lid_id}";
                     break;
             }
-            success = SendAction(send_data, "");
             RecordData.RecordSFISData(MainPresenter.SystemParam(), send_data);
+            success = SendAction(send_data, "");
+            
             return success;
         }
         #endregion 實作方法

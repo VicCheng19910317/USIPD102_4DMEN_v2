@@ -238,7 +238,7 @@ namespace USIPD102_4DMEN.Pages
         {
             try
             {
-                var index = int.Parse(((ComboBoxItem)StationNgCB.SelectedItem).Content.ToString());
+                var index = int.Parse(((ComboBoxItem)StationNgCB.SelectedItem).Content.ToString().Split(':')[0]);
                 if (MessageBox.Show($"Manual Setting {index} NG?", "Flow Info.", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     MainWindow.SendPresenterData("manual_ng_setting", new ManualNGSettingArgs { station_index = index });

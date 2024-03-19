@@ -87,8 +87,10 @@ namespace _4DMEN_Library.Model
                     {
                         IsNG = true;
                         Step = 6;
-                        case_data.DefectCode.Add(MainPresenter.SystemParam().DefectMapping["BasePlate/ Lid 2D code異常"]);
-                        case_data.NGPosition.Add(20);
+                        if (!case_data.DefectCode.Contains(MainPresenter.SystemParam().DefectMapping["BasePlate/ Lid 2D code異常"]))
+                            case_data.DefectCode.Add(MainPresenter.SystemParam().DefectMapping["BasePlate/ Lid 2D code異常"]);
+                        if (!case_data.NGPosition.Contains(20))
+                            case_data.NGPosition.Add(20);
                         break;
                     }
                     case_data.Step = Step = 3;
@@ -98,8 +100,10 @@ namespace _4DMEN_Library.Model
                     {
                         IsNG = true;
                         Step = 6;
-                        case_data.DefectCode.Add(MainPresenter.SystemParam().DefectMapping["鐳碼等級異常"]);
-                        case_data.NGPosition.Add(20);
+                        if (!case_data.DefectCode.Contains(MainPresenter.SystemParam().DefectMapping["鐳碼等級異常"]))
+                            case_data.DefectCode.Add(MainPresenter.SystemParam().DefectMapping["鐳碼等級異常"]);
+                        if (!case_data.NGPosition.Contains(20))
+                            case_data.NGPosition.Add(20);
                         break;
                     }
                     Step = 4;
@@ -120,8 +124,10 @@ namespace _4DMEN_Library.Model
                     else
                     {
                         Step = 6;
-                        case_data.DefectCode.Add(MainPresenter.SystemParam().DefectMapping["BasePlate/ Lid 2D code異常"]);
-                        case_data.NGPosition.Add(20);
+                        if (!case_data.DefectCode.Contains(MainPresenter.SystemParam().DefectMapping["BasePlate/ Lid 2D code異常"]))
+                            case_data.DefectCode.Add(MainPresenter.SystemParam().DefectMapping["BasePlate/ Lid 2D code異常"]);
+                        if (!case_data.NGPosition.Contains(20))
+                            case_data.NGPosition.Add(20);
                         IsNG = true;
                         break;
                     }

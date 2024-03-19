@@ -1623,7 +1623,8 @@ namespace _4DMEN_Library
                         var case_data = CaseInTask.GetEntity().case_data;
                         case_data.IsRun = false;
                         case_data.ManualNG = true;
-                        case_data.NGPosition.Add(e.station_index);
+                        if(!case_data.NGPosition.Contains(e.station_index))
+                            case_data.NGPosition.Add(e.station_index);
                         CaseInTask.GetEntity().SetStep(0);
                         break;
                     case 5:
@@ -1631,21 +1632,24 @@ namespace _4DMEN_Library
                         case_data.IsRun = false;
                         case_data.ManualNG = true;
                         CaseLidTask.GetEntity().PutCaseFinish = true;
-                        case_data.NGPosition.Add(e.station_index);
+                        if (!case_data.NGPosition.Contains(e.station_index))
+                            case_data.NGPosition.Add(e.station_index);
                         CaseLidTask.GetEntity().SetStep(6);
                         break;
                     case 7:
                         case_data = CaseScanCodeTask.GetEntity().case_data;
                         case_data.IsRun = false;
                         case_data.ManualNG = true;
-                        case_data.NGPosition.Add(e.station_index);
+                        if (!case_data.NGPosition.Contains(e.station_index))
+                            case_data.NGPosition.Add(e.station_index);
                         CaseScanCodeTask.GetEntity().Status = EnumData.TaskStatus.Done;
                         break;
                     case 8:
                         case_data = CasePutNutTask.GetEntity().case_data;
                         case_data.IsRun = false;
                         case_data.ManualNG = true;
-                        case_data.NGPosition.Add(e.station_index);
+                        if (!case_data.NGPosition.Contains(e.station_index))
+                            case_data.NGPosition.Add(e.station_index);
                         CasePutNutTask.GetEntity().Status = EnumData.TaskStatus.Done;
                         break;
                     case 9:
@@ -1653,42 +1657,48 @@ namespace _4DMEN_Library
                         case_data = CaseBendTask.GetEntity().case_data;
                         case_data.IsRun = false;
                         case_data.ManualNG = true;
-                        case_data.NGPosition.Add(e.station_index);
+                        if (!case_data.NGPosition.Contains(e.station_index))
+                            case_data.NGPosition.Add(e.station_index);
                         CaseBendTask.GetEntity().Status = EnumData.TaskStatus.Done;
                         break;
                     case 11:
                         case_data = CasePlateTask.GetEntity().case_data;
                         case_data.IsRun = false;
                         case_data.ManualNG = true;
-                        case_data.NGPosition.Add(e.station_index);
+                        if (!case_data.NGPosition.Contains(e.station_index))
+                            case_data.NGPosition.Add(e.station_index);
                         CasePlateTask.GetEntity().Status = EnumData.TaskStatus.Done;
                         break;
                     case 13:
                         case_data = CaseEstHeightTask.GetEntity().case_data;
                         case_data.IsRun = false;
                         case_data.ManualNG = true;
-                        case_data.NGPosition.Add(e.station_index);
+                        if (!case_data.NGPosition.Contains(e.station_index))
+                            case_data.NGPosition.Add(e.station_index);
                         CaseEstHeightTask.GetEntity().Status = EnumData.TaskStatus.Done;
                         break;
                     case 14:
                         case_data = CaseNgOutTask.GetEntity().case_data;
                         case_data.IsRun = false;
                         case_data.ManualNG = true;
-                        case_data.NGPosition.Add(e.station_index);
+                        if (!case_data.NGPosition.Contains(e.station_index))
+                            case_data.NGPosition.Add(e.station_index);
                         CaseNgOutTask.GetEntity().Status = EnumData.TaskStatus.Done;
                         break;
                     case 15:
                         case_data = CaseMarkingTask.GetEntity().case_data;
                         case_data.IsRun = false;
                         case_data.ManualNG = true;
-                        case_data.NGPosition.Add(e.station_index);
+                        if (!case_data.NGPosition.Contains(e.station_index))
+                            case_data.NGPosition.Add(e.station_index);
                         CaseMarkingTask.GetEntity().Status = EnumData.TaskStatus.Done;
                         break;
                     case 20:
                         case_data = CaseOutTask.GetEntity().case_data;
                         case_data.IsRun = false;
                         case_data.ManualNG = true;
-                        case_data.NGPosition.Add(e.station_index);
+                        if (!case_data.NGPosition.Contains(e.station_index))
+                            case_data.NGPosition.Add(e.station_index);
                         if (system_param.Sfis.Enable)
                         {
                             _sfis.SendStep(3, MainPresenter.SystemParam().Sfis, case_data);
