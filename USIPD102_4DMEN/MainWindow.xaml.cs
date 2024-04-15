@@ -29,7 +29,7 @@ namespace USIPD102_4DMEN
     {
         #region 屬性參數
         private readonly PaletteHelper _paletteHelper = new PaletteHelper();
-        private readonly string version = "2.46.44.20240319";
+        private readonly string version = "2.50.50.20240415";
         private static Logger logger = LogManager.GetCurrentClassLogger();
         #endregion 屬性參數
         #region 靜態動作
@@ -89,6 +89,10 @@ namespace USIPD102_4DMEN
                     UpdateLoggerData((UpdateLoggerArgs)e);
                 else if (response_name == "load_log_datas")
                     LoadLogDatas((UpdateLoggerArgs)e);
+                else if (response_name == "reset_ng_count_display")
+                    ResetNgCount();
+                else if (response_name == "reset_out_ng_count_display")
+                    ResetOutNgCount();
             }
             catch (Exception ex)
             {
@@ -255,6 +259,8 @@ namespace USIPD102_4DMEN
             {
                 FlowDataInfoPage.UpdateCaseDatas(e.CaseDatas);
                 MainFlowPage.UpdateStationSignal(e.CaseDatas);
+                MainFlowPage.UpdateNgCount(e.NgCount);
+                MainFlowPage.UpdateOutNgCount(e.OutNgCount);
             }
             catch (Exception ex)
             {
@@ -335,6 +341,28 @@ namespace USIPD102_4DMEN
             catch (Exception ex)
             {
                 logger.Error(ex, "讀取Logger資料錯誤。");
+            }
+        }
+        public void ResetNgCount()
+        {
+            try
+            {
+                MainFlowPage.UpdateNgCount(0);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "重置NG數量錯誤。");
+            }
+        }
+        public void ResetOutNgCount()
+        {
+            try
+            {
+                MainFlowPage.UpdateOutNgCount(0);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "重置NG數量錯誤。");
             }
         }
         #endregion MVP架構事件

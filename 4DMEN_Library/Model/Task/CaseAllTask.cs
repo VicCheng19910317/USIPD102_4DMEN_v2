@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,18 @@ namespace _4DMEN_Library.Model
     {
         internal List<CaseData> case_datas = null;
         internal Stopwatch all_cases_time = new Stopwatch();
+        internal static int put_station = int.Parse(ConfigurationManager.AppSettings["PutStation"]);
+        internal static int lid_station = int.Parse(ConfigurationManager.AppSettings["LidStation"]);
+        internal static int nut_station = int.Parse(ConfigurationManager.AppSettings["NutStation"]);
+        internal static List<int> bend_station = new List<int> { int.Parse(ConfigurationManager.AppSettings["BendStation"].Split(',')[0]), int.Parse(ConfigurationManager.AppSettings["BendStation"].Split(',')[1]) };
+        internal static int plate_station = int.Parse(ConfigurationManager.AppSettings["PlateStation"]);
+        internal static int est_hei_station = int.Parse(ConfigurationManager.AppSettings["EstHeiStation"]);
+        internal static int ng_station = int.Parse(ConfigurationManager.AppSettings["NgStation"]); 
+        internal static int scan_station = int.Parse(ConfigurationManager.AppSettings["ScanStation"]);
+        internal static int mark_station = int.Parse(ConfigurationManager.AppSettings["MarkStation"]);
+        internal static int out_station = int.Parse(ConfigurationManager.AppSettings["OutStation"]);
+        
+        
         #region 類別欄位
         private static CaseAllTask m_Singleton;
         #endregion
@@ -73,9 +86,11 @@ namespace _4DMEN_Library.Model
                 OnUpdateCaseData(case_datas);
                 #region 檢查流程動作是否完成
                 if (!MainPresenter.GetInitRun() || MainPresenter.GetManualPause()) continue;
-                if (!CaseInTask.GetEntity().PutCaseFinish || !CaseLidTask.GetEntity().PutCaseFinish || CaseScanCodeTask.GetEntity().IsRunning || CasePutNutTask.GetEntity().IsRunning || CaseBendTask.GetEntity().IsRunning ||
-                    CasePlateTask.GetEntity().IsRunning || CaseEstHeightTask.GetEntity().IsRunning || CaseNgOutTask.GetEntity().IsRunning || CaseMarkingTask.GetEntity().IsRunning ||
-                    CaseOutTask.GetEntity().IsRunning) continue;
+                if (!CaseInTask.GetEntity().PutCaseFinish || (CaseInTask.GetEntity().IsPause && CaseInTask.GetEntity().Status != EnumData.TaskStatus.Done) || 
+                    !CaseLidTask.GetEntity().PutCaseFinish || (CaseLidTask.GetEntity().IsPause && CaseLidTask.GetEntity().Status != EnumData.TaskStatus.Done) || 
+                    CaseScanCodeTask.GetEntity().IsRunning || CasePutNutTask.GetEntity().IsRunning || CaseBendTask.GetEntity().IsRunning || 
+                    CasePlateTask.GetEntity().IsRunning || CaseEstHeightTask.GetEntity().IsRunning || CaseNgOutTask.GetEntity().IsRunning || 
+                    CaseMarkingTask.GetEntity().IsRunning || CaseOutTask.GetEntity().IsRunning) continue;
                 #endregion 檢查流程動作是否完成
                 if (case_datas.Where(x => x.Station >= 20).Count() == MainPresenter.SystemParam().CaseCount)
                 {
@@ -122,60 +137,61 @@ namespace _4DMEN_Library.Model
             var flow_datas = case_datas.Where(x => x.Station > 0).ToList();
             foreach (var flow_data in flow_datas)
             {
-                if (flow_data.Station == 1)
+                if (flow_data.Station == put_station)
                 {
                     CaseInTask.GetEntity().CanPutCase = true;
                     CaseInTask.GetEntity().PutCaseFinish = false;
                 }
-                else if(flow_data.Station == 5)
+                else if(flow_data.Station == lid_station && MainPresenter.SystemParam().Flow.CaseAssemble)
                 {
                     CaseLidTask.GetEntity().CanPutCase = true;
                     CaseLidTask.GetEntity().PutCaseFinish = false;
                 }
-                else if (flow_data.Station == 7)
-                {
-                    CaseScanCodeTask.GetEntity().Status = EnumData.TaskStatus.Running;
-                    CaseScanCodeTask.GetEntity().case_data = flow_data;
-                    CaseScanCodeTask.GetEntity().StartTask();
-                }
-                else if (flow_data.Station == 8)
+                
+                else if (flow_data.Station == nut_station)
                 {
                     CasePutNutTask.GetEntity().Status = EnumData.TaskStatus.Running;
                     CasePutNutTask.GetEntity().case_data = flow_data;
                     CasePutNutTask.GetEntity().StartTask();
                 }
-                else if (!CaseBendTask.GetEntity().IsStartBend && (flow_data.Station == 9 || flow_data.Station == 10))
+                else if (!CaseBendTask.GetEntity().IsStartBend && bend_station.Contains(flow_data.Station))
                 {
                     CaseBendTask.GetEntity().Status = EnumData.TaskStatus.Running;
                     CaseBendTask.GetEntity().IsStartBend = true;
                     CaseBendTask.GetEntity().case_data = flow_data;
                     CaseBendTask.GetEntity().StartTask();
                 }
-                else if (flow_data.Station == 11)
+                else if (flow_data.Station == plate_station)
                 {
                     CasePlateTask.GetEntity().Status = EnumData.TaskStatus.Running;
                     CasePlateTask.GetEntity().case_data = flow_data;
                     CasePlateTask.GetEntity().StartTask();
                 }
-                else if(flow_data.Station == 13)
+                else if(flow_data.Station == est_hei_station)
                 {
                     CaseEstHeightTask.GetEntity().Status = EnumData.TaskStatus.Running;
                     CaseEstHeightTask.GetEntity().case_data = flow_data;
                     CaseEstHeightTask.GetEntity().StartTask();
                 }
-                else if (flow_data.Station == 14)
+                else if (flow_data.Station == ng_station)
                 {
                     CaseNgOutTask.GetEntity().Status = EnumData.TaskStatus.Running;
                     CaseNgOutTask.GetEntity().case_data = flow_data;
                     CaseNgOutTask.GetEntity().StartTask();
                 }
-                else if (flow_data.Station == 15)
+                else if (flow_data.Station == scan_station)
+                {
+                    CaseScanCodeTask.GetEntity().Status = EnumData.TaskStatus.Running;
+                    CaseScanCodeTask.GetEntity().case_data = flow_data;
+                    CaseScanCodeTask.GetEntity().StartTask();
+                }
+                else if (flow_data.Station == mark_station)
                 {
                     CaseMarkingTask.GetEntity().Status = EnumData.TaskStatus.Running;
                     CaseMarkingTask.GetEntity().case_data = flow_data;
                     CaseMarkingTask.GetEntity().StartTask();
                 }
-                else if (flow_data.Station == 20)
+                else if (flow_data.Station == out_station)
                 {
                     CaseOutTask.GetEntity().Status = EnumData.TaskStatus.Running;
                     CaseOutTask.GetEntity().case_data = flow_data;

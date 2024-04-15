@@ -123,7 +123,7 @@ namespace _4DMEN_Library.Model
                     if (NgCount >= NgCountLimit)
                     {
                         PauseTask();
-                        ErrorMessage = "NG區已滿料，請清除對應料件後，按下Resume按鈕";
+                        ErrorMessage = "NG區已滿料，請清除對應料件後，先按「Ng Reset」按鈕後，再按下「Resume」按鈕";
                     }
                     case_data.Step = Step = 4;
                     break;

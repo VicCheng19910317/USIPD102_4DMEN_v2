@@ -67,6 +67,14 @@ namespace _4DMEN_Library.Model
                 case 0: ///是否需要執行
                     RecordData.RecordProcessData(MainPresenter.SystemParam(), $"組裝上蓋流程開始");
                     Status = EnumData.TaskStatus.Running;
+                    if (!MainPresenter.SystemParam().Flow.CaseAssemble)
+                    {
+                        MainPresenter.SetRunSingleFlow(false);
+                        MainPresenter.SetRunFlow(false);
+                        PutCaseFinish = true;
+                        Status = EnumData.TaskStatus.Done;
+                        break;
+                    }
                     case_data?.CaseAssembleTime.Start();
                     case_data.Step = Step = 1;
                     break;
@@ -83,12 +91,12 @@ namespace _4DMEN_Library.Model
                     case_data.Step = Step = 3;
                     break;
                 case 3: ///手臂取料
-                    if (!DoArmsAction(() => MainPresenter.CaseLidArms().Pick(), MainPresenter.CaseLidArms(), "組裝手臂取料錯誤，請重新將手臂回Home再行後續動作"))
+                    if (!DoArmsActionErrorWithoutWait(() => MainPresenter.CaseLidArms().Pick(), MainPresenter.CaseLidArms(), "組裝手臂取料錯誤，請重新將手臂回Home再行後續動作"))
                     {
                         Step = 1;
                         if (PickSequence == MainPresenter.SystemParam().LidTrayCount)
                         {
-                            PickSequence = 0;
+                            PickSequence = 1;
                             CaseLidStationTask.GetEntity().PassDetect = false;
                             CaseLidStationTask.GetEntity().StartTask(); //開始換Tray
                             System.Threading.Thread.Sleep(500);
@@ -96,6 +104,7 @@ namespace _4DMEN_Library.Model
                         PickSequence++;
                         break;
                     }
+                    PickSequence++;
                     case_data.Step = Step = 4;
                     break;
                 case 4: ///判斷是否可以進行放料

@@ -49,7 +49,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Model\BaseThread.cs" />
     <Compile Include="Model\CalcFunc.cs" />
     <Compile Include="Model\ClientTCP.cs" />

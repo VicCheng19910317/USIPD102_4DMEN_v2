@@ -27,11 +27,14 @@ namespace USIPD102_4DMEN.Pages
         bool init = true;
         private static Logger logger = LogManager.GetCurrentClassLogger();
         private List<Image> signal_img = new List<Image>();
+       
         #endregion 屬性
         #region 靜態動作
         public static Action<SfisParam, int, int> SetWorksheetInfo;
         public static Action<SystemFlow> SetSystemFlow;
         public static Action<List<CaseData>> UpdateStationSignal;
+        public static Action<int> UpdateNgCount;
+        public static Action<int> UpdateOutNgCount;
         public static Action ResetRunFlow;
         public static Action SetRunFlow;
         #endregion 靜態動作
@@ -152,6 +155,26 @@ namespace USIPD102_4DMEN.Pages
                     });
                 });
 
+            };
+            UpdateNgCount = count =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    if (count >= 0)
+                        NgCountTxt.Text = $"NG數量：{count.ToString()}";
+                });
+            };
+            UpdateOutNgCount = count =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    var full_txt = count>=2 ? "滿料" : "";
+                    if (count >= 0)
+                    {
+                        OutNgCountTxt.Text = $"NG數量：{count.ToString()} {full_txt}";
+                        OutNgCountTxt.Foreground = count >= 2 ? new SolidColorBrush(Colors.Red) : new SolidColorBrush(Colors.Blue);
+                    }
+                });
             };
             #endregion 靜態動作
         }
@@ -313,6 +336,29 @@ namespace USIPD102_4DMEN.Pages
             }
         }
 
-        
+        private void CaseCB_Checked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (init) return;
+                var flow = new SystemFlow
+                {
+                    CaseAssemble = CaseAssembleCB.IsChecked.Value,
+                    CaseScan = CaseScanCB.IsChecked.Value,
+                    CasePutNut = CasePutNutCB.IsChecked.Value,
+                    CaseBending = CaseBendingCB.IsChecked.Value,
+                    CasePlate = CasePlateCB.IsChecked.Value,
+                    CaseEstHeight = CaseEstHeightCB.IsChecked.Value,
+                    CaseNgOut = CaseNgOutCB.IsChecked.Value,
+                    CaseMarking = CaseMarkingCB.IsChecked.Value,
+
+                };
+                MainWindow.SendPresenterData("set_flow", new SetSystemFlowArgs { Flow = flow });
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "設定流程開關功能失敗。");
+            }
+        }
     }
 }

@@ -185,7 +185,7 @@ namespace _4DMEN_Library
         }
         private void MainPresenter_UpdateCaseDataEvent(object sender, List<CaseData> caseDatas)
         {
-            OnPresentResponseEvent("update_all_loop_data", new UpdateCaseDatasArgs { CaseDatas = caseDatas });
+            OnPresentResponseEvent("update_all_loop_data", new UpdateCaseDatasArgs { CaseDatas = caseDatas, NgCount = CaseNgOutTask.GetEntity().NgCount, OutNgCount = CaseOutTask.GetEntity().NGCount });
         }
         private void MainPresenter_ShowFlowErrorEvent(object sender, EventArgs e)
         {
@@ -1404,61 +1404,81 @@ namespace _4DMEN_Library
             {
                 if (e.Action.ToLower().Contains("start") || e.Action.ToLower().Contains("resume"))
                 {
-                    main_plc.PCErrorSet(0);
-
                     #region 檢查硬體狀態
                     var restart = false;
                     var message = "Start All Cases.";
-                    main_plc.GetStatus();
+                    Task.WaitAll(new Task[] {
+                        Task.Run(()=>main_plc.PCErrorSet(0)),
+                        Task.Run(()=> main_plc.GetStatus()),
+                        Task.Run(()=> nut_plc.GetStatus()),
+                        Task.Run(()=> bend_plc.GetStatus()),
+                        Task.Run(()=> plate_plc.GetStatus()),
+                        Task.Run(()=> height_plc.GetStatus()),
+                        Task.Run(()=> ng_plc.GetStatus()),
+                    });
+                    Task.WaitAll(new Task[] {
+                        Task.Run(()=> in_station_plc.GetStatus()),
+                        Task.Run(()=> lid_station_plc.GetStatus()),
+                        Task.Run(()=> out_station_plc.GetStatus()),
+                    });
+                    #region 將所有發送訊號歸0
+                    if (e.Action.ToLower().Contains("start"))
+                    {
+                        Task.WaitAll(new Task[] {
+                            Task.Run(()=>main_plc.SendIdle()),
+                            Task.Run(()=> nut_plc.SendIdle()),
+                            Task.Run(()=> bend_plc.SendIdle()),
+                            Task.Run(()=> plate_plc.SendIdle()),
+                            Task.Run(()=> height_plc.SendIdle()),
+                            Task.Run(()=> ng_plc.SendIdle()),
+                        });
+                        Task.WaitAll(new Task[] {
+                            Task.Run(()=> in_station_plc.SendIdle()),
+                            Task.Run(()=> lid_station_plc.SendIdle()),
+                            Task.Run(()=> out_station_plc.SendIdle()),
+                        });
+                    }
+                    #endregion 將所有發送訊號歸0
                     if (main_plc.IsError || main_plc.IsInitialized || main_plc.IsSend)
                     {
                         restart = true;
                         message = "主流道PLC錯誤，請確認。";
                     }
-                    nut_plc.GetStatus();
                     if (!(nut_plc.IsIdle || nut_plc.IsFinish))
                     {
                         restart = true;
                         message = "螺帽站PLC錯誤，請確認。";
                     }
-                    bend_plc.GetStatus();
                     if (!(bend_plc.IsIdle || bend_plc.IsFinish))
                     {
                         restart = true;
                         message = "折彎站PLC錯誤，請確認。";
                     }
-                    plate_plc.GetStatus();
                     if (!(plate_plc.IsIdle || plate_plc.IsFinish))
                     {
                         restart = true;
                         message = "壓平站PLC錯誤，請確認。";
                     }
-                    height_plc.GetStatus();
                     if (!(height_plc.IsIdle || height_plc.IsFinish))
                     {
                         restart = true;
                         message = "測高站PLC錯誤，請確認。";
                     }
-                    ng_plc.GetStatus();
                     if (ng_plc.IsError || ng_plc.IsInitialized || ng_plc.IsSend)
                     {
                         restart = true;
                         message = "NG站PLC錯誤，請確認。";
                     }
-                    
-                    in_station_plc.GetStatus();
                     if (in_station_plc.IsError)
                     {
                         restart = true;
                         message = "入料站PLC錯誤，請確認。";
                     }
-                    lid_station_plc.GetStatus();
                     if (lid_station_plc.IsError)
                     {
                         restart = true;
                         message = "組裝站PLC錯誤，請確認。";
                     }
-                    out_station_plc.GetStatus();
                     if (out_station_plc.IsError)
                     {
                         restart = true;
@@ -1571,6 +1591,7 @@ namespace _4DMEN_Library
                     CaseInTask.GetEntity().PutCaseFinish = true;
                     CaseLidTask.GetEntity().CanPutCase = false;
                     CaseLidTask.GetEntity().PutCaseFinish = true;
+                    CaseLidTask.GetEntity().PickSequence = 1;
                     #endregion 重置計數
                     Thread.Sleep(500);
                     if (CaseAllTask.GetEntity().IsRunning)
@@ -1595,7 +1616,7 @@ namespace _4DMEN_Library
                 }
                 else if (e.Action.ToLower().Contains("resume"))
                 {
-                    main_plc.PCErrorSet(0);
+                    
                     CaseAllTask.GetEntity().Resume();
                     is_run = true;
                 }
@@ -1718,6 +1739,7 @@ namespace _4DMEN_Library
             try
             {
                 CaseNgOutTask.GetEntity().NgCount = 0;
+                OnPresentResponseEvent("reset_ng_count_display", null);
                 OnPresentResponseEvent("show_message", new SendMessageBoxArgs { Name = "流程訊息", Message = "重置成功。", Image = System.Windows.MessageBoxImage.Information });
             }
             catch (Exception ex)
@@ -1730,6 +1752,7 @@ namespace _4DMEN_Library
             try
             {
                 CaseOutTask.GetEntity().NGCount = 0;
+                OnPresentResponseEvent("reset_out_ng_count_display", null);
                 OnPresentResponseEvent("show_message", new SendMessageBoxArgs { Name = "流程訊息", Message = "重置成功。", Image = System.Windows.MessageBoxImage.Information });
             }
             catch (Exception ex)

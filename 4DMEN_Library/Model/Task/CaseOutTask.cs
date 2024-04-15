@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -13,6 +14,8 @@ namespace _4DMEN_Library.Model
         internal bool IsNG { get; set; } = false;
         internal int NGCount { get; set; } = 0;
         internal int NGCountLimit { get; set; } = 2;
+        internal int ReScanCountLimit { get; set; } = int.Parse(ConfigurationManager.AppSettings["ReScanCountLimit"]);
+        internal int ReScanCount { get; set; } = 0;
         private DateTime CTTime { get; set; } = DateTime.Now;
         #region 類別欄位
         private static CaseOutTask m_Singleton;
@@ -61,6 +64,12 @@ namespace _4DMEN_Library.Model
                     Status = EnumData.TaskStatus.Running;
                     if (case_data == null || !case_data.IsRun || case_data.ManualNG)
                     {
+                        if (case_data.Reader1NG)
+                        {
+                            IsNG = true;
+                            case_data.Step = Step = 6;
+                            break;
+                        }
                         case_data.Step = Step = 11;
                         break;
                     }
@@ -69,9 +78,11 @@ namespace _4DMEN_Library.Model
                     if(!MainPresenter.SystemParam().Flow.CaseScan)
                         case_data.Step = Step = 6;
                     case_data?.CaseOutTime.Start();
+
                     break;
                 case 1: //手臂移到雷雕掃碼處
                     if (!DoArmsAction(() => MainPresenter.CaseOutArms().SetCOne(), MainPresenter.CaseOutArms(), "出料手臂移至雷雕掃碼處錯誤，請重新將手臂回Home再行後續動作")) break;
+                    ReScanCount = 0;
                     case_data.Step = Step = 2;
                     break;
                 case 2: //執行雷雕掃碼辨識
@@ -98,6 +109,12 @@ namespace _4DMEN_Library.Model
                 case 3: //判斷雷雕品質
                     if (!MainPresenter.SystemParam().MarkParam.pass_level.Contains(case_data.MarkingLevel))
                     {
+                        if(ReScanCount < ReScanCountLimit)
+                        {
+                            ReScanCount++;
+                            case_data.Step = Step = 2;
+                            break;
+                        }
                         IsNG = true;
                         Step = 6;
                         if (!case_data.DefectCode.Contains(MainPresenter.SystemParam().DefectMapping["鐳碼等級異常"]))
@@ -162,7 +179,7 @@ namespace _4DMEN_Library.Model
                 case 10: //判斷NG是否超過上限
                     if(NGCount >= NGCountLimit)
                     {
-                        ErrorMessage = "出料NG區已滿載，請將出料NG區除料後，按下「」後，再按下「Resume接續流程。";
+                        ErrorMessage = "出料NG區已滿載，請將出料NG區除料後，按下「Out NG Reset」後，再按下「Resume」接續流程。";
                         PauseTask();
                         break;
                     }

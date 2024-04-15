@@ -82,7 +82,7 @@ namespace _4DMEN_Library.Model
                     case_data.Step = Step = 3;
                     break;
                 case 3: ///手臂取料
-                    if (!DoArmsAction(() => MainPresenter.CaseInArms().Pick(), MainPresenter.CaseInArms(), "入料手臂取料錯誤，請重新將手臂回Home再行後續動作"))
+                    if (!DoArmsActionErrorWithoutWait(() => MainPresenter.CaseInArms().Pick(), MainPresenter.CaseInArms(), "入料手臂取料錯誤，請重新將手臂回Home再行後續動作"))
                     {
                         case_data.Step = Step = 1;
                         break;

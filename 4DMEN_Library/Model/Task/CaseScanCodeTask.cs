@@ -78,6 +78,7 @@ namespace _4DMEN_Library.Model
                         if (!case_data.NGPosition.Contains(7))
                             case_data.NGPosition.Add(7);
                         case_data.IsRun = false;
+                        case_data.Reader1NG = true;
                         break;
                     }
                     case_data.Step = Step = 2;

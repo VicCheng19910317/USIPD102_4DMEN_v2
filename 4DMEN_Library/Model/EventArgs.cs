@@ -183,6 +183,8 @@ namespace _4DMEN_Library.Model
     public class UpdateCaseDatasArgs : EventArgs
     {
         public List<CaseData> CaseDatas { get; set; }
+        public int NgCount { get; set; } = -1;
+        public int OutNgCount { get; set; } = -1;
     }
     public class RunMainFlowArgs : EventArgs
     {

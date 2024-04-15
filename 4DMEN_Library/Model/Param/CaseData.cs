@@ -44,9 +44,9 @@ namespace _4DMEN_Library.Model
                 else if (Station == 5)
                     _stationName = "組裝站";
                 else if (Station == 6)
-                    _stationName = "組裝->掃碼(6)";
+                    _stationName = "組裝->螺帽(6)";
                 else if (Station == 7)
-                    _stationName = "掃碼站";
+                    _stationName = "組裝->螺帽(7)";
                 else if (Station == 8)
                     _stationName = "螺帽站";
                 else if (Station == 9)
@@ -62,11 +62,11 @@ namespace _4DMEN_Library.Model
                 else if (Station == 14)
                     _stationName = "NG站";
                 else if (Station == 15)
-                    _stationName = "雷雕站";
+                    _stationName = "NG->掃碼(15)";
                 else if (Station == 16)
-                    _stationName = "雷雕->出料(16)";
+                    _stationName = "掃碼站";
                 else if (Station == 17)
-                    _stationName = "雷雕->出料(17)";
+                    _stationName = "雷雕站";
                 else if (Station == 18)
                     _stationName = "雷雕->出料(18)";
                 else if (Station == 19)

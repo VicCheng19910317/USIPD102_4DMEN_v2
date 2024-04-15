@@ -51,15 +51,17 @@
         <Image  x:Name="DisplayStation20" Tag="11" Grid.Row="0" Grid.Column="0" Source="Green_Button.png" Margin="1190,375,159,481" IsEnabled="False" Visibility="Hidden" />
         <TextBlock Text="1" FontWeight="Bold" TextAlignment="Center" Foreground="White" Background="Red" FontSize="18" Grid.Column="0" Margin="160,501,1216,381" />
         <TextBlock Text="5" FontWeight="Bold" TextAlignment="Center" Foreground="White" Background="Red" FontSize="18" Grid.Column="0" Margin="620,501,750,381" />
-        <TextBlock Text="7" FontWeight="Bold" TextAlignment="Center" Foreground="White" Background="Red" FontSize="18" Grid.Column="0" Margin="854,501,520,381" />
+        <TextBlock Text="16" FontWeight="Bold" TextAlignment="Center" Foreground="White" Background="Red" FontSize="18" Grid.Column="0" Margin="506,352,868,530" />
         <TextBlock Text="8" FontWeight="Bold" TextAlignment="Center" Foreground="White" Background="Red" FontSize="18" Grid.Column="0" Margin="968,501,402,381" />
         <TextBlock Text="9" FontWeight="Bold" TextAlignment="Center" Foreground="White" Background="Red" FontSize="18" Grid.Column="0" Margin="1086,501,286,381" />
         <TextBlock Text="10" FontWeight="Bold" TextAlignment="Center" Foreground="White" Background="Red" FontSize="18" Grid.Column="0" Margin="1205,501,168,381" />
         <TextBlock Text="11" FontWeight="Bold" TextAlignment="Center" Foreground="White" Background="Red" FontSize="18" Grid.Column="0" Margin="1205,352,168,530" />
         <TextBlock Text="13" FontWeight="Bold" TextAlignment="Center" Foreground="White" Background="Red" FontSize="18" Grid.Column="0" Margin="968,352,402,530" />
+        <TextBlock x:Name="NgCountTxt" Text="NG數量：0" FontWeight="Bold" TextAlignment="Center" Foreground="Blue" FontSize="18" Grid.Column="0" Margin="814,197,480,685" />
         <TextBlock Text="14" FontWeight="Bold" TextAlignment="Center" Foreground="White" Background="Red" FontSize="18" Grid.Column="0" Margin="854,352,520,530" />
-        <TextBlock Text="15" FontWeight="Bold" TextAlignment="Center" Foreground="White" Background="Red" FontSize="18" Grid.Column="0" Margin="736,352,633,530" />
+        <TextBlock Text="17" FontWeight="Bold" TextAlignment="Center" Foreground="White" Background="Red" FontSize="18" Grid.Column="0" Margin="388,352,981,530" />
         <TextBlock Text="20" FontWeight="Bold" TextAlignment="Center" Foreground="White" Background="Red" FontSize="18" Grid.Column="0" Margin="160,352,1216,530" />
+        <TextBlock x:Name="OutNgCountTxt" Text="NG數量：0" FontWeight="Bold" TextAlignment="Center" Foreground="Blue" FontSize="18" Grid.Column="0" Margin="119,189,1175,693" />
         <Grid Grid.Row="0" Grid.Column="1" Style="{StaticResource CCDGrid}">
             <TabControl 
                     materialDesign:ColorZoneAssist.Mode="SecondaryMid"
@@ -130,14 +132,14 @@
                             <ComboBox x:Name="StationNgCB" Grid.Row="13" Grid.Column="1" Style="{StaticResource MaterialDesignComboBox}" VerticalAlignment="Center" FontSize="24" TextBlock.TextAlignment="Center" >
                                 <ComboBoxItem IsSelected="True">1:入料站</ComboBoxItem>
                                 <ComboBoxItem>5:組裝站</ComboBoxItem>
-                                <ComboBoxItem>7:掃碼站</ComboBoxItem>
                                 <ComboBoxItem>8:螺帽站</ComboBoxItem>
                                 <ComboBoxItem>9:折彎站</ComboBoxItem>
                                 <ComboBoxItem>10:折彎站</ComboBoxItem>
                                 <ComboBoxItem>11:壓平站</ComboBoxItem>
                                 <ComboBoxItem>13:測高站</ComboBoxItem>
                                 <ComboBoxItem>14:NG站</ComboBoxItem>
-                                <ComboBoxItem>15:雷雕站</ComboBoxItem>
+                                <ComboBoxItem>16:掃碼站</ComboBoxItem>
+                                <ComboBoxItem>17:雷雕站</ComboBoxItem>
                                 <ComboBoxItem>20:出料站</ComboBoxItem>
                             </ComboBox>
                             <Button x:Name="StationNgBtn" Style="{StaticResource MaterialDesignOutlinedLightButton}" Grid.Row="13" Grid.Column="2" Margin="3" Height="50" FontSize="16" Click="StationNgBtn_Click" >
@@ -168,16 +170,16 @@
                             <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Grid.Column="0">
-                            <CheckBox x:Name="CaseAssembleCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="上蓋組裝" />
-                            <CheckBox x:Name="CaseScanCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="掃碼檢測"  />
-                            <CheckBox x:Name="CasePutNutCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="放置螺帽" />
-                            <CheckBox x:Name="CaseBendingCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="底板折彎" />
-                            <CheckBox x:Name="CasePlateCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="底板壓平"  />
-                            <CheckBox x:Name="CaseEstHeightCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="高度測試" />
-                            <CheckBox x:Name="CaseNgOutCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="檢測NG排料" />
-                            <CheckBox x:Name="CaseMarkingCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="雷射雕刻" />
+                            <CheckBox x:Name="CaseAssembleCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="上蓋組裝" Unchecked="CaseCB_Checked" Checked="CaseCB_Checked"  />
+                            <CheckBox x:Name="CaseScanCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="掃碼檢測" Unchecked="CaseCB_Checked" Checked="CaseCB_Checked" />
+                            <CheckBox x:Name="CasePutNutCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="放置螺帽" Unchecked="CaseCB_Checked" Checked="CaseCB_Checked" />
+                            <CheckBox x:Name="CaseBendingCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="底板折彎" Unchecked="CaseCB_Checked" Checked="CaseCB_Checked" />
+                            <CheckBox x:Name="CasePlateCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="底板壓平" Unchecked="CaseCB_Checked" Checked="CaseCB_Checked" />
+                            <CheckBox x:Name="CaseEstHeightCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="高度測試" Unchecked="CaseCB_Checked" Checked="CaseCB_Checked" />
+                            <CheckBox x:Name="CaseNgOutCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="檢測NG排料" Unchecked="CaseCB_Checked" Checked="CaseCB_Checked" />
+                            <CheckBox x:Name="CaseMarkingCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="雷射雕刻" Unchecked="CaseCB_Checked" Checked="CaseCB_Checked" />
                         </StackPanel>
-                        <Button x:Name="SettingBtn" Grid.Row="1" Grid.Column="0" Content="Setting" Style="{StaticResource MaterialDesignOutlinedLightButton}" HorizontalAlignment="Right" Width="200" Margin="10,3,10,3" Height="50" FontSize="28" Click="SettingBtn_Click" />
+                        <Button x:Name="SettingBtn" Grid.Row="1" Grid.Column="0" Content="Setting" Style="{StaticResource MaterialDesignOutlinedLightButton}" HorizontalAlignment="Right" Width="200" Margin="10,3,10,3" Height="50" FontSize="28" Click="SettingBtn_Click" Visibility="Hidden" />
                     </Grid>
 
                 </TabItem>
