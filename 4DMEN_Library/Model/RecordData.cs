@@ -16,6 +16,12 @@ namespace _4DMEN_Library.Model
             Directory.CreateDirectory($"{folder}/{time.ToString("yyyyMM")}");
             var file_name = $"{folder}/{time.ToString("yyyyMM")}/{time.ToString("yyyyMMdd")}.csv";
             if (!File.Exists(file_name))
+            {
+                using (StreamWriter sw = new StreamWriter(new FileStream(file_name, FileMode.Append, FileAccess.Write, FileShare.ReadWrite), Encoding.UTF8))
+                {
+                    sw.WriteLine($"校正次數,校正時間,校正數值X,校正數值Y,校正數值Z,是否完成校正");
+                }
+            }
                 File.WriteAllText(file_name, $"校正次數,校正時間,校正數值X,校正數值Y,校正數值Z,是否完成校正\n");
             using (StreamWriter sw = new StreamWriter(new FileStream(file_name, FileMode.Append, FileAccess.Write, FileShare.ReadWrite)))
             {
@@ -35,17 +41,18 @@ namespace _4DMEN_Library.Model
 
                 if (!File.Exists(file_name))
                 {
-                    var txt = "";
-                    txt += $"站別：{param.Sfis.StationID}\n";
-                    txt += $"線別：{param.Sfis.LineID}\n";
-                    txt += $"Lid編號：{param.Sfis.LidLotID}\n";
-                    txt += $"Nut編號：{param.Sfis.NutNo}\n";
-                    txt += $"工單：{param.Sfis.TicketID}\n";
-                    txt += $"操作員：{param.Sfis.WorkerID}\n";
-                    txt += $"=============================\n";
-                    File.WriteAllText(file_name, txt);
+                    using (StreamWriter sw = new StreamWriter(new FileStream(file_name, FileMode.Append, FileAccess.Write, FileShare.ReadWrite), Encoding.UTF8))
+                    {
+                        sw.WriteLine($"站別：{param.Sfis.StationID}");
+                        sw.WriteLine($"線別：{param.Sfis.LineID}");
+                        sw.WriteLine($"Lid編號：{param.Sfis.LidLotID}");
+                        sw.WriteLine($"Nut編號：{param.Sfis.NutNo}");
+                        sw.WriteLine($"工單：{param.Sfis.TicketID}");
+                        sw.WriteLine($"操作員：{param.Sfis.WorkerID}");
+                        sw.WriteLine($"=============================");
+                    }
                 }
-                using (StreamWriter sw = new StreamWriter(new FileStream(file_name, FileMode.Append, FileAccess.Write,FileShare.ReadWrite)))
+                using (StreamWriter sw = new StreamWriter(new FileStream(file_name, FileMode.Append, FileAccess.Write,FileShare.ReadWrite), Encoding.UTF8))
                 {
                     sw.WriteLine($"{date_time.ToString("HH:mm:ss.ffff")},{data}");
                 }
@@ -68,17 +75,18 @@ namespace _4DMEN_Library.Model
 
                 if (!File.Exists(file_name))
                 {
-                    var txt = "";
-                    txt += $"站別：{param.Sfis.StationID}\n";
-                    txt += $"線別：{param.Sfis.LineID}\n";
-                    txt += $"Lid編號：{param.Sfis.LidLotID}\n";
-                    txt += $"Nut編號：{param.Sfis.NutNo}\n";
-                    txt += $"工單：{param.Sfis.TicketID}\n";
-                    txt += $"操作員：{param.Sfis.WorkerID}\n";
-                    txt += $"=============================\n";
-                    File.WriteAllText(file_name, txt);
+                    using (StreamWriter sw = new StreamWriter(new FileStream(file_name, FileMode.Append, FileAccess.Write, FileShare.ReadWrite), Encoding.UTF8))
+                    {
+                        sw.WriteLine($"站別：{param.Sfis.StationID}");
+                        sw.WriteLine($"線別：{param.Sfis.LineID}");
+                        sw.WriteLine($"Lid編號：{param.Sfis.LidLotID}");
+                        sw.WriteLine($"Nut編號：{param.Sfis.NutNo}");
+                        sw.WriteLine($"工單：{param.Sfis.TicketID}");
+                        sw.WriteLine($"操作員：{param.Sfis.WorkerID}");
+                        sw.WriteLine($"=============================");
+                    }
                 }
-                using (StreamWriter sw = new StreamWriter(new FileStream(file_name, FileMode.Append, FileAccess.Write, FileShare.ReadWrite)))
+                using (StreamWriter sw = new StreamWriter(new FileStream(file_name, FileMode.Append, FileAccess.Write, FileShare.ReadWrite), Encoding.UTF8))
                 {
                     sw.WriteLine($"{date_time.ToString("HH:mm:ss.ffff")},{data}");
                 }
@@ -98,18 +106,19 @@ namespace _4DMEN_Library.Model
 
             if (!File.Exists(file_name))
             {
-                var txt = "";
-                txt += $"站別：{param.Sfis.StationID}\n";
-                txt += $"線別：{param.Sfis.LineID}\n";
-                txt += $"Lid編號：{param.Sfis.LidLotID}\n";
-                txt += $"Nut編號：{param.Sfis.NutNo}\n";
-                txt += $"工單：{param.Sfis.TicketID}\n";
-                txt += $"操作員：{param.Sfis.WorkerID}\n";
-                txt += $"==============================================\n";
-                txt += $"時間,編號,掃描等級,量測結果,基準面位置公式,平面距離,平整度,條碼結果1,條碼結果2,NG位置,入料站耗時,組裝站耗時,掃碼站耗時,螺帽站耗時,折彎站耗時,下壓站耗時,測高站耗時,NG站耗時,雷雕站耗時,出料站耗時,CT時間,總耗時\n";
-                File.WriteAllText(file_name, txt);
+                using (StreamWriter sw = new StreamWriter(new FileStream(file_name, FileMode.Append, FileAccess.Write, FileShare.ReadWrite), Encoding.UTF8))
+                {
+                    sw.WriteLine($"站別：{param.Sfis.StationID}");
+                    sw.WriteLine($"線別：{param.Sfis.LineID}");
+                    sw.WriteLine($"Lid編號：{param.Sfis.LidLotID}");
+                    sw.WriteLine($"Nut編號：{param.Sfis.NutNo}");
+                    sw.WriteLine($"工單：{param.Sfis.TicketID}");
+                    sw.WriteLine($"操作員：{param.Sfis.WorkerID}");
+                    sw.WriteLine($"==============================================");
+                    sw.WriteLine($"時間,編號,掃描等級,量測結果,基準面位置公式,平面距離,平整度,條碼結果1,條碼結果2,NG位置,入料站耗時,組裝站耗時,掃碼站耗時,螺帽站耗時,折彎站耗時,下壓站耗時,測高站耗時,NG站耗時,雷雕站耗時,出料站耗時,CT時間,總耗時");
+                }
             }
-            using (StreamWriter sw = new StreamWriter(new FileStream(file_name, FileMode.Append, FileAccess.Write, FileShare.ReadWrite)))
+            using (StreamWriter sw = new StreamWriter(new FileStream(file_name, FileMode.Append, FileAccess.Write, FileShare.ReadWrite), Encoding.UTF8))
             {
                 datas.ForEach(x =>
                 {
