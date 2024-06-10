@@ -109,6 +109,7 @@ namespace USIPD102_4DMEN.Pages
                     CaseEstHeightCB.IsChecked = data.CaseEstHeight;
                     CaseNgOutCB.IsChecked = data.CaseNgOut;
                     CaseMarkingCB.IsChecked = data.CaseMarking;
+                    CaseInGlueCB.IsChecked = data.CaseInGlue;
                 });
 
             };
@@ -326,7 +327,7 @@ namespace USIPD102_4DMEN.Pages
                     CaseEstHeight = CaseEstHeightCB.IsChecked.Value,
                     CaseNgOut = CaseNgOutCB.IsChecked.Value,
                     CaseMarking = CaseMarkingCB.IsChecked.Value,
-                    
+                    CaseInGlue = CaseInGlueCB.IsChecked.Value,
                 };
                 MainWindow.SendPresenterData("set_flow", new SetSystemFlowArgs { Flow = flow });
             }
@@ -351,7 +352,7 @@ namespace USIPD102_4DMEN.Pages
                     CaseEstHeight = CaseEstHeightCB.IsChecked.Value,
                     CaseNgOut = CaseNgOutCB.IsChecked.Value,
                     CaseMarking = CaseMarkingCB.IsChecked.Value,
-
+                    CaseInGlue = CaseInGlueCB.IsChecked.Value,
                 };
                 MainWindow.SendPresenterData("set_flow", new SetSystemFlowArgs { Flow = flow });
             }

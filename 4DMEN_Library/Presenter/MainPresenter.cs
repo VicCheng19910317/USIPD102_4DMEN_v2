@@ -643,7 +643,7 @@ namespace _4DMEN_Library
                     ini_file.Write("CaseEstHeight", "True", "Flow");
                     ini_file.Write("CastNgOut", "True", "Flow");
                     ini_file.Write("CastMarking", "True", "Flow");
-                    system_param.Flow = new SystemFlow { CaseAssemble = true, CaseScan = true, CasePutNut = true, CaseBending = true, CasePlate = true, CaseEstHeight = true, CaseNgOut = true, CaseMarking = true };
+                    system_param.Flow = new SystemFlow { CaseAssemble = true, CaseScan = true, CasePutNut = true, CaseBending = true, CasePlate = true, CaseEstHeight = true, CaseNgOut = true, CaseMarking = true, CaseInGlue = true };
                     ini_file.Write("EstHeighInLower", "-100", "In");
                     ini_file.Write("EstHeighInUpper", "100", "In");
                     system_param.EstHeighIn = new Range { Lower = -100, Upper = 100 };
@@ -767,6 +767,7 @@ namespace _4DMEN_Library
                         CaseEstHeight = bool.Parse(ini_file.Read("CaseEstHeight", "Flow")),
                         CaseNgOut = bool.Parse(ini_file.Read("CastNgOut", "Flow")),
                         CaseMarking = bool.Parse(ini_file.Read("CastMarking", "Flow")),
+                        CaseInGlue = bool.Parse(ini_file.Read("CaseInGlue", "Flow")),
                     };
                     system_param.EstHeighIn = new Range
                     {
@@ -857,7 +858,7 @@ namespace _4DMEN_Library
             ini_file.Write("CaseEstHeight", system_param.Flow.CaseEstHeight.ToString(), "Flow");
             ini_file.Write("CastNgOut", system_param.Flow.CaseNgOut.ToString(), "Flow");
             ini_file.Write("CastMarking", system_param.Flow.CaseMarking.ToString(), "Flow");
-
+            ini_file.Write("CaseInGlue", system_param.Flow.CaseInGlue.ToString(), "Flow");
             ini_file.Write("EstHeighInLower", system_param.EstHeighIn.Lower.ToString(), "In");
             ini_file.Write("EstHeighInUpper", system_param.EstHeighIn.Upper.ToString(), "In");
 
@@ -1780,7 +1781,7 @@ namespace _4DMEN_Library
                 LoggerData.Info($"儲存系統流程參數開始。");
                 system_param.Flow = e.Flow;
                 SaveSystemParam();
-                LoggerData.Info($"儲存系統流程參數完成，參數:{e.Flow.CaseAssemble},{e.Flow.CaseScan},{e.Flow.CasePutNut},{e.Flow.CaseBending},{e.Flow.CasePlate},{e.Flow.CaseEstHeight},{e.Flow.CaseNgOut},{e.Flow.CaseMarking}。");
+                LoggerData.Info($"儲存系統流程參數完成，參數:{e.Flow.CaseAssemble},{e.Flow.CaseScan},{e.Flow.CasePutNut},{e.Flow.CaseBending},{e.Flow.CasePlate},{e.Flow.CaseEstHeight},{e.Flow.CaseNgOut},{e.Flow.CaseMarking},{e.Flow.CaseInGlue}。");
                 OnPresentResponseEvent("show_message", new SendMessageBoxArgs { Name = "參數設定", Message = "系統參數儲存成功。", Image = System.Windows.MessageBoxImage.Information });
             }
             catch (Exception ex)

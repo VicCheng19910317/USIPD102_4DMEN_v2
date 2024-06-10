@@ -170,6 +170,7 @@
                             <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Grid.Column="0">
+                            <CheckBox x:Name="CaseInGlueCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="入料膠檢" Unchecked="CaseCB_Checked" Checked="CaseCB_Checked"  />
                             <CheckBox x:Name="CaseAssembleCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="上蓋組裝" Unchecked="CaseCB_Checked" Checked="CaseCB_Checked"  />
                             <CheckBox x:Name="CaseScanCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="掃碼檢測" Unchecked="CaseCB_Checked" Checked="CaseCB_Checked" />
                             <CheckBox x:Name="CasePutNutCB" Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineCheckBox}" Width="300" Height="40" FontSize="32" Content="放置螺帽" Unchecked="CaseCB_Checked" Checked="CaseCB_Checked" />

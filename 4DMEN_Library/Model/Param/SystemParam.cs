@@ -216,6 +216,10 @@ namespace _4DMEN_Library.Model
         /// 雷射雕刻
         /// </summary>
         public bool CaseMarking { get; set; } = true;
+        /// <summary>
+        /// 入料膠檢
+        /// </summary>
+        public bool CaseInGlue { get; set; } = true;
     }
     public class MarkingParam
     {

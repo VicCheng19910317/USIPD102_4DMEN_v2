@@ -46,7 +46,7 @@ namespace _4DMEN_Library.Model
         /// 手臂取料
         /// </summary>
         /// <returns>成功/失敗</returns>
-        internal virtual bool Pick()
+        internal virtual bool Pick(bool by_pass = false)
         {
             var logger = MainPresenter.LogDatas();
             logger = LoggerData.Info($"手臂 {Name} 手臂取料");

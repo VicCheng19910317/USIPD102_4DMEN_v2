@@ -29,7 +29,7 @@ namespace USIPD102_4DMEN
     {
         #region 屬性參數
         private readonly PaletteHelper _paletteHelper = new PaletteHelper();
-        private readonly string version = "2.50.51.20240417";
+        private readonly string version = "2.51.51.20240610";
         private static Logger logger = LogManager.GetCurrentClassLogger();
         #endregion 屬性參數
         #region 靜態動作
