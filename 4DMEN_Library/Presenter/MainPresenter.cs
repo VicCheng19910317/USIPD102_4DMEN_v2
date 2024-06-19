@@ -37,6 +37,7 @@ namespace _4DMEN_Library
         /// 是否執行中
         /// </summary>
         protected bool is_run = false;
+        protected bool is_init_finish = false;
         /// <summary>
         /// 資料紀錄
         /// </summary>
@@ -182,6 +183,8 @@ namespace _4DMEN_Library
                 SendSingleStationControlFlow((SendSingleStationFlowArgs)e);
             else if (actions == "load_log_datas")
                 LoadLogDatasAction();
+            else if (actions == "manual_initialize")
+                ManualInitializeAction();
         }
         private void MainPresenter_UpdateCaseDataEvent(object sender, List<CaseData> caseDatas)
         {
@@ -709,10 +712,10 @@ namespace _4DMEN_Library
                     var measure = new List<EstimatePosition>();
                     measure_position.ForEach(x => measure.Add(new EstimatePosition { X = int.Parse(x.Split(',')[0]), Y = int.Parse(x.Split(',')[1]) }));
                     system_param.MeasurePosition = measure;
-                    system_param.FlatnessUpperLimit = int.Parse(ini_file.Read("FlatnessUpperLimit", "Measure"));
+                    system_param.FlatnessUpperLimit = (float)Math.Round(float.Parse(ini_file.Read("FlatnessUpperLimit", "Measure")),3);
                     var hei_limit = ini_file.Read("HeightLimit", "Measure").Split(';').ToList();
                     var height = new List<Range>();
-                    hei_limit.ForEach(x => height.Add(new Range() { Lower = double.Parse(x.Split(',')[0]), Upper = double.Parse(x.Split(',')[1]) }));
+                    hei_limit.ForEach(x => height.Add(new Range() { Lower = Math.Round(double.Parse(x.Split(',')[0]),3), Upper = Math.Round(double.Parse(x.Split(',')[1]),3) }));
                     system_param.HeightLimit = height;
 
                     system_param.ShiftInArms = new ShiftArms
@@ -726,36 +729,36 @@ namespace _4DMEN_Library
                         },
                         Put = new ShiftArmsAxis
                         {
-                            X = double.Parse(ini_file.Read("ShiftInArmsPutX", "Shift")),
-                            Y = double.Parse(ini_file.Read("ShiftInArmsPutY", "Shift")),
-                            Z = double.Parse(ini_file.Read("ShiftInArmsPutZ", "Shift")),
-                            U = double.Parse(ini_file.Read("ShiftInArmsPutU", "Shift")),
+                            X = Math.Round(double.Parse(ini_file.Read("ShiftInArmsPutX", "Shift")),3),
+                            Y = Math.Round(double.Parse(ini_file.Read("ShiftInArmsPutY", "Shift")), 3),
+                            Z = Math.Round(double.Parse(ini_file.Read("ShiftInArmsPutZ", "Shift")), 3),
+                            U = Math.Round(double.Parse(ini_file.Read("ShiftInArmsPutU", "Shift")), 3),
                         },
                     };
                     system_param.ShiftInArms = new ShiftArms
                     {
                         Pick = new ShiftArmsAxis
                         {
-                            X = double.Parse(ini_file.Read("ShiftOutArmsPickX", "Shift")),
-                            Y = double.Parse(ini_file.Read("ShiftOutArmsPickY", "Shift")),
-                            Z = double.Parse(ini_file.Read("ShiftOutArmsPickZ", "Shift")),
-                            U = double.Parse(ini_file.Read("ShiftOutArmsPickU", "Shift")),
+                            X = Math.Round(double.Parse(ini_file.Read("ShiftOutArmsPickX", "Shift")), 3),
+                            Y = Math.Round(double.Parse(ini_file.Read("ShiftOutArmsPickY", "Shift")), 3),
+                            Z = Math.Round(double.Parse(ini_file.Read("ShiftOutArmsPickZ", "Shift")), 3),
+                            U = Math.Round(double.Parse(ini_file.Read("ShiftOutArmsPickU", "Shift")), 3),
                         },
                         Put = new ShiftArmsAxis
                         {
-                            X = double.Parse(ini_file.Read("ShiftOutArmsPutX", "Shift")),
-                            Y = double.Parse(ini_file.Read("ShiftOutArmsPutY", "Shift")),
-                            Z = double.Parse(ini_file.Read("ShiftOutArmsPutZ", "Shift")),
-                            U = double.Parse(ini_file.Read("ShiftOutArmsPutU", "Shift")),
+                            X = Math.Round(double.Parse(ini_file.Read("ShiftOutArmsPutX", "Shift")), 3),
+                            Y = Math.Round(double.Parse(ini_file.Read("ShiftOutArmsPutY", "Shift")), 3),
+                            Z = Math.Round(double.Parse(ini_file.Read("ShiftOutArmsPutZ", "Shift")), 3),
+                            U = Math.Round(double.Parse(ini_file.Read("ShiftOutArmsPutU", "Shift")), 3),
                         },
                     };
-                    system_param.ShiftLimit = new Range { Lower = double.Parse(ini_file.Read("ShiftLimitLower", "Shift")), Upper = double.Parse(ini_file.Read("ShiftLimitUpper", "Shift")) };
+                    system_param.ShiftLimit = new Range { Lower = Math.Round(double.Parse(ini_file.Read("ShiftLimitLower", "Shift")),3), Upper = Math.Round(double.Parse(ini_file.Read("ShiftLimitUpper", "Shift")), 3) };
 
                     system_param.PlateAccuracy = new PlateAccuracy
                     {
-                        X = new Range { Lower = double.Parse(ini_file.Read("PlateAccuracyXUpper", "Plate")), Upper = double.Parse(ini_file.Read("PlateAccuracyXLower", "Plate")) },
-                        Y = new Range { Lower = double.Parse(ini_file.Read("PlateAccuracyYUpper", "Plate")), Upper = double.Parse(ini_file.Read("PlateAccuracyYLower", "Plate")) },
-                        U = new Range { Lower = double.Parse(ini_file.Read("PlateAccuracyUUpper", "Plate")), Upper = double.Parse(ini_file.Read("PlateAccuracyULower", "Plate")) }
+                        X = new Range { Lower = Math.Round(double.Parse(ini_file.Read("PlateAccuracyXUpper", "Plate")), 3), Upper = Math.Round(double.Parse(ini_file.Read("PlateAccuracyXLower", "Plate")), 3) },
+                        Y = new Range { Lower = Math.Round(double.Parse(ini_file.Read("PlateAccuracyYUpper", "Plate")), 3), Upper = Math.Round(double.Parse(ini_file.Read("PlateAccuracyYLower", "Plate")), 3) },
+                        U = new Range { Lower = Math.Round(double.Parse(ini_file.Read("PlateAccuracyUUpper", "Plate")),3), Upper = Math.Round(double.Parse(ini_file.Read("PlateAccuracyULower", "Plate")), 3) }
                     };
                     system_param.Flow = new SystemFlow
                     {
@@ -767,12 +770,11 @@ namespace _4DMEN_Library
                         CaseEstHeight = bool.Parse(ini_file.Read("CaseEstHeight", "Flow")),
                         CaseNgOut = bool.Parse(ini_file.Read("CastNgOut", "Flow")),
                         CaseMarking = bool.Parse(ini_file.Read("CastMarking", "Flow")),
-                        CaseInGlue = bool.Parse(ini_file.Read("CaseInGlue", "Flow")),
                     };
                     system_param.EstHeighIn = new Range
                     {
-                        Lower = double.Parse(ini_file.Read("EstHeighInLower", "In")),
-                        Upper = double.Parse(ini_file.Read("EstHeighInUpper", "In"))
+                        Lower = Math.Round(double.Parse(ini_file.Read("EstHeighInLower", "In")),3),
+                        Upper = Math.Round(double.Parse(ini_file.Read("EstHeighInUpper", "In")),3),
                     };
                     system_param.MarkParam.marking_fst_code = ini_file.Read("marking_fst_code", "Marking");
                     system_param.MarkParam.marking_fst_txt = ini_file.Read("marking_fst_txt", "Marking");
@@ -1270,6 +1272,7 @@ namespace _4DMEN_Library
                         break;
                     case "SetLevel":
                         system_param.MarkParam.pass_level = e.PassLevel;
+                        SaveSystemParam();
                         Message = $"設定等級成功。";
                         success = true;
                         break;
@@ -1531,12 +1534,12 @@ namespace _4DMEN_Library
                     #region 卡控檢查
 
                     #region 檢查NG數量
-                    if (CaseNgOutTask.GetEntity().NgCount >= system_param.NgOutCountLimit && e.Action.ToLower().Contains("resume"))
+                    if (CaseNgOutTask.GetEntity().NgCount >= system_param.NgOutCountLimit && e.Action.ToLower().Contains("resume") && !e.Action.ToLower().Contains("start"))
                     {
                         restart = true;
                         message = "NG站計數尚未重置，請重置NG站數量。";
                     }
-                    if (CaseOutTask.GetEntity().NGCount >= CaseOutTask.GetEntity().NGCountLimit && e.Action.ToLower().Contains("resume"))
+                    if (CaseOutTask.GetEntity().NGCount >= CaseOutTask.GetEntity().NGCountLimit && e.Action.ToLower().Contains("resume") && !e.Action.ToLower().Contains("start"))
                     {
                         restart = true;
                         message = "出料NG計數尚未重置，請重置出料NG數量。";
@@ -1551,6 +1554,16 @@ namespace _4DMEN_Library
                 }
                 if (e.Action.ToLower().Contains("start"))
                 {
+                    if(run_single_flow)
+                    {
+                        OnPresentResponseEvent("run_main_flow", new RunMainFlowArgs { ReStartFlow = true, Message = "流程正在執行中，請先關閉當前流程，再按下「Start」按鈕。" });
+                        return;
+                    }
+                    if (!is_init_finish)
+                    {
+                        OnPresentResponseEvent("run_main_flow", new RunMainFlowArgs { ReStartFlow = true, Message = "尚未完成初始化，請先按下「Initialize」按鈕，再按下「Start」按鈕。" });
+                        return;
+                    }
                     #region 檢查Load/Unload
                     in_station_plc.GetStatus();
                     if (in_station_plc.IsChangedCassette)
@@ -1571,18 +1584,10 @@ namespace _4DMEN_Library
                         return;
                     }
                     #endregion 檢查Load/Unload
-                    #region 初始化手臂並將PLC設定成自動模式
+                    #region 將PLC設定成自動模式
                     Task.WaitAll(new Task[] {
-                        Task.Run(()=> in_arms.Home()),
-                        Task.Run(()=> lid_arms.Home()),
-                        Task.Run(()=> out_arms.Home()),
                         Task.Run(()=>main_plc.SwitchAutoMode(1)),
                         });
-                    Task.WaitAll(new Task[] {
-                        Task.Run(()=> in_arms.SetRecipe(system_param.Recipe)),
-                        Task.Run(() => lid_arms.SetRecipe(system_param.Recipe)),
-                        Task.Run(() => out_arms.SetRecipe(system_param.Recipe)),
-                    });
                     #endregion 初始化手臂並將PLC設定成自動模式
 
                     #region 重置計數
@@ -1599,11 +1604,6 @@ namespace _4DMEN_Library
                     {
                         CaseAllTask.GetEntity().Stop();
                         Thread.Sleep(1000);
-                    }
-                    if (!main_plc.RunAllInitialized())
-                    {
-                        OnPresentResponseEvent("run_main_flow", new RunMainFlowArgs { ReStartFlow = true, Message = "All PLC Initialize Fail." });
-                        return;
                     }
                     CaseAllTask.GetEntity().StartTask();
                     is_run = true;
@@ -1939,6 +1939,38 @@ namespace _4DMEN_Library
             try
             {
                 OnPresentResponseEvent("load_log_datas", new UpdateLoggerArgs { Datas = _logger });
+            }
+            catch (Exception ex)
+            {
+                logger = LoggerData.Error(ex, $"讀取檢測膠量設定資料失敗。");
+            }
+        }
+        public void ManualInitializeAction()
+        {
+            try
+            {
+                run_single_flow = true;
+                #region 初始化手臂並將PLC設定成自動模式
+                Task.WaitAll(new Task[] {
+                        Task.Run(()=> in_arms.Home()),
+                        Task.Run(()=> lid_arms.Home()),
+                        Task.Run(()=> out_arms.Home()),
+                        Task.Run(()=>main_plc.SwitchAutoMode(1)),
+                        });
+                Task.WaitAll(new Task[] {
+                        Task.Run(()=> in_arms.SetRecipe(system_param.Recipe)),
+                        Task.Run(() => lid_arms.SetRecipe(system_param.Recipe)),
+                        Task.Run(() => out_arms.SetRecipe(system_param.Recipe)),
+                    });
+                #endregion 初始化手臂並將PLC設定成自動模式
+                if (!main_plc.RunAllInitialized())
+                {
+                    OnPresentResponseEvent("manual_initialize", new SendMessageBoxArgs { Message = $"執行全機初始化失敗，請重試。", Image = System.Windows.MessageBoxImage.Information });
+                    return;
+                }
+                run_single_flow = false;
+                is_init_finish = true;
+                OnPresentResponseEvent("manual_initialize", new SendMessageBoxArgs { Message = $"執行全機初始化完成。", Image = System.Windows.MessageBoxImage.Information });
             }
             catch (Exception ex)
             {

@@ -29,7 +29,7 @@ namespace USIPD102_4DMEN
     {
         #region 屬性參數
         private readonly PaletteHelper _paletteHelper = new PaletteHelper();
-        private readonly string version = "2.51.51.20240610";
+        private readonly string version = "2.57.60.20240619";
         private static Logger logger = LogManager.GetCurrentClassLogger();
         #endregion 屬性參數
         #region 靜態動作
@@ -93,6 +93,8 @@ namespace USIPD102_4DMEN
                     ResetNgCount();
                 else if (response_name == "reset_out_ng_count_display")
                     ResetOutNgCount();
+                else if (response_name == "manual_initialize")
+                    ManualInitialize((SendMessageBoxArgs)e);
             }
             catch (Exception ex)
             {
@@ -359,6 +361,17 @@ namespace USIPD102_4DMEN
             try
             {
                 MainFlowPage.UpdateOutNgCount(0);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "重置NG數量錯誤。");
+            }
+        }
+        public void ManualInitialize(SendMessageBoxArgs e)
+        {
+            try
+            {
+                MessageBox.Show(e.Message, "初始化結果", e.Button, e.Image);
             }
             catch (Exception ex)
             {

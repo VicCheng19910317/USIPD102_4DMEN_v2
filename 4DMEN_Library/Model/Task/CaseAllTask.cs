@@ -11,6 +11,7 @@ namespace _4DMEN_Library.Model
     class CaseAllTask : BaseTask
     {
         internal List<CaseData> case_datas = null;
+        internal DateTime run_record_time { get; set; }
         internal Stopwatch all_cases_time = new Stopwatch();
         internal static int put_station = int.Parse(ConfigurationManager.AppSettings["PutStation"]);
         internal static int lid_station = int.Parse(ConfigurationManager.AppSettings["LidStation"]);
@@ -66,6 +67,7 @@ namespace _4DMEN_Library.Model
             {
                 case_datas.Add(new CaseData { Index = i });
             }
+            run_record_time = DateTime.Now;
             all_cases_time = new Stopwatch();
             all_cases_time.Start();
             CaseDoorCheckTask.GetEntity().StartTask();

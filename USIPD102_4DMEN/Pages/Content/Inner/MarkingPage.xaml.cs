@@ -181,11 +181,11 @@ namespace USIPD102_4DMEN.Pages
         {
             try
             {
-                var item_name = ((ListViewItem)PassLevelLV.SelectedItem).Content.ToString();
+                var item_name = PassLevelLV.SelectedItem.ToString();
                 for (int i = 0; i < PassLevelLV.Items.Count; i++)
                 {
-                    var item = (ListViewItem)PassLevelLV.Items[i];
-                    if (item.Content.ToString() == item_name)
+                    var item = PassLevelLV.Items[i];
+                    if (item.ToString() == item_name)
                         PassLevelLV.Items.Remove(item);
                 }
             }
@@ -200,10 +200,10 @@ namespace USIPD102_4DMEN.Pages
             try
             {
                 List<string> pass_level = new List<string>();
-                foreach(ListViewItem item in PassLevelLV.Items)
+                foreach(string item in PassLevelLV.Items)
                 {
-                    if (!pass_level.Contains(item.Content.ToString()))
-                        pass_level.Add(item.Content.ToString());
+                    if (!pass_level.Contains(item))
+                        pass_level.Add(item);
                 }
                 MainWindow.SendPresenterData("send_marking_action", new SendMarkingActionsArgs { Action = "SetLevel", PassLevel = pass_level });
             }

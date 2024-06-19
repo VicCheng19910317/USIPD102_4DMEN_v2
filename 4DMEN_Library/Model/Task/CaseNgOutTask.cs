@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,8 +59,12 @@ namespace _4DMEN_Library.Model
                 case 0: //是否需要執行
                     RecordData.RecordProcessData(MainPresenter.SystemParam(), $"NG出料流程開始");
                     Status = EnumData.TaskStatus.Running;
-
-                    if(case_data.ManualNG)
+                    if (ConfigurationManager.AppSettings["Examine"].ToLower() == "true")
+                    {
+                        case_data.Step = Step = 4;
+                        break;
+                    }
+                    if (case_data.ManualNG)
                     {
                         case_data.Step = Step = 4;
                         break;

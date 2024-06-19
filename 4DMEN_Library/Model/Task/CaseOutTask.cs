@@ -89,10 +89,18 @@ namespace _4DMEN_Library.Model
                     var reader = MainPresenter.OutReader();
                     string read_data = "", read_level = "";
                     var internal_finish = DoReaderAction(() => reader.Read(), reader, out read_data,out read_level, "掃碼讀取訊號超時，請按下「Resume」系統進行後續放料流程。\n錯誤訊號：", false);
+                    
                     if (internal_finish)
                     { ///判斷是否成功
                         case_data.ReaderResult2 = read_data;
                         case_data.MarkingLevel = read_level;
+                    }
+                    else if (ConfigurationManager.AppSettings["Examine"].ToLower() == "true")
+                    {
+                        case_data.ReaderResult2 = "Read Failure";
+                        case_data.MarkingLevel = "F";
+                        case_data.Step = Step = 4;
+                        break;
                     }
                     else
                     {
@@ -115,6 +123,12 @@ namespace _4DMEN_Library.Model
                             case_data.Step = Step = 2;
                             break;
                         }
+                        else if (ConfigurationManager.AppSettings["Examine"].ToLower() == "true")
+                        {
+                            case_data.MarkingLevel = "B";
+                            case_data.Step = Step = 4;
+                            break;
+                        }
                         IsNG = true;
                         Step = 6;
                         if (!case_data.DefectCode.Contains(MainPresenter.SystemParam().DefectMapping["鐳碼等級異常"]))
@@ -130,12 +144,27 @@ namespace _4DMEN_Library.Model
                     case_data.Step = Step = 5;
                     break;
                 case 5: // 進行底板掃碼並判斷是否正確
+                    if(ConfigurationManager.AppSettings["OutByPassTwo"].ToLower() == "true")
+                    {
+                        case_data.Step = Step = 6;
+                        break;
+                    }
                     reader = MainPresenter.OutReader();
                     read_data = "";
                     read_level = "";
                     internal_finish = DoReaderAction(() => reader.Read(), reader, out read_data, out read_level, "掃碼讀取訊號超時，請按下「Resume」系統進行後續放料流程。\n錯誤訊號：", false);
-                    if (internal_finish && read_data == case_data.ReaderResult1)  { ///判斷是否成功
+                    if (internal_finish && read_data == case_data.ReaderResult1)
+                    { ///判斷是否成功
                         case_data.Step = Step = 6;
+                        //case_data.ReaderResult2 = read_data;
+                        //case_data.MarkingLevel = read_level;
+                        break;
+                    }
+                    else if (ConfigurationManager.AppSettings["Examine"].ToLower() == "true")
+                    {
+                        case_data.Step = Step = 6;
+                        //case_data.ReaderResult2 = "Read Failure";
+                        //case_data.MarkingLevel = "F";
                         break;
                     }
                     else
@@ -211,6 +240,7 @@ namespace _4DMEN_Library.Model
                     MainPresenter.SetRunSingleFlow(false);
                     MainPresenter.SetRunFlow(false);
                     case_data.IsRun = false;
+                    Task.Run(()=>RecordData.RecordDataResult(MainPresenter.SystemParam(), CaseAllTask.GetEntity().case_datas));
                     RecordData.RecordProcessData(MainPresenter.SystemParam(), $"出料流程完成");
                     Status = EnumData.TaskStatus.Done;
                     break;

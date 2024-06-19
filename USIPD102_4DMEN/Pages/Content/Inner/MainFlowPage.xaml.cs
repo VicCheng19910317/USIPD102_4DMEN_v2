@@ -242,7 +242,21 @@ namespace USIPD102_4DMEN.Pages
                 logger.Error(ex, "設定全線執行流程失敗。");
             }
         }
-
+        private void InitBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var tag = (sender as Button).Content.ToString();
+                if (MessageBox.Show($"{tag} Task?", "Confirm", MessageBoxButton.OKCancel, MessageBoxImage.Information) == MessageBoxResult.Cancel)
+                    return;
+                
+                MainWindow.SendPresenterData("manual_initialize", new RunMainFlowArgs { Action = tag.Replace("Btn", "") });
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "設定全線執行流程失敗。");
+            }
+        }
         private void ArmsHomeBtn_Click(object sender, RoutedEventArgs e)
         {
             try

@@ -99,10 +99,11 @@ namespace _4DMEN_Library.Model
         }
         internal static void RecordDataResult(SystemParam param, List<CaseData> datas, string folder = @"C:/4DMEN/DataResult")
         {
-            var date_time = DateTime.Now;
+            var date_time = CaseAllTask.GetEntity().run_record_time;
             Directory.CreateDirectory($"{folder}/{date_time.ToString("yyyyMM")}/{date_time.ToString("yyyyMMdd")}");
-            var file_name = $"{folder}/{date_time.ToString("yyyyMM")}/{date_time.ToString("yyyyMMdd")}/{param.Sfis.TicketID}.csv";
+            var file_name = $"{folder}/{date_time.ToString("yyyyMM")}/{date_time.ToString("yyyyMMdd")}/{param.Sfis.TicketID}_{date_time:HHmmss}.csv";
 
+            if (File.Exists(file_name)) File.Delete(file_name);
 
             if (!File.Exists(file_name))
             {

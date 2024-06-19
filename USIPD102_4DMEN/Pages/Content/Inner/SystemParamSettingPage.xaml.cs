@@ -252,11 +252,11 @@ namespace USIPD102_4DMEN.Pages
         {
             try
             {
-                var item_name = ((ListViewItem)LocationLV.SelectedItem).Content.ToString();
+                var item_name = LocationLV.SelectedItem.ToString();
                 for (int i = 0; i < LocationLV.Items.Count; i++)
                 {
-                    var item = (ListViewItem)LocationLV.Items[i];
-                    if (item.Content.ToString() == item_name)
+                    var item = LocationLV.Items[i];
+                    if (item.ToString() == item_name)
                         LocationLV.Items.Remove(item);
                 }
             }
@@ -501,6 +501,42 @@ namespace USIPD102_4DMEN.Pages
             catch (Exception ex)
             {
                 logger.Error(ex, "SFIS連線功能設定失敗。");
+            }
+        }
+
+        private void LocationDownBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (LocationLV.SelectedIndex == LocationLV.Items.Count - 1) return;
+                var index = LocationLV.SelectedIndex;
+                var tmp = LocationLV.Items[index];
+                LocationLV.Items[index] = LocationLV.Items[index + 1];
+                LocationLV.Items[index + 1] = tmp;
+                LocationLV.SelectedIndex = index + 1;
+
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "設定測高下移錯誤。");
+            }
+        }
+
+        private void LocationUpBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (LocationLV.SelectedIndex == 0) return;
+                var index = LocationLV.SelectedIndex;
+                var tmp = LocationLV.Items[index];
+                LocationLV.Items[index] = LocationLV.Items[index - 1];
+                LocationLV.Items[index - 1] = tmp;
+                LocationLV.SelectedIndex = index -1;
+
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "設定測高上移錯誤。");
             }
         }
 

@@ -129,10 +129,10 @@ namespace _4DMEN_Library.Model
                     case_data.Step = Step = 6;
                     break;
                 case 6: ///判斷入料平台是否要換Tray
-                    if (!MainPresenter.GetRunSingleFlow() && ((case_data.Index + 1) == MainPresenter.SystemParam().CaseCount || PickSequence % MainPresenter.SystemParam().TrayCount == 0))
+                    if (!MainPresenter.GetRunSingleFlow() && ((case_data.Index + 1) == MainPresenter.SystemParam().CaseCount || PickSequence % MainPresenter.SystemParam().LidTrayCount == 0))
                     {
-                        CaseInStationTask.GetEntity().PassDetect = (case_data.Index + 1) == MainPresenter.SystemParam().CaseCount;
-                        CaseInStationTask.GetEntity().StartTask(); //開始換Tray
+                        CaseLidStationTask.GetEntity().PassDetect = (case_data.Index + 1) == MainPresenter.SystemParam().CaseCount;
+                        CaseLidStationTask.GetEntity().StartTask(); //開始換Tray
                         PickSequence = 1;
                         System.Threading.Thread.Sleep(500);
                     }

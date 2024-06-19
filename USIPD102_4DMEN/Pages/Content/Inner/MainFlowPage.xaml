@@ -90,6 +90,7 @@
                             <RowDefinition Height="2*"/>
                             <RowDefinition Height="2*"/>
                             <RowDefinition Height="2*"/>
+                            <RowDefinition Height="2*"/>
                             <RowDefinition Height=".5*" />
                             <RowDefinition Height="2*" />
                             <RowDefinition Height="2*" />
@@ -112,17 +113,18 @@
                         <TextBlock Text="Recipe：" TextAlignment="Right"  VerticalAlignment="Center" FontSize="18" Grid.Row="5" Grid.Column="0" />
                         <TextBox x:Name="RecipeTxt" IsEnabled="False" TextAlignment="Center"  VerticalAlignment="Center" FontSize="18" Grid.Row="5" Grid.Column="1" TextChanged="Sheet_TextChanged"/>
                         <Separator Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource MaterialDesignDarkSeparator}" />
-                        <Button x:Name="StartBtn" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Content="Start" Margin="3" Height="50" FontSize="28" Click="Btn_Click"/>
-                        <Button x:Name="PauseBtn" Style="{StaticResource MaterialDesignOutlinedDarkButton}"  Grid.Row="8" Grid.Column="0" Content="Pause" Margin="3" Height="50" FontSize="24" IsEnabled="False" Click="Btn_Click"/>
-                        <Button x:Name="ResumeBtn" Style="{StaticResource MaterialDesignOutlinedDarkButton}" Grid.Row="8" Grid.Column="1" Content="Resume" Margin="3" Height="50" FontSize="24" IsEnabled="False" Click="Btn_Click"/>
-                        <Button x:Name="StopBtn" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Content="Stop" Margin="3" Height="50" FontSize="28" IsEnabled="False" Click="Btn_Click"/>
-                        <Separator Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource MaterialDesignDarkSeparator}" />
-                        <Button x:Name="ArmsInHomeBtn" Style="{StaticResource MaterialDesignOutlinedSecondaryDarkButton}" Grid.Row="11" Grid.Column="0" Content="Arms In Home" Margin="3" Height="50" FontSize="16" Click="ArmsHomeBtn_Click" />
-                        <Button x:Name="ArmsLidHomeBtn" Style="{StaticResource MaterialDesignOutlinedSecondaryDarkButton}" Grid.Row="11" Grid.Column="1" Content="Arms Lid Home" Margin="3" Height="50" FontSize="16" Click="ArmsHomeBtn_Click" />
-                        <Button x:Name="ArmsOutHomeBtn" Style="{StaticResource MaterialDesignOutlinedSecondaryDarkButton}" Grid.Row="12" Grid.Column="0" Content="Arms Out Home" Margin="3" Height="50" FontSize="16" Click="ArmsHomeBtn_Click" />
+                        <Button x:Name="InitBtn" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Content="Initialize" Margin="3" Height="50" FontSize="28" Click="InitBtn_Click"/>
+                        <Button x:Name="StartBtn" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Content="Start" Margin="3" Height="50" FontSize="28" Click="Btn_Click"/>
+                        <Button x:Name="PauseBtn" Style="{StaticResource MaterialDesignOutlinedDarkButton}"  Grid.Row="9" Grid.Column="0" Content="Pause" Margin="3" Height="50" FontSize="24" IsEnabled="False" Click="Btn_Click"/>
+                        <Button x:Name="ResumeBtn" Style="{StaticResource MaterialDesignOutlinedDarkButton}" Grid.Row="9" Grid.Column="1" Content="Resume" Margin="3" Height="50" FontSize="24" IsEnabled="False" Click="Btn_Click"/>
+                        <Button x:Name="StopBtn" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Content="Stop" Margin="3" Height="50" FontSize="28" IsEnabled="False" Click="Btn_Click"/>
+                        <Separator Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource MaterialDesignDarkSeparator}" />
+                        <Button x:Name="ArmsInHomeBtn" Style="{StaticResource MaterialDesignOutlinedSecondaryDarkButton}" Grid.Row="12" Grid.Column="0" Content="Arms In Home" Margin="3" Height="50" FontSize="16" Click="ArmsHomeBtn_Click" />
+                        <Button x:Name="ArmsLidHomeBtn" Style="{StaticResource MaterialDesignOutlinedSecondaryDarkButton}" Grid.Row="12" Grid.Column="1" Content="Arms Lid Home" Margin="3" Height="50" FontSize="16" Click="ArmsHomeBtn_Click" />
+                        <Button x:Name="ArmsOutHomeBtn" Style="{StaticResource MaterialDesignOutlinedSecondaryDarkButton}" Grid.Row="13" Grid.Column="0" Content="Arms Out Home" Margin="3" Height="50" FontSize="16" Click="ArmsHomeBtn_Click" />
 
-                        <Separator Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource MaterialDesignDarkSeparator}" />
-                        <Grid Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="2">
+                        <Separator Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource MaterialDesignDarkSeparator}" />
+                        <Grid Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1*" />
                                 <ColumnDefinition Width="1*" />
@@ -151,10 +153,10 @@
                             </Button>
                         </Grid>
 
-                        <Separator Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource MaterialDesignDarkSeparator}" />
-                        <Button x:Name="NgCountResetBtn" Style="{StaticResource MaterialDesignOutlinedSecondaryDarkButton}" Grid.Row="16" Grid.Column="0" Content="Ng Reset" Margin="3" Height="50" FontSize="16" Click="NgCountResetBtn_Click" />
-                        <Button x:Name="PCErrorResetBtn" Style="{StaticResource MaterialDesignOutlinedSecondaryDarkButton}" Grid.Row="16" Grid.Column="1" Content="PC Error Reset" Margin="3" Height="50" FontSize="16" Click="PCErrorResetBtn_Click" />
-                        <Button x:Name="OutNgCountResetBtn" Style="{StaticResource MaterialDesignOutlinedSecondaryDarkButton}" Grid.Row="17" Grid.Column="0" Content="Out NG Reset" Margin="3" Height="50" FontSize="16" Click="OutNgCountResetBtn_Click" />
+                        <Separator Grid.Row="16" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource MaterialDesignDarkSeparator}" />
+                        <Button x:Name="NgCountResetBtn" Style="{StaticResource MaterialDesignOutlinedSecondaryDarkButton}" Grid.Row="17" Grid.Column="0" Content="Ng Reset" Margin="3" Height="50" FontSize="16" Click="NgCountResetBtn_Click" />
+                        <Button x:Name="PCErrorResetBtn" Style="{StaticResource MaterialDesignOutlinedSecondaryDarkButton}" Grid.Row="17" Grid.Column="1" Content="PC Error Reset" Margin="3" Height="50" FontSize="16" Click="PCErrorResetBtn_Click" />
+                        <Button x:Name="OutNgCountResetBtn" Style="{StaticResource MaterialDesignOutlinedSecondaryDarkButton}" Grid.Row="18" Grid.Column="0" Content="Out NG Reset" Margin="3" Height="50" FontSize="16" Click="OutNgCountResetBtn_Click" />
                     </Grid>
                 </TabItem>
                 <TabItem Height="60" Width="20">

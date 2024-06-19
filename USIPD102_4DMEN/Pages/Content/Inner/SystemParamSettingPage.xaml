@@ -183,7 +183,9 @@
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="1*" />
-                                        <RowDefinition Height="6*" />
+                                        <RowDefinition Height="1*" />
+                                        <RowDefinition Height="1*" />
+                                        <RowDefinition Height="4*" />
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width=".5*" />
@@ -197,7 +199,7 @@
                                     <TextBlock Grid.Row="0" Grid.Column="2" Text="Y：" Style="{StaticResource DisplayLabel}" />
                                     <TextBox x:Name="LocationYTxt" Grid.Row="0" Grid.Column="3" Style="{StaticResource MaterialDesignTextBox}" FontSize="20" TextAlignment="Center" VerticalAlignment="Center" />
                                     <Button x:Name="LocationAddBtn" Content="新增" Grid.Row="0" Grid.Column="4" Style="{StaticResource MaterialDesignOutlinedButton}" VerticalAlignment="Center" FontSize="20" Height="40" Click="LocationAddBtn_Click" Margin="3,0,0,0" />
-                                    <ListView x:Name="LocationLV" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" >
+                                    <ListView x:Name="LocationLV" Grid.Row="1" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="4" >
                                         <ListView.ItemContainerStyle>
                                             <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
                                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -215,6 +217,8 @@
                                         <ListViewItem Content=":)" />
                                     </ListView>
                                     <Button x:Name="LocationDelBtn" Content="移除" Grid.Row="1" Grid.Column="4" Style="{StaticResource MaterialDesignOutlinedButton}" FontSize="20" Height="40" VerticalAlignment="Top" Click="LocationDelBtn_Click" Margin="3,5,0,0" />
+                                    <Button x:Name="LocationUpBtn" Content="上移" Grid.Row="2" Grid.Column="4" Style="{StaticResource MaterialDesignOutlinedButton}" FontSize="20" Height="40" VerticalAlignment="Top" Click="LocationUpBtn_Click" Margin="3,5,0,0" />
+                                    <Button x:Name="LocationDownBtn" Content="下移" Grid.Row="3" Grid.Column="4" Style="{StaticResource MaterialDesignOutlinedButton}" FontSize="20" Height="40" VerticalAlignment="Top" Click="LocationDownBtn_Click" Margin="3,5,0,0" />
                                 </Grid>
                             </GroupBox>
                             <GroupBox Margin="5" Grid.Row="0" Grid.Column="1"  Header="平整度異常設定" Style="{StaticResource MaterialDesignCardGroupBox}">
